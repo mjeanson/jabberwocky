@@ -30,6 +30,7 @@
 
   <modules>
     <module>jabberwocky-lib</module>
+    <module>lttng</module>
     <module>p2-update-site</module>
   </modules>
 

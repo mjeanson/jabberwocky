@@ -48,6 +48,10 @@
                   <id>com.efficios.jabberwocky:jabberwocky-lib:${project.version}</id>
                   <source>true</source>
                 </artifact>
+                <artifact>
+                  <id>com.efficios.jabberwocky:jabberwocky-lttng:${project.version}</id>
+                  <source>true</source>
+                </artifact>
               </artifacts>
             </configuration>
           </execution>
