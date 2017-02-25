@@ -15,19 +15,11 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import javax.management.AttributeNotFoundException;
-
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
-import org.eclipse.tracecompass.statesystem.core.ITmfStateSystem;
-import org.eclipse.tracecompass.statesystem.core.StateSystemUtils;
-import org.eclipse.tracecompass.statesystem.core.exceptions.StateSystemDisposedException;
-import org.eclipse.tracecompass.statesystem.core.interval.ITmfStateInterval;
-import org.eclipse.tracecompass.tmf.core.statesystem.TmfStateSystemAnalysisModule;
-import org.eclipse.tracecompass.tmf.core.trace.ITmfTrace;
 
+import com.efficios.jabberwocky.trace.ITrace;
 import com.efficios.jabberwocky.views.timegraph.model.provider.TimeGraphModelRenderProvider;
-import com.efficios.jabberwocky.views.timegraph.model.provider.statesystem.StateSystemModelRenderProvider.StateIntervalContext;
 import com.efficios.jabberwocky.views.timegraph.model.render.ColorDefinition;
 import com.efficios.jabberwocky.views.timegraph.model.render.arrows.TimeGraphArrowRender;
 import com.efficios.jabberwocky.views.timegraph.model.render.drawnevents.TimeGraphDrawnEventRender;
@@ -37,6 +29,11 @@ import com.efficios.jabberwocky.views.timegraph.model.render.states.TimeGraphSta
 import com.efficios.jabberwocky.views.timegraph.model.render.tooltip.TimeGraphTooltip;
 import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeElement;
 import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeRender;
+
+import ca.polymtl.dorsal.libdelorean.ITmfStateSystem;
+import ca.polymtl.dorsal.libdelorean.StateSystemUtils;
+import ca.polymtl.dorsal.libdelorean.exceptions.StateSystemDisposedException;
+import ca.polymtl.dorsal.libdelorean.interval.ITmfStateInterval;
 
 public class StateSystemModelRenderProvider extends TimeGraphModelRenderProvider {
 
@@ -132,7 +129,7 @@ public class StateSystemModelRenderProvider extends TimeGraphModelRenderProvider
     }
 
     private @Nullable ITmfStateSystem getSSOfCurrentTrace() {
-        ITmfTrace trace = getCurrentTrace();
+        ITrace trace = getCurrentTrace();
         if (trace == null) {
             return null;
         }
@@ -202,8 +199,8 @@ public class StateSystemModelRenderProvider extends TimeGraphModelRenderProvider
          */
         List<ITmfStateInterval> intervals;
         try {
-            intervals = StateSystemUtils.queryHistoryRange(ss, treeElem.getSourceQuark(), rangeStart, rangeEnd, resolution, null);
-        } catch (AttributeNotFoundException | StateSystemDisposedException e) {
+            intervals = StateSystemUtils.queryHistoryRange(ss, treeElem.getSourceQuark(), rangeStart, rangeEnd, resolution);
+        } catch (StateSystemDisposedException e) {
             intervals = Collections.emptyList();
             e.printStackTrace();
         }

@@ -9,24 +9,18 @@
 
 package com.efficios.jabberwocky.views.timegraph.model.provider;
 
-import org.eclipse.jdt.annotation.NonNullByDefault;
-import org.eclipse.osgi.util.NLS;
-
 /**
- * Package message bundle
- *
- * @noreference Messages class
+ * Placeholder for package messages
  */
-@NonNullByDefault({})
-@SuppressWarnings("javadoc")
-public class Messages extends NLS {
+@SuppressWarnings({"javadoc", "nls"})
+public class Messages {
 
-    private static final String BUNDLE_NAME = Messages.class.getPackage().getName() + ".messages"; //$NON-NLS-1$
+//    private static final String BUNDLE_NAME = Messages.class.getPackage().getName() + ".messages"; //$NON-NLS-1$
 
-    public static String DefaultSortingModeName;
+    public static String DefaultSortingModeName = "Default";
 
     static {
-        NLS.initializeMessages(BUNDLE_NAME, Messages.class);
+//        NLS.initializeMessages(BUNDLE_NAME, Messages.class);
     }
 
     private Messages() {}

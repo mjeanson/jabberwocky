@@ -9,15 +9,13 @@
 
 package com.efficios.jabberwocky.views.timegraph.model.provider;
 
-import static org.eclipse.tracecompass.common.core.NonNullUtils.nullToEmptyString;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jdt.annotation.Nullable;
-import org.eclipse.tracecompass.tmf.core.trace.ITmfTrace;
 
+import com.efficios.jabberwocky.trace.ITrace;
 import com.efficios.jabberwocky.views.timegraph.model.render.arrows.TimeGraphArrowRender;
 import com.efficios.jabberwocky.views.timegraph.model.render.drawnevents.TimeGraphDrawnEventRender;
 import com.efficios.jabberwocky.views.timegraph.model.render.states.TimeGraphStateInterval;
@@ -30,7 +28,7 @@ import com.google.common.collect.ImmutableSet;
 
 public abstract class TimeGraphModelRenderProvider implements ITimeGraphModelRenderProvider {
 
-    protected static final SortingMode DEFAULT_SORTING_MODE = new SortingMode(nullToEmptyString(Messages.DefaultSortingModeName));
+    protected static final SortingMode DEFAULT_SORTING_MODE = new SortingMode(Messages.DefaultSortingModeName);
 
     private final List<SortingMode> fSortingModes;
     private final List<FilterMode> fFilterModes;
@@ -38,7 +36,7 @@ public abstract class TimeGraphModelRenderProvider implements ITimeGraphModelRen
     private final Set<FilterMode> fActiveFilterModes = new HashSet<>();
     private SortingMode fCurrentSortingMode;
 
-    private @Nullable ITmfTrace fCurrentTrace;
+    private @Nullable ITrace fCurrentTrace;
 
     protected TimeGraphModelRenderProvider(@Nullable List<SortingMode> sortingModes,
             @Nullable List<FilterMode> filterModes) {
@@ -58,11 +56,11 @@ public abstract class TimeGraphModelRenderProvider implements ITimeGraphModelRen
     }
 
     @Override
-    public final void setTrace(@Nullable ITmfTrace trace) {
+    public final void setTrace(@Nullable ITrace trace) {
         fCurrentTrace = trace;
     }
 
-    protected final @Nullable ITmfTrace getCurrentTrace() {
+    protected final @Nullable ITrace getCurrentTrace() {
         return fCurrentTrace;
     }
 

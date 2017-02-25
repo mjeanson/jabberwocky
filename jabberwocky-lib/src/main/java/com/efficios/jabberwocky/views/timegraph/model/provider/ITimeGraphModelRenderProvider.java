@@ -14,8 +14,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.jdt.annotation.Nullable;
-import org.eclipse.tracecompass.tmf.core.trace.ITmfTrace;
 
+import com.efficios.jabberwocky.trace.ITrace;
 import com.efficios.jabberwocky.views.timegraph.model.render.arrows.TimeGraphArrowRender;
 import com.efficios.jabberwocky.views.timegraph.model.render.drawnevents.TimeGraphDrawnEventRender;
 import com.efficios.jabberwocky.views.timegraph.model.render.states.TimeGraphStateInterval;
@@ -56,7 +56,7 @@ public interface ITimeGraphModelRenderProvider {
         }
     }
 
-    void setTrace(@Nullable ITmfTrace trace);
+    void setTrace(@Nullable ITrace trace);
 
     // ------------------------------------------------------------------------
     // Render generation methods
