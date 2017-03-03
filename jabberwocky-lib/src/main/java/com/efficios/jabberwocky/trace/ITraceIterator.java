@@ -9,12 +9,12 @@
 
 package com.efficios.jabberwocky.trace;
 
+import java.util.Iterator;
+
 import com.efficios.jabberwocky.trace.event.ITraceEvent;
 
-public interface ITrace<E extends ITraceEvent> {
+public interface ITraceIterator<E extends ITraceEvent> extends Iterator<E>, AutoCloseable {
 
-    long getStartTime();
-
-    ITraceIterator<E> getIterator();
-
+    @Override
+    void close();
 }

@@ -9,12 +9,20 @@
 
 package com.efficios.jabberwocky.trace;
 
-import com.efficios.jabberwocky.trace.event.ITraceEvent;
+public class TraceInitializationException extends Exception {
 
-public interface ITrace<E extends ITraceEvent> {
+    private static final long serialVersionUID = 3507492056815877150L;
 
-    long getStartTime();
+    public TraceInitializationException() {
+        super();
+    }
 
-    ITraceIterator<E> getIterator();
+    public TraceInitializationException(String message) {
+        super(message);
+    }
+
+    public TraceInitializationException(Throwable e) {
+        super(e);
+    }
 
 }

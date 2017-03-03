@@ -7,14 +7,5 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package com.efficios.jabberwocky.trace;
-
-import com.efficios.jabberwocky.trace.event.ITraceEvent;
-
-public interface ITrace<E extends ITraceEvent> {
-
-    long getStartTime();
-
-    ITraceIterator<E> getIterator();
-
-}
+@org.eclipse.jdt.annotation.NonNullByDefault
+package com.efficios.jabberwocky.ctf.trace.generic;

@@ -7,14 +7,14 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package com.efficios.jabberwocky.trace;
+package com.efficios.jabberwocky.trace.event;
 
-import com.efficios.jabberwocky.trace.event.ITraceEvent;
+import com.google.common.collect.Range;
 
-public interface ITrace<E extends ITraceEvent> {
+public interface ITraceLostEvent extends ITraceEvent {
 
-    long getStartTime();
+    Range<Long> getTimeRange();
 
-    ITraceIterator<E> getIterator();
+    long getNbLostEvents();
 
 }

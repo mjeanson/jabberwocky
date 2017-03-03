@@ -17,8 +17,8 @@
     <maven>3.0</maven>
   </prerequisites>
 
-  <groupId>com.efficios.jabberwocky</groupId>
-  <artifactId>jabberwocky-parent</artifactId>
+  <groupId>org.babeltrace</groupId>
+  <artifactId>babeltrace-parent</artifactId>
   <version>0.1.0</version>
   <packaging>pom</packaging>
 
@@ -28,21 +28,9 @@
     <p2-deploy-destination>/var/www/html/jabberwocky/repository/latest/</p2-deploy-destination>
   </properties>
 
-  <repositories>
-    <repository>
-      <id>ttt-repo</id>
-      <name>Trace Compass Test Traces</name>
-      <url>http://archive.eclipse.org/tracecompass/tracecompass-test-traces/maven</url>
-    </repository>
-  </repositories>
-
   <modules>
-    <!-- Babeltrace sub-module is not functional -->
-    <!-- <module>babeltrace</module> -->
-    <module>ctf</module>
-    <module>jabberwocky-lib</module>
-    <module>lttng</module>
-    <module>p2-update-site</module>
+    <module>babeltrace</module>
+    <module>babeltrace-jni</module>
   </modules>
 
   <build>
@@ -132,56 +120,10 @@
       </dependency>
 
       <dependency>
-        <groupId>org.eclipse.tracecompass.testtraces</groupId>
-        <artifactId>tracecompass-test-traces-ctf</artifactId>
-        <version>1.6.0</version>
-        <scope>test</scope>
-      </dependency>
-
-      <dependency>
         <groupId>org.eclipse.jdt</groupId>
         <artifactId>org.eclipse.jdt.annotation</artifactId>
         <version>2.0.0</version>
       </dependency>
-
-      <dependency>
-        <groupId>com.google.guava</groupId>
-        <artifactId>guava</artifactId>
-        <version>19.0</version>
-      </dependency>
-
-      <dependency>
-        <groupId>ca.polymtl.dorsal.libdelorean</groupId>
-        <artifactId>libdelorean</artifactId>
-        <version>0.6.1</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.eclipse.tracecompass</groupId>
-        <artifactId>ctfreader</artifactId>
-        <version>0.1.0</version>
-      </dependency>
-
-      <!-- FIXME Only keep the one JSON lib that is actually needed -->
-      <dependency>
-        <groupId>org.json</groupId>
-        <artifactId>json</artifactId>
-        <version>20160810</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.code.gson</groupId>
-        <artifactId>gson</artifactId>
-        <version> 2.8.0</version>
-      </dependency>
-
-      <!-- Artifacts provided by this project. Version numbers should
-           match the current ones. -->
-      <dependency>
-        <groupId>com.efficios.jabberwocky</groupId>
-        <artifactId>jabberwocky-lib</artifactId>
-        <version>0.1.0</version>
-      </dependency>
-    </dependencies>
   </dependencyManagement>
 
   <distributionManagement>

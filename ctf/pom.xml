@@ -19,35 +19,35 @@
     <version>0.1.0</version>
   </parent>
 
-  <artifactId>jabberwocky-lib</artifactId>
+  <artifactId>jabberwocky-ctf</artifactId>
   <packaging>jar</packaging>
 
-  <name>Jabberwocky Trace Analysis Library</name>
+  <name>Common Trace Format (CTF) Support for Jabberwocky</name>
 
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>org.eclipse.tracecompass.testtraces</groupId>
+      <artifactId>tracecompass-test-traces-ctf</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>org.eclipse.jdt</groupId>
       <artifactId>org.eclipse.jdt.annotation</artifactId>
     </dependency>
+
     <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
+      <groupId>org.eclipse.tracecompass</groupId>
+      <artifactId>ctfreader</artifactId>
     </dependency>
+
     <dependency>
-      <groupId>org.json</groupId>
-      <artifactId>json</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>ca.polymtl.dorsal.libdelorean</groupId>
-      <artifactId>libdelorean</artifactId>
+      <groupId>com.efficios.jabberwocky</groupId>
+      <artifactId>jabberwocky-lib</artifactId>
     </dependency>
   </dependencies>
 

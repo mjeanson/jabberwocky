@@ -7,14 +7,12 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package com.efficios.jabberwocky.trace;
+package com.efficios.jabberwocky.ctf.trace.event;
 
-import com.efficios.jabberwocky.trace.event.ITraceEvent;
+import org.eclipse.tracecompass.ctf.core.event.IEventDefinition;
 
-public interface ITrace<E extends ITraceEvent> {
+public interface ICtfTraceEventFactory<T extends CtfTraceEvent> {
 
-    long getStartTime();
-
-    ITraceIterator<E> getIterator();
-
+    // FIXME Remove IEventDef from API?
+    T createEvent(IEventDefinition eventDef);
 }

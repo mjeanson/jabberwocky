@@ -7,14 +7,23 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package com.efficios.jabberwocky.trace;
+package com.efficios.jabberwocky.trace.event.field;
 
-import com.efficios.jabberwocky.trace.event.ITraceEvent;
+import java.util.Map;
 
-public interface ITrace<E extends ITraceEvent> {
+public interface IFieldValue {
 
-    long getStartTime();
+    enum Type {
+        INTEGER,
+        FLOAT,
+        STRING,
+        ENUMERATION,
+        ARRAY,
+        STRUCTURE;
+    }
 
-    ITraceIterator<E> getIterator();
+    Type getType();
+
+    Map<String, String> getAttributes();
 
 }
