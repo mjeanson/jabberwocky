@@ -12,6 +12,7 @@ package com.efficios.jabberwocky.ctf.trace.event;
 import java.util.stream.IntStream;
 
 import org.eclipse.tracecompass.ctf.core.event.types.AbstractArrayDefinition;
+import org.eclipse.tracecompass.ctf.core.event.types.ByteArrayDefinition;
 import org.eclipse.tracecompass.ctf.core.event.types.CompoundDeclaration;
 import org.eclipse.tracecompass.ctf.core.event.types.EnumDefinition;
 import org.eclipse.tracecompass.ctf.core.event.types.FloatDefinition;
@@ -22,7 +23,6 @@ import org.eclipse.tracecompass.ctf.core.event.types.IntegerDeclaration;
 import org.eclipse.tracecompass.ctf.core.event.types.IntegerDefinition;
 import org.eclipse.tracecompass.ctf.core.event.types.StringDefinition;
 import org.eclipse.tracecompass.ctf.core.event.types.VariantDefinition;
-import org.eclipse.tracecompass.internal.ctf.core.event.types.ByteArrayDefinition;
 
 import com.efficios.jabberwocky.trace.event.field.ArrayValue;
 import com.efficios.jabberwocky.trace.event.field.EnumValue;
