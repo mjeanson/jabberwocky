@@ -19,20 +19,45 @@
 
   <groupId>com.efficios.jabberwocky</groupId>
   <artifactId>jabberwocky-parent</artifactId>
-  <version>0.1.0</version>
+  <version>0.1.1</version>
   <packaging>pom</packaging>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven-deploy-destination>file:///var/www/html/jabberwocky/maven/</maven-deploy-destination>
-    <p2-deploy-destination>/var/www/html/jabberwocky/repository/latest/</p2-deploy-destination>
   </properties>
+
+  <distributionManagement>
+    <repository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>efficios-releases-repo</id>
+      <name>EfficiOS Releases</name>
+      <url>https://mvn.efficios.com/maven/releases/</url>
+      <layout>default</layout>
+    </repository>
+    <snapshotRepository>
+      <uniqueVersion>true</uniqueVersion>
+      <id>efficios-snapshots-repo</id>
+      <name>EfficiOS Snapshots</name>
+      <url>https://mvn.efficios.com/maven/snapshots/</url>
+      <layout>default</layout>
+    </snapshotRepository>
+  </distributionManagement>
 
   <repositories>
     <repository>
       <id>ttt-repo</id>
       <name>Trace Compass Test Traces</name>
       <url>http://archive.eclipse.org/tracecompass/tracecompass-test-traces/maven</url>
+    </repository>
+    <repository>
+      <id>efficios-releases-repo</id>
+      <name>EfficiOS Releases</name>
+      <url>https://mvn.efficios.com/maven/releases/</url>
+    </repository>
+    <repository>
+      <id>efficios-snapshots-repo</id>
+      <name>EfficiOS Snapshots</name>
+      <url>https://mvn.efficios.com/maven/snapshots/</url>
     </repository>
   </repositories>
 
@@ -42,7 +67,6 @@
     <module>ctf</module>
     <module>jabberwocky-lib</module>
     <module>lttng</module>
-    <module>p2-update-site</module>
   </modules>
 
   <build>
@@ -55,6 +79,11 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
       </plugin>
     </plugins>
 
@@ -85,12 +114,13 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>2.6</version>
+          <version>3.0.2</version>
           <configuration>
             <archive>
               <manifest>
                 <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
               </manifest>
+              <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
             </archive>
           </configuration>
         </plugin>
@@ -116,6 +146,21 @@
           <groupId>com.github.maven-nar</groupId>
           <artifactId>nar-maven-plugin</artifactId>
           <version>3.2.3</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.felix</groupId>
+          <artifactId>maven-bundle-plugin</artifactId>
+          <version>3.2.0</version>
+          <executions>
+            <execution>
+              <id>bundle-manifest</id>
+              <phase>process-classes</phase>
+              <goals>
+                <goal>manifest</goal>
+              </goals>
+            </execution>
+          </executions>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -179,16 +224,8 @@
       <dependency>
         <groupId>com.efficios.jabberwocky</groupId>
         <artifactId>jabberwocky-lib</artifactId>
-        <version>0.1.0</version>
+        <version>0.1.1</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
-
-  <distributionManagement>
-    <repository>
-      <id>jabberwocky-maven-repo</id>
-      <url>${maven-deploy-destination}</url>
-    </repository>
-  </distributionManagement>
-
 </project>
