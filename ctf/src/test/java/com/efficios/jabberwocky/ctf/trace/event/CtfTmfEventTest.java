@@ -134,12 +134,4 @@ public class CtfTmfEventTest {
         assertEquals(0, attributes.size());
     }
 
-    /**
-     * Test the toString() method
-     */
-    @Test
-    public void testToString() {
-        String s = fixture.toString();
-        assertEquals("ret=4132", s);
-    }
 }
