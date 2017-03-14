@@ -16,7 +16,7 @@
   <parent>
     <groupId>com.efficios.jabberwocky</groupId>
     <artifactId>jabberwocky-parent</artifactId>
-    <version>0.1.2</version>
+    <version>0.1.3-SNAPSHOT</version>
   </parent>
 
   <artifactId>jabberwocky-lib</artifactId>
