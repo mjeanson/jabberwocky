@@ -54,6 +54,7 @@
 
                 <!-- Copy over the compiled libraries from the nar package -->
                 <copy todir="${javasrcdir}/org/babeltrace" flatten="true">
+                  <!-- TODO Update with the .java file that contains the API ("native") methods -->
                   <fileset dir="../babeltrace/target/nar" includes="*i386-Linux*/**/liblttng-ust-agent-jul-jni*.so" />
                 </copy>
               </target>
@@ -66,6 +67,7 @@
       </plugin>
 
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-clean-plugin</artifactId>
         <executions>
           <execution>
