@@ -19,10 +19,13 @@
 
   <groupId>com.efficios.jabberwocky</groupId>
   <artifactId>jabberwocky-parent</artifactId>
-  <version>0.1.3-SNAPSHOT</version>
+  <version>0.2.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <properties>
+    <kotlin.version>1.1.2-4</kotlin.version>
+    <kotlin.compiler.jvmTarget>1.8</kotlin.compiler.jvmTarget>
+
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
@@ -62,14 +65,15 @@
   </repositories>
 
   <modules>
-    <!-- Babeltrace sub-module is not functional -->
-    <!-- <module>babeltrace</module> -->
     <module>ctf</module>
-    <module>jabberwocky-lib</module>
+    <module>jabberwocky-core</module>
     <module>lttng</module>
   </modules>
 
   <build>
+    <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
+    <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
+
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -90,7 +94,7 @@
           <artifactId>maven-clean-plugin</artifactId>
           <version>3.0.0</version>
         </plugin>
-
+<!--
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
@@ -100,7 +104,7 @@
             <target>1.8</target>
           </configuration>
         </plugin>
-
+-->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
@@ -146,6 +150,26 @@
             </execution>
           </executions>
         </plugin>
+
+        <plugin>
+          <artifactId>kotlin-maven-plugin</artifactId>
+          <groupId>org.jetbrains.kotlin</groupId>
+          <version>${kotlin.version}</version>
+          <executions>
+            <execution>
+              <id>compile</id>
+              <goals>
+                <goal>compile</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>test-compile</id>
+              <goals>
+                <goal>test-compile</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
       </plugins>
     </pluginManagement>
 
@@ -153,6 +177,26 @@
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-stdlib-jre8</artifactId>
+        <version>${kotlin.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-test</artifactId>
+        <version>${kotlin.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-test-junit</artifactId>
+        <version>${kotlin.version}</version>
+        <scope>test</scope>
+      </dependency>
+
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
@@ -165,12 +209,6 @@
         <artifactId>tracecompass-test-traces-ctf</artifactId>
         <version>1.6.0</version>
         <scope>test</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>org.eclipse.jdt</groupId>
-        <artifactId>org.eclipse.jdt.annotation</artifactId>
-        <version>2.0.0</version>
       </dependency>
 
       <dependency>
@@ -207,8 +245,8 @@
            match the current ones. -->
       <dependency>
         <groupId>com.efficios.jabberwocky</groupId>
-        <artifactId>jabberwocky-lib</artifactId>
-        <version>0.1.3-SNAPSHOT</version>
+        <artifactId>jabberwocky-core</artifactId>
+        <version>0.2.0-SNAPSHOT</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
