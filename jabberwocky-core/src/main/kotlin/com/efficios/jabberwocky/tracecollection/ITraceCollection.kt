@@ -12,9 +12,9 @@ package com.efficios.jabberwocky.tracecollection
 import com.efficios.jabberwocky.trace.ITrace
 import com.efficios.jabberwocky.trace.event.ITraceEvent
 
-interface ITraceCollection<out E : ITraceEvent> {
+interface ITraceCollection<out E : ITraceEvent, out T : ITrace<E>> {
 
-    val traces: Collection<ITrace<E>>
+    val traces: Collection<T>
 
     fun iterator(): ITraceCollectionIterator<out E>
 }

@@ -7,17 +7,16 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package com.efficios.jabberwocky.tracecollection
+package com.efficios.jabberwocky.project
 
 import com.efficios.jabberwocky.trace.ITrace
-import com.efficios.jabberwocky.trace.ITraceIterator
 import com.efficios.jabberwocky.trace.event.ITraceEvent
+import com.efficios.jabberwocky.tracecollection.ITraceCollectionIterator
 import com.efficios.jabberwocky.utils.SortedCompoundIterator
-import java.util.*
 
-class TraceCollectionIterator<E : ITraceEvent> (traceCollection: ITraceCollection<E, ITrace<E>>) : SortedCompoundIterator<E, ITraceIterator<E>>(
-        traceCollection.traces.map { it.iterator() },
-        Comparator.comparingLong { event -> event.timestamp }), ITraceCollectionIterator<E> {
+class TraceProjectIterator<out E : ITraceEvent> (project: TraceProject<E, ITrace<E>>) : SortedCompoundIterator<E, ITraceCollectionIterator<E>>(
+        project.traceCollections.map { it.iterator() },
+        Comparator.comparingLong { event -> event.timestamp }), ITraceProjectIterator<E> {
 
     override fun close() {
         iterators.forEach { it.close() }

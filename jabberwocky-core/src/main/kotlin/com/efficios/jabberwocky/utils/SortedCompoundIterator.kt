@@ -15,7 +15,7 @@ import java.util.*
 import java.util.function.Supplier
 import java.util.stream.Collectors
 
-open class SortedCompoundIterator<out T, I : Iterator<T>>(protected val iterators: Collection<I>, comparator: Comparator<T>) : Iterator<T> {
+open class SortedCompoundIterator<out T, out I : Iterator<T>>(protected val iterators: Collection<I>, comparator: Comparator<T>) : Iterator<T> {
 
     private val iteratorQueue: Queue<PeekingIterator<T>>
 

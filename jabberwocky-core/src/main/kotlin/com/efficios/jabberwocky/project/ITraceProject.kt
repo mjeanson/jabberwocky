@@ -7,16 +7,15 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package com.efficios.jabberwocky.tracecollection
+package com.efficios.jabberwocky.project
 
 import com.efficios.jabberwocky.trace.ITrace
 import com.efficios.jabberwocky.trace.event.ITraceEvent
-import com.google.common.collect.ImmutableSet
+import com.efficios.jabberwocky.tracecollection.ITraceCollection
 
-class TraceCollection<out E : ITraceEvent, out T : ITrace<E>>(override val traces: Collection<T>) : ITraceCollection<E, T> {
+interface ITraceProject<out E : ITraceEvent, out T : ITrace<E>> {
 
-    override fun iterator(): ITraceCollectionIterator<E> {
-        return TraceCollectionIterator(this)
-    }
+    val traceCollections: Collection<ITraceCollection<E, T>>
 
+    fun iterator(): ITraceProjectIterator<E>
 }
