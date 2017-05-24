@@ -11,8 +11,6 @@ package com.efficios.jabberwocky.ctf.trace.generic
 
 import org.eclipse.tracecompass.ctf.core.CTFStrings
 import org.eclipse.tracecompass.ctf.core.event.IEventDefinition
-import org.eclipse.tracecompass.ctf.core.event.types.ICompositeDefinition
-import org.eclipse.tracecompass.ctf.core.event.types.IDefinition
 import org.eclipse.tracecompass.ctf.core.event.types.IntegerDefinition
 
 import com.efficios.jabberwocky.ctf.trace.event.CtfTraceEvent
@@ -22,12 +20,17 @@ import com.efficios.jabberwocky.ctf.trace.event.ICtfTraceEventFactory
 import com.efficios.jabberwocky.trace.event.FieldValue
 import com.google.common.collect.ImmutableMap
 
-class GenericCtfTraceEventFactory(private val fTrace: GenericCtfTrace) : ICtfTraceEventFactory<CtfTraceEvent> {
+class GenericCtfTraceEventFactory(private val trace: GenericCtfTrace) : ICtfTraceEventFactory<CtfTraceEvent> {
+
+    companion object {
+        private const val UNDERSCORE = "_"
+        private const val CONTEXT_FIELD_PREFIX = "context."
+    }
 
     override fun createEvent(eventDef: IEventDefinition): CtfTraceEvent {
         /* lib quirk, eventDef.getTimestamp() actually returns a cycle count... */
         val cycles = eventDef.getTimestamp()
-        val ts = fTrace.innerTrace.timestampCyclesToNanos(cycles)
+        val ts = trace.innerTrace.timestampCyclesToNanos(cycles)
 
         val cpu = eventDef.getCPU()
         val eventName = eventDef.getDeclaration().getName()
@@ -76,11 +79,6 @@ class GenericCtfTraceEventFactory(private val fTrace: GenericCtfTrace) : ICtfTra
 
         /* No custom attributes at the moment */
         return CtfTraceEvent(ts, cpu, eventName, fields.build(), null)
-    }
-
-    companion object {
-        private val UNDERSCORE = "_"
-        private val CONTEXT_FIELD_PREFIX = "context."
     }
 
 }

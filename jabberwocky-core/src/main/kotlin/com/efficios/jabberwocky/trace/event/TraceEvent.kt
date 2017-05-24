@@ -19,17 +19,11 @@ open class TraceEvent(override val timestamp: Long,
                       eventFields: Map<String, FieldValue>,
                       attributes: Map<String, String>?) : ITraceEvent {
 
-    private val fEventFields: Map<String, FieldValue>
+    private val fEventFields: Map<String, FieldValue> = ImmutableMap.copyOf(eventFields)
 
-    final override val attributes: Map<String, String>
+    final override val attributes: Map<String, String> = if (attributes == null) Collections.emptyMap() else ImmutableMap.copyOf(attributes)
 
-    init {
-        fEventFields = ImmutableMap.copyOf(eventFields)
-        this.attributes = if (attributes == null) Collections.emptyMap() else ImmutableMap.copyOf(attributes)
-    }
-
-    override val fieldNames: Set<String>
-        get() = fEventFields.keys
+    final override val fieldNames = fEventFields.keys
 
     override fun <T : FieldValue> getField(fieldName: String, fieldType: Class<T>): T? {
         val value = fEventFields[fieldName] ?: /*
@@ -45,9 +39,7 @@ open class TraceEvent(override val timestamp: Long,
         return ret
     }
 
-    override fun hashCode(): Int {
-        return Objects.hash(timestamp, cpu, eventName, fEventFields, attributes)
-    }
+    override fun hashCode() = Objects.hash(timestamp, cpu, eventName, fEventFields, attributes)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

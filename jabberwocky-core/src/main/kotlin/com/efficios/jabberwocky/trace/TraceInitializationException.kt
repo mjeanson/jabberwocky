@@ -11,15 +11,16 @@ package com.efficios.jabberwocky.trace
 
 class TraceInitializationException : Exception {
 
+    companion object {
+        private val serialVersionUID = 3507492056815877150L
+    }
+
     constructor() : super() {}
 
     constructor(message: String) : super(message) {}
 
     constructor(e: Throwable) : super(e) {}
 
-    companion object {
 
-        private val serialVersionUID = 3507492056815877150L
-    }
 
 }

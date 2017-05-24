@@ -22,9 +22,7 @@ class CtfTraceLostEvent(startTime: Long,
 
     override val timeRange: Range<Long> = Range.closed(startTime, endTime)
 
-    override fun hashCode(): Int {
-        return Objects.hash(super.hashCode(), timeRange, nbLostEvents)
-    }
+    override fun hashCode(): Int = Objects.hash(super.hashCode(), timeRange, nbLostEvents)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

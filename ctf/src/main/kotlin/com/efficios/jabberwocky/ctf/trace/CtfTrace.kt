@@ -9,29 +9,20 @@
 
 package com.efficios.jabberwocky.ctf.trace
 
-import java.nio.file.Path
-
-import org.eclipse.tracecompass.ctf.core.CTFException
-import org.eclipse.tracecompass.ctf.core.trace.CTFTrace
-
 import com.efficios.jabberwocky.ctf.trace.event.CtfTraceEvent
 import com.efficios.jabberwocky.ctf.trace.event.ICtfTraceEventFactory
 import com.efficios.jabberwocky.trace.Trace
 import com.efficios.jabberwocky.trace.TraceInitializationException
+import org.eclipse.tracecompass.ctf.core.CTFException
+import org.eclipse.tracecompass.ctf.core.trace.CTFTrace
+import java.nio.file.Path
 
 abstract class CtfTrace<E : CtfTraceEvent>(tracePath: Path) : Trace<E>() {
 
-    internal val innerTrace: CTFTrace
-
-    init {
-        val trace: CTFTrace
-        try {
-            trace = CTFTrace(tracePath.toFile())
-        } catch (e: CTFException) {
-            throw TraceInitializationException(e)
-        }
-
-        innerTrace = trace
+    internal val innerTrace: CTFTrace = try {
+        CTFTrace(tracePath.toFile())
+    } catch (e: CTFException) {
+        throw TraceInitializationException(e)
     }
 
     override fun iterator(): CtfTraceIterator<E> {

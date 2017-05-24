@@ -18,31 +18,21 @@ import org.eclipse.tracecompass.ctf.core.trace.CTFTraceReader
 import com.efficios.jabberwocky.ctf.trace.event.CtfTraceEvent
 import com.efficios.jabberwocky.trace.ITraceIterator
 
-open class CtfTraceIterator<E : CtfTraceEvent>(private val originTrace: CtfTrace<E>) : ITraceIterator<E> {
+open class CtfTraceIterator<out E : CtfTraceEvent>(private val originTrace: CtfTrace<E>) : ITraceIterator<E> {
 
-    private val traceReader: CTFTraceReader
-
-    private var currentEventDef: IEventDefinition? = null
-
-    init {
-        val reader: CTFTraceReader
-        try {
-            reader = CTFTraceReader(originTrace.innerTrace)
-        } catch (e: CTFException) {
-            /*
-             * If the CtfTrace was initialized successfully, creating an
-             * iterator should not fail.
-             */
-            throw IllegalStateException(e)
-        }
-
-        traceReader = reader
-        currentEventDef = reader.getCurrentEventDef()
+    private val traceReader: CTFTraceReader = try {
+        CTFTraceReader(originTrace.innerTrace)
+    } catch (e: CTFException) {
+        /*
+         * If the CtfTrace was initialized successfully, creating an
+         * iterator should not fail.
+         */
+        throw IllegalStateException(e)
     }
 
-    override fun hasNext(): Boolean {
-        return (currentEventDef != null)
-    }
+    private var currentEventDef: IEventDefinition? = traceReader.currentEventDef
+
+    override fun hasNext(): Boolean = (currentEventDef != null)
 
     override fun next(): E {
         val currentEventDef = currentEventDef ?: throw NoSuchElementException()
