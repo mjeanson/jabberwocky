@@ -11,7 +11,7 @@ package com.efficios.jabberwocky.project
 
 import com.efficios.jabberwocky.trace.ITrace
 import com.efficios.jabberwocky.trace.event.ITraceEvent
-import com.efficios.jabberwocky.tracecollection.ITraceCollectionIterator
+import com.efficios.jabberwocky.collection.ITraceCollectionIterator
 import com.efficios.jabberwocky.utils.SortedCompoundIterator
 
 class TraceProjectIterator<out E : ITraceEvent> (project: TraceProject<E, ITrace<E>>) : SortedCompoundIterator<E, ITraceCollectionIterator<E>>(

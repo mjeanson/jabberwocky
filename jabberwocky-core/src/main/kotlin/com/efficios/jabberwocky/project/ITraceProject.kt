@@ -11,7 +11,7 @@ package com.efficios.jabberwocky.project
 
 import com.efficios.jabberwocky.trace.ITrace
 import com.efficios.jabberwocky.trace.event.ITraceEvent
-import com.efficios.jabberwocky.tracecollection.ITraceCollection
+import com.efficios.jabberwocky.collection.ITraceCollection
 
 interface ITraceProject<out E : ITraceEvent, out T : ITrace<E>> {
 

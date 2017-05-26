@@ -7,16 +7,12 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package com.efficios.jabberwocky.tracecollection
+package com.efficios.jabberwocky.collection
 
-import com.efficios.jabberwocky.trace.ITrace
 import com.efficios.jabberwocky.trace.event.ITraceEvent
-import com.google.common.collect.ImmutableSet
 
-class TraceCollection<out E : ITraceEvent, out T : ITrace<E>>(override val traces: Collection<T>) : ITraceCollection<E, T> {
+interface ITraceCollectionIterator<out E : ITraceEvent> : Iterator<E>, AutoCloseable {
 
-    override fun iterator(): ITraceCollectionIterator<E> {
-        return TraceCollectionIterator(this)
-    }
+    override fun close()
 
 }

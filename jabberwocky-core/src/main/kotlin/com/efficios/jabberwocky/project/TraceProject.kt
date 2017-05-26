@@ -11,7 +11,7 @@ package com.efficios.jabberwocky.project
 
 import com.efficios.jabberwocky.trace.ITrace
 import com.efficios.jabberwocky.trace.event.ITraceEvent
-import com.efficios.jabberwocky.tracecollection.TraceCollection
+import com.efficios.jabberwocky.collection.TraceCollection
 
 class TraceProject<out E : ITraceEvent, out T : ITrace<E>> (override val traceCollections: Collection<TraceCollection<E, T>>) : ITraceProject<E, T> {
 
