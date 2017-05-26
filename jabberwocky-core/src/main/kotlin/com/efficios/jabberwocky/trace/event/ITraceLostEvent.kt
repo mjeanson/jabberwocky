@@ -9,11 +9,9 @@
 
 package com.efficios.jabberwocky.trace.event
 
-import com.google.common.collect.Range
-
 interface ITraceLostEvent : ITraceEvent {
 
-    val timeRange: Range<Long>
+    val timeRange: LongRange
 
     val nbLostEvents: Long
 

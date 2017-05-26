@@ -11,7 +11,6 @@ package com.efficios.jabberwocky.ctf.trace.event
 
 import com.efficios.jabberwocky.trace.event.ITraceLostEvent
 import com.google.common.base.MoreObjects
-import com.google.common.collect.Range
 import java.util.*
 
 class CtfTraceLostEvent(startTime: Long,
@@ -20,7 +19,7 @@ class CtfTraceLostEvent(startTime: Long,
                         eventName: String,
                         override val nbLostEvents: Long) : CtfTraceEvent(startTime, cpu, eventName, emptyMap(), null), ITraceLostEvent {
 
-    override val timeRange: Range<Long> = Range.closed(startTime, endTime)
+    override val timeRange: LongRange = LongRange(startTime, endTime)
 
     override fun hashCode(): Int = Objects.hash(super.hashCode(), timeRange, nbLostEvents)
 
