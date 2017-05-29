@@ -17,6 +17,7 @@ data class TimeRange private constructor (val startTime: Long, val endTime: Long
     }
 
     companion object {
+        @JvmStatic
         fun of(startTime: Long, endTime: Long): TimeRange {
             // TODO Implement caching?
             return TimeRange(startTime, endTime)
