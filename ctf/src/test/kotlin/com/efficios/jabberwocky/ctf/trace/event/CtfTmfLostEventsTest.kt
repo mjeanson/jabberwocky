@@ -161,8 +161,8 @@ class CtfTmfLostEventsTest {
         val event = ev as ITraceLostEvent
 
         assertEquals(start, event.timestamp)
-        assertEquals(start, event.timeRange.start)
-        assertEquals(end, event.timeRange.endInclusive)
+        assertEquals(start, event.timeRange.startTime)
+        assertEquals(end, event.timeRange.endTime)
         assertEquals(nbLost, event.nbLostEvents)
     }
 
