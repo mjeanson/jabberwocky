@@ -16,7 +16,7 @@
   <parent>
     <groupId>com.efficios.jabberwocky</groupId>
     <artifactId>jabberwocky-parent</artifactId>
-    <version>0.2.3-SNAPSHOT</version>
+    <version>0.2.5-SNAPSHOT</version>
   </parent>
 
   <artifactId>jabberwocky-core</artifactId>
@@ -73,7 +73,9 @@
               kotlin.jvm.functions,
               kotlin.jvm.internal,
               kotlin.jvm.internal.markers,
-              kotlin.reflect
+              kotlin.ranges,
+              kotlin.reflect,
+              kotlin.text
             </Export-Package>
           </instructions>
         </configuration>
