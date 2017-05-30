@@ -16,7 +16,7 @@
   <parent>
     <groupId>com.efficios.jabberwocky</groupId>
     <artifactId>jabberwocky-parent</artifactId>
-    <version>0.2.1-SNAPSHOT</version>
+    <version>0.2.2-SNAPSHOT</version>
   </parent>
 
   <artifactId>jabberwocky-core</artifactId>
@@ -34,6 +34,29 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <artifactSet>
+                <includes>
+                  <include>org.jetbrains.kotlin:kotlin-stdlib-jre8</include>
+                  <include>org.jetbrains.kotlin:kotlin-stdlib-jre7</include>
+                  <include>org.jetbrains.kotlin:kotlin-stdlib</include>
+                  <include>org.jetbrains:annotations</include>
+                </includes>
+              </artifactSet>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
 
       <plugin>
