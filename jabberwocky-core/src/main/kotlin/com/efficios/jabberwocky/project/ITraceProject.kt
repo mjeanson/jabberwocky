@@ -12,8 +12,13 @@ package com.efficios.jabberwocky.project
 import com.efficios.jabberwocky.trace.ITrace
 import com.efficios.jabberwocky.trace.event.ITraceEvent
 import com.efficios.jabberwocky.collection.ITraceCollection
+import java.nio.file.Path
 
 interface ITraceProject<out E : ITraceEvent, out T : ITrace<E>> {
+
+    val name: String
+
+    val directory: Path
 
     val traceCollections: Collection<ITraceCollection<E, T>>
 

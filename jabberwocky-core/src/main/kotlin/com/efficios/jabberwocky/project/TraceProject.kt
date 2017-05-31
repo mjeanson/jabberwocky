@@ -12,8 +12,16 @@ package com.efficios.jabberwocky.project
 import com.efficios.jabberwocky.trace.ITrace
 import com.efficios.jabberwocky.trace.event.ITraceEvent
 import com.efficios.jabberwocky.collection.TraceCollection
+import java.nio.file.Files
+import java.nio.file.Path
 
-class TraceProject<out E : ITraceEvent, out T : ITrace<E>> (override val traceCollections: Collection<TraceCollection<E, T>>) : ITraceProject<E, T> {
+class TraceProject<out E : ITraceEvent, out T : ITrace<E>> (override val name: String,
+                                                            override val directory: Path,
+                                                            override val traceCollections: Collection<TraceCollection<E, T>>) : ITraceProject<E, T> {
+
+    init {
+        if (!Files.isReadable(directory) || !Files.isWritable(directory)) throw IllegalArgumentException("Invalid project directory")
+    }
 
     override fun iterator(): ITraceProjectIterator<E> {
         return TraceProjectIterator(this)
