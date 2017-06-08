@@ -20,6 +20,8 @@ interface ITraceProject<out E : ITraceEvent, out T : ITrace<E>> {
 
     val directory: Path
 
+    val startTime: Long
+
     val traceCollections: Collection<ITraceCollection<E, T>>
 
     fun iterator(): ITraceProjectIterator<E>
