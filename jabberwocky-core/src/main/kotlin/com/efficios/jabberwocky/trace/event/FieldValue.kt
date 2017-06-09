@@ -11,75 +11,77 @@ package com.efficios.jabberwocky.trace.event
 
 import java.util.*
 
-sealed class FieldValue(open val attributes: Map<String, String>?) {}
+sealed class FieldValue(open val attributes: Map<String, String>?) {
 
-data class ArrayValue<T : FieldValue>(val elements: Array<T>,
-                                      override val attributes: Map<String, String>?) : FieldValue(attributes) {
-    val size: Int = elements.size
+    data class ArrayValue<T : FieldValue>(val elements: Array<T>,
+                                          override val attributes: Map<String, String>?) : FieldValue(attributes) {
+        val size: Int = elements.size
 
-    fun getElement(index: Int): T {
-        return elements[index]
-    }
-
-    override fun hashCode() = Objects.hash(elements)
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other?.javaClass != javaClass) return false
-
-        other as ArrayValue<*>
-
-        if (!(elements contentDeepEquals other.elements)) return false
-
-        return true
-    }
-
-    override fun toString() = elements.contentDeepToString()
-}
-
-data class EnumValue(val stringValue: String,
-                     val longValue: Long,
-                     override val attributes: Map<String, String>?) : FieldValue(attributes) {
-
-    override fun toString() = stringValue + '(' + longValue.toString() + ')'
-}
-
-data class FloatValue(val value: Double,
-                      override val attributes: Map<String, String>?) : FieldValue(attributes) {
-
-    override fun toString() = value.toString()
-}
-
-data class IntegerValue(val value: Long,
-                        val base: Int = 10,
-                        override val attributes: Map<String, String>?) : FieldValue(attributes) {
-
-    override fun toString() = if (base == 16) {
-        "0x" + java.lang.Long.toHexString(value)
-    } else {
-        value.toString()
-    }
-}
-
-data class StringValue(val value: String,
-                       override val attributes: Map<String, String>?) : FieldValue(attributes) {
-
-    override fun toString() = value
-}
-
-data class StructValue(val elements: Map<String, FieldValue>,
-                       override val attributes: Map<String, String>?) : FieldValue(attributes) {
-
-    val fieldNames = elements.keys
-
-    fun <T : FieldValue> getField(fieldName: String, fieldType: Class<T>): T? {
-        val value = elements[fieldName] ?: return null
-        if (!fieldType.isAssignableFrom(value.javaClass)) {
-            return null
+        fun getElement(index: Int): T {
+            return elements[index]
         }
-        val ret = value as T
-        return ret
+
+        override fun hashCode() = Objects.hash(elements)
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (other?.javaClass != javaClass) return false
+
+            other as ArrayValue<*>
+
+            if (!(elements contentDeepEquals other.elements)) return false
+
+            return true
+        }
+
+        override fun toString() = elements.contentDeepToString()
     }
 
-    override fun toString() = elements.toString()
+    data class EnumValue(val stringValue: String,
+                         val longValue: Long,
+                         override val attributes: Map<String, String>?) : FieldValue(attributes) {
+
+        override fun toString() = stringValue + '(' + longValue.toString() + ')'
+    }
+
+    data class FloatValue(val value: Double,
+                          override val attributes: Map<String, String>?) : FieldValue(attributes) {
+
+        override fun toString() = value.toString()
+    }
+
+    data class IntegerValue(val value: Long,
+                            val base: Int = 10,
+                            override val attributes: Map<String, String>?) : FieldValue(attributes) {
+
+        override fun toString() = if (base == 16) {
+            "0x" + java.lang.Long.toHexString(value)
+        } else {
+            value.toString()
+        }
+    }
+
+    data class StringValue(val value: String,
+                           override val attributes: Map<String, String>?) : FieldValue(attributes) {
+
+        override fun toString() = value
+    }
+
+    data class StructValue(val elements: Map<String, FieldValue>,
+                           override val attributes: Map<String, String>?) : FieldValue(attributes) {
+
+        val fieldNames = elements.keys
+
+        fun <T : FieldValue> getField(fieldName: String, fieldType: Class<T>): T? {
+            val value = elements[fieldName] ?: return null
+            if (!fieldType.isAssignableFrom(value.javaClass)) {
+                return null
+            }
+            val ret = value as T
+            return ret
+        }
+
+        override fun toString() = elements.toString()
+    }
+
 }

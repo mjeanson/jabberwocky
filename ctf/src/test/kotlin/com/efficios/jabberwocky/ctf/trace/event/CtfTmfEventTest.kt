@@ -14,19 +14,13 @@
 
 package com.efficios.jabberwocky.ctf.trace.event
 
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertTrue
-
+import com.efficios.jabberwocky.ctf.trace.ExtractedCtfTestTrace
+import com.efficios.jabberwocky.trace.event.FieldValue.IntegerValue
 import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.ClassRule
 import org.junit.Test
-
-import com.efficios.jabberwocky.ctf.trace.ExtractedCtfTestTrace
-import com.efficios.jabberwocky.ctf.trace.generic.GenericCtfTrace
-import com.efficios.jabberwocky.ctf.trace.generic.GenericCtfTraceIterator
-import com.efficios.jabberwocky.trace.event.IntegerValue
 
 /**
  * The class `CtfTmfEventTest` contains tests for the class

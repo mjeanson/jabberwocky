@@ -13,7 +13,7 @@
 package com.efficios.jabberwocky.ctf.trace
 
 import com.efficios.jabberwocky.ctf.trace.event.CtfTraceEvent
-import com.efficios.jabberwocky.trace.event.*
+import com.efficios.jabberwocky.trace.event.FieldValue.*
 import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue

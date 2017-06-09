@@ -9,7 +9,8 @@
 
 package com.efficios.jabberwocky.ctf.trace.event
 
-import com.efficios.jabberwocky.trace.event.*
+import com.efficios.jabberwocky.trace.event.FieldValue
+import com.efficios.jabberwocky.trace.event.FieldValue.*
 import org.eclipse.tracecompass.ctf.core.event.types.*
 
 object CtfTraceEventFieldParser {

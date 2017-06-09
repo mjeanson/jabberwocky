@@ -13,8 +13,8 @@
 
 package com.efficios.jabberwocky.ctf.trace.event
 
-import com.efficios.jabberwocky.trace.event.ArrayValue
-import com.efficios.jabberwocky.trace.event.IntegerValue
+import com.efficios.jabberwocky.trace.event.FieldValue.ArrayValue
+import com.efficios.jabberwocky.trace.event.FieldValue.IntegerValue
 import org.eclipse.tracecompass.ctf.core.CTFException
 import org.eclipse.tracecompass.ctf.core.event.io.BitBuffer
 import org.eclipse.tracecompass.ctf.core.event.types.*

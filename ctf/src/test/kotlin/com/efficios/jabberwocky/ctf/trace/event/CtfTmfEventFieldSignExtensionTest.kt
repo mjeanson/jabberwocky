@@ -9,21 +9,15 @@
 
 package com.efficios.jabberwocky.ctf.trace.event
 
+import com.efficios.jabberwocky.ctf.trace.ExtractedCtfTestTrace
+import com.efficios.jabberwocky.trace.event.FieldValue.ArrayValue
+import com.efficios.jabberwocky.trace.event.FieldValue.IntegerValue
+import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
-
-import java.util.stream.Collectors
-import java.util.stream.IntStream
-import java.util.stream.LongStream
-
-import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
 import org.junit.ClassRule
 import org.junit.Test
-
-import com.efficios.jabberwocky.ctf.trace.ExtractedCtfTestTrace
-import com.efficios.jabberwocky.ctf.trace.generic.GenericCtfTraceIterator
-import com.efficios.jabberwocky.trace.event.ArrayValue
-import com.efficios.jabberwocky.trace.event.IntegerValue
+import java.util.stream.Collectors
 import kotlin.streams.asStream
 
 /**
