@@ -15,12 +15,6 @@ import com.efficios.jabberwocky.project.ITraceProject
 interface IAnalysis {
 
     /**
-     * The displayed name of this analysis. It should usually be
-     * externalized.
-     */
-    val name: String
-
-    /**
      * Determine if the current analysis can run on the given trace project.
 
      * If it does not apply, then it should not be suggested for the given project

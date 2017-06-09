@@ -21,7 +21,7 @@ import com.efficios.jabberwocky.trace.event.ITraceEvent
 import java.io.IOException
 import java.nio.file.Files
 
-abstract class StateSystemAnalysis(override val name: String) : IAnalysis  {
+abstract class StateSystemAnalysis : IAnalysis  {
 
     companion object {
         private const val ANALYSES_DIRECTORY = "analyses"

@@ -11,7 +11,6 @@ package com.efficios.jabberwocky.ctf.analysis
 
 import ca.polymtl.dorsal.libdelorean.ITmfStateSystem
 import ca.polymtl.dorsal.libdelorean.ITmfStateSystemBuilder
-import com.efficios.jabberwocky.analysis.AnalysisManager
 import com.efficios.jabberwocky.analysis.statesystem.StateSystemAnalysis
 import com.efficios.jabberwocky.collection.ITraceCollection
 import com.efficios.jabberwocky.collection.TraceCollection
@@ -43,7 +42,6 @@ class CtfStateSystemAnalysisTest {
         val ETT3 = ExtractedCtfTestTrace(CtfTestTrace.KERNEL_VM)
 
         private val projectName = "Test-statesystem-project"
-        private val analysisName = "test-ss-analysis"
         private val attribName = "count"
     }
 
@@ -64,7 +62,6 @@ class CtfStateSystemAnalysisTest {
 
         /* Setup the analysis */
         analysis = TestAnalysis()
-        AnalysisManager.registerAnalysis(analysis)
 
         /* Execute the analysis */
         ss = analysis.execute(project)
@@ -74,10 +71,9 @@ class CtfStateSystemAnalysisTest {
     fun cleanup() {
         ss.dispose()
         projectPath.toFile().deleteRecursively()
-        AnalysisManager.unregisterAnalysis(analysis)
     }
 
-    private class TestAnalysis : StateSystemAnalysis(analysisName) {
+    private class TestAnalysis : StateSystemAnalysis() {
 
         override val providerVersion = 0
 

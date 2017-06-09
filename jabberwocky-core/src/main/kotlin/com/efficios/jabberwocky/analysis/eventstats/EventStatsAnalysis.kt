@@ -16,11 +16,9 @@ import com.efficios.jabberwocky.collection.TraceCollection
 import com.efficios.jabberwocky.project.ITraceProject
 import com.efficios.jabberwocky.trace.event.ITraceEvent
 
-class EventStatsAnalysis : StateSystemAnalysis(ANALYSIS_NAME) {
+class EventStatsAnalysis : StateSystemAnalysis() {
 
     companion object {
-        private const val ANALYSIS_NAME = "Event statistics"
-
         const val TOTAL_ATTRIBUTE = "total"
         const val EVENT_NAME_ATTRIBUTE = "eventname"
         const val CPU_ATTRIBUTE = "cpu"
