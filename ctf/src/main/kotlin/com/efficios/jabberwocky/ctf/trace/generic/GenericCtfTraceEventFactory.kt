@@ -9,6 +9,7 @@
 
 package com.efficios.jabberwocky.ctf.trace.generic
 
+import com.efficios.jabberwocky.ctf.trace.CtfTrace
 import org.eclipse.tracecompass.ctf.core.CTFStrings
 import org.eclipse.tracecompass.ctf.core.event.IEventDefinition
 import org.eclipse.tracecompass.ctf.core.event.types.IntegerDefinition
@@ -20,7 +21,7 @@ import com.efficios.jabberwocky.ctf.trace.event.ICtfTraceEventFactory
 import com.efficios.jabberwocky.trace.event.FieldValue
 import com.google.common.collect.ImmutableMap
 
-class GenericCtfTraceEventFactory(private val trace: GenericCtfTrace) : ICtfTraceEventFactory<CtfTraceEvent> {
+class GenericCtfTraceEventFactory(private val trace: CtfTrace<CtfTraceEvent>) : ICtfTraceEventFactory<CtfTraceEvent> {
 
     companion object {
         private const val UNDERSCORE = "_"

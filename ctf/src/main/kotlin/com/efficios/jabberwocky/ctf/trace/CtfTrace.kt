@@ -17,7 +17,7 @@ import org.eclipse.tracecompass.ctf.core.CTFException
 import org.eclipse.tracecompass.ctf.core.trace.CTFTrace
 import java.nio.file.Path
 
-abstract class CtfTrace<E : CtfTraceEvent>(tracePath: Path) : Trace<E>() {
+abstract class CtfTrace<E : CtfTraceEvent>(val tracePath: Path) : Trace<E>() {
 
     internal val innerTrace: CTFTrace = try {
         CTFTrace(tracePath.toFile())
@@ -30,4 +30,6 @@ abstract class CtfTrace<E : CtfTraceEvent>(tracePath: Path) : Trace<E>() {
     }
 
     abstract val eventFactory: ICtfTraceEventFactory<E>
+
+    val environment: Map<String, String> = innerTrace.environment
 }
