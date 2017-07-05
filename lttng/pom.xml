@@ -16,7 +16,7 @@
   <parent>
     <groupId>com.efficios.jabberwocky</groupId>
     <artifactId>jabberwocky-parent</artifactId>
-    <version>0.2.5-SNAPSHOT</version>
+    <version>0.2.6-SNAPSHOT</version>
   </parent>
 
   <artifactId>jabberwocky-lttng</artifactId>
@@ -71,7 +71,7 @@
     <dependency>
       <groupId>com.efficios.jabberwocky</groupId>
       <artifactId>jabberwocky-ctf</artifactId>
-      <version>0.2.5-SNAPSHOT</version>
+      <version>0.2.6-SNAPSHOT</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
