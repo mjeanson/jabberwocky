@@ -9,7 +9,7 @@
 
 package com.efficios.jabberwocky.lttng.kernel.trace
 
-import com.efficios.jabberwocky.ctf.trace.ExtractedCtfTestTrace
+import com.efficios.jabberwocky.lttng.trace.ExtractedCtfTestTrace
 import com.efficios.jabberwocky.trace.TraceInitializationException
 import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
 import org.junit.ClassRule

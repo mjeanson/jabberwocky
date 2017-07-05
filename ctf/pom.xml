@@ -16,7 +16,7 @@
   <parent>
     <groupId>com.efficios.jabberwocky</groupId>
     <artifactId>jabberwocky-parent</artifactId>
-    <version>0.2.6-SNAPSHOT</version>
+    <version>0.2.7-SNAPSHOT</version>
   </parent>
 
   <artifactId>jabberwocky-ctf</artifactId>
@@ -34,15 +34,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <!-- Bundle the ExtractedCtfTestTrace in a test-jar, so it can be
-             re-used by tests in downstream plugins. -->
-        <executions>
-          <execution>
-            <goals>
-              <goal>test-jar</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
 
       <plugin>
