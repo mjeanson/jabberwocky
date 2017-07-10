@@ -11,7 +11,7 @@ package com.efficios.jabberwocky.trace
 
 import com.efficios.jabberwocky.trace.event.TraceEvent
 
-class TraceStubs {
+internal class TraceStubs {
 
     companion object {
         const val EVENT_NAME_A = "EventA"

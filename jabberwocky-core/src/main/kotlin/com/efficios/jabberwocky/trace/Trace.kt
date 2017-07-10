@@ -1,6 +1,7 @@
 package com.efficios.jabberwocky.trace
 
 import com.efficios.jabberwocky.trace.event.TraceEvent
+import com.google.common.collect.Iterators
 
 abstract class Trace<out E : TraceEvent> : ITrace<E> {
 
@@ -15,4 +16,13 @@ abstract class Trace<out E : TraceEvent> : ITrace<E> {
         startTime
     }
 
+    override val endTime: Long by lazy {
+        var endTime: Long = 0L
+        iterator().use {
+            if (it.hasNext()) {
+                endTime = Iterators.getLast(it).timestamp
+            }
+        }
+        endTime
+    }
 }

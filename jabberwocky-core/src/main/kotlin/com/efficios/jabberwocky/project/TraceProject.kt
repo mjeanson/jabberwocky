@@ -21,20 +21,23 @@ class TraceProject<out E : ITraceEvent, out T : ITrace<E>> (override val name: S
 
     init {
         if (!Files.isReadable(directory) || !Files.isWritable(directory)) throw IllegalArgumentException("Invalid project directory")
+        if (traceCollections.isEmpty()) throw IllegalArgumentException("Project needs at least 1 trace")
     }
 
     override fun iterator(): ITraceProjectIterator<E> {
         return TraceProjectIterator(this)
     }
 
-    /* Lazy-load the start time by reading the timestamp of the first event. */
-    override val startTime: Long by lazy {
-        var startTime: Long = 0L
-        iterator().use { iter ->
-            if (iter.hasNext()) {
-                startTime = iter.next().timestamp
-            }
-        }
-        startTime
-    }
+    /* The project's start time is the earliest of all its traces's start times */
+    override val startTime: Long = traceCollections
+                .flatMap { collection -> collection.traces }
+                .map { trace -> trace.startTime }
+                .min() ?: 0L
+
+
+    /* The project's end time is the latest of all its traces's end times */
+    override val endTime: Long = traceCollections
+            .flatMap { collection -> collection.traces }
+            .map { trace -> trace.endTime }
+            .max() ?: 0L
 }

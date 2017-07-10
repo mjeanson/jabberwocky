@@ -22,6 +22,8 @@ interface ITraceProject<out E : ITraceEvent, out T : ITrace<E>> {
 
     val startTime: Long
 
+    val endTime: Long
+
     val traceCollections: Collection<ITraceCollection<E, T>>
 
     fun iterator(): ITraceProjectIterator<E>

@@ -15,6 +15,8 @@ interface ITrace<out E : ITraceEvent> {
 
     val startTime: Long
 
+    val endTime: Long
+
     fun iterator(): ITraceIterator<out E>
 
 }
