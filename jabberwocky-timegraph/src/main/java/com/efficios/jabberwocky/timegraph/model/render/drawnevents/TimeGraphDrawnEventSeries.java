@@ -10,7 +10,7 @@
 package com.efficios.jabberwocky.timegraph.model.render.drawnevents;
 
 import com.efficios.jabberwocky.config.ConfigOption;
-import com.efficios.jabberwocky.timegraph.model.render.ColorDefinition;
+import com.efficios.jabberwocky.views.common.ColorDefinition;
 
 /**
  * Definition of a time graph arrow series.

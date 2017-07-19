@@ -22,31 +22,33 @@
 
 package com.efficios.jabberwocky.timegraph.model.render;
 
+import com.efficios.jabberwocky.views.common.ColorDefinition;
+
 /**
  * Definition of UI colors, from https://flatuicolors.com/ .
  */
 @SuppressWarnings("javadoc")
 public interface FlatUIColors {
 
-    ColorDefinition TURQUOISE       = new ColorDefinition( 26, 188, 156);
-    ColorDefinition DARK_TURQUOISE  = new ColorDefinition( 22, 160, 133);
-    ColorDefinition GREEN           = new ColorDefinition( 46, 204, 113);
-    ColorDefinition DARK_GREEN      = new ColorDefinition( 39, 174,  96);
-    ColorDefinition BLUE            = new ColorDefinition( 52, 152, 219);
-    ColorDefinition DARK_BLUE       = new ColorDefinition( 41, 128, 185);
-    ColorDefinition PURPLE          = new ColorDefinition(155,  89, 182);
-    ColorDefinition DARK_PURPLE     = new ColorDefinition(142,  68, 173);
-    ColorDefinition BLUE_GRAY       = new ColorDefinition( 52,  73,  94);
-    ColorDefinition DARK_BLUE_GRAY  = new ColorDefinition( 44,  62,  80);
-    ColorDefinition YELLOW          = new ColorDefinition(241, 196,  15);
-    ColorDefinition DARK_YELLOW     = new ColorDefinition(243, 156,  18);
-    ColorDefinition ORANGE          = new ColorDefinition(230, 126,  34);
-    ColorDefinition DARK_ORANGE     = new ColorDefinition(211,  84,   0);
-    ColorDefinition RED             = new ColorDefinition(231,  76,  60);
-    ColorDefinition DARK_RED        = new ColorDefinition(192,  57,  43);
-    ColorDefinition VERY_LIGHT_GRAY = new ColorDefinition(236, 240, 241);
-    ColorDefinition LIGHT_GRAY      = new ColorDefinition(189, 195, 199);
-    ColorDefinition GRAY            = new ColorDefinition(149, 165, 166);
-    ColorDefinition DARK_GRAY       = new ColorDefinition(127, 140, 141);
+    ColorDefinition TURQUOISE       = new ColorDefinition( 26, 188, 156, ColorDefinition.MAX);
+    ColorDefinition DARK_TURQUOISE  = new ColorDefinition( 22, 160, 133, ColorDefinition.MAX);
+    ColorDefinition GREEN           = new ColorDefinition( 46, 204, 113, ColorDefinition.MAX);
+    ColorDefinition DARK_GREEN      = new ColorDefinition( 39, 174,  96, ColorDefinition.MAX);
+    ColorDefinition BLUE            = new ColorDefinition( 52, 152, 219, ColorDefinition.MAX);
+    ColorDefinition DARK_BLUE       = new ColorDefinition( 41, 128, 185, ColorDefinition.MAX);
+    ColorDefinition PURPLE          = new ColorDefinition(155,  89, 182, ColorDefinition.MAX);
+    ColorDefinition DARK_PURPLE     = new ColorDefinition(142,  68, 173, ColorDefinition.MAX);
+    ColorDefinition BLUE_GRAY       = new ColorDefinition( 52,  73,  94, ColorDefinition.MAX);
+    ColorDefinition DARK_BLUE_GRAY  = new ColorDefinition( 44,  62,  80, ColorDefinition.MAX);
+    ColorDefinition YELLOW          = new ColorDefinition(241, 196,  15, ColorDefinition.MAX);
+    ColorDefinition DARK_YELLOW     = new ColorDefinition(243, 156,  18, ColorDefinition.MAX);
+    ColorDefinition ORANGE          = new ColorDefinition(230, 126,  34, ColorDefinition.MAX);
+    ColorDefinition DARK_ORANGE     = new ColorDefinition(211,  84,   0, ColorDefinition.MAX);
+    ColorDefinition RED             = new ColorDefinition(231,  76,  60, ColorDefinition.MAX);
+    ColorDefinition DARK_RED        = new ColorDefinition(192,  57,  43, ColorDefinition.MAX);
+    ColorDefinition VERY_LIGHT_GRAY = new ColorDefinition(236, 240, 241, ColorDefinition.MAX);
+    ColorDefinition LIGHT_GRAY      = new ColorDefinition(189, 195, 199, ColorDefinition.MAX);
+    ColorDefinition GRAY            = new ColorDefinition(149, 165, 166, ColorDefinition.MAX);
+    ColorDefinition DARK_GRAY       = new ColorDefinition(127, 140, 141, ColorDefinition.MAX);
 
 }

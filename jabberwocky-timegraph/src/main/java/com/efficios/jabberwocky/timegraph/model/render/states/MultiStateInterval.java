@@ -11,10 +11,10 @@ package com.efficios.jabberwocky.timegraph.model.render.states;
 
 import java.util.Collections;
 
-import com.efficios.jabberwocky.timegraph.model.render.ColorDefinition;
 import com.efficios.jabberwocky.timegraph.model.render.LineThickness;
 import com.efficios.jabberwocky.timegraph.model.render.StateDefinition;
 import com.efficios.jabberwocky.timegraph.model.render.tree.TimeGraphTreeElement;
+import com.efficios.jabberwocky.views.common.ColorDefinition;
 
 /**
  * Dummy interval model object representing a "multi-state", which means a case
@@ -28,7 +28,7 @@ public final class MultiStateInterval extends BasicTimeGraphStateInterval {
      * State definition for "multi-states"
      */
     public static final StateDefinition MULTI_STATE_DEFINITION = new StateDefinition("Multi-state", //$NON-NLS-1$
-            new ColorDefinition(0, 0, 0),
+            new ColorDefinition(0, 0, 0, ColorDefinition.MAX),
             LineThickness.NORMAL);
 
     /**

@@ -12,6 +12,7 @@ package com.efficios.jabberwocky.timegraph.model.render;
 import java.util.Objects;
 
 import com.efficios.jabberwocky.config.ConfigOption;
+import com.efficios.jabberwocky.views.common.ColorDefinition;
 import org.eclipse.jdt.annotation.Nullable;
 
 import com.google.common.base.MoreObjects;

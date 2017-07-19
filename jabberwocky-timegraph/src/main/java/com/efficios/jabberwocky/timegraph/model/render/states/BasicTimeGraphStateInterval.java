@@ -15,8 +15,8 @@ import java.util.Objects;
 import com.efficios.jabberwocky.config.ConfigOption;
 import com.efficios.jabberwocky.timegraph.model.render.LineThickness;
 import com.efficios.jabberwocky.timegraph.model.render.tree.TimeGraphTreeElement;
+import com.efficios.jabberwocky.views.common.ColorDefinition;
 import org.eclipse.jdt.annotation.Nullable;
-import com.efficios.jabberwocky.timegraph.model.render.ColorDefinition;
 import com.efficios.jabberwocky.timegraph.model.render.StateDefinition;
 import com.efficios.jabberwocky.timegraph.model.render.TimeGraphEvent;
 

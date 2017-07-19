@@ -9,7 +9,7 @@
 
 package com.efficios.jabberwocky.timegraph.model.render.arrows;
 
-import com.efficios.jabberwocky.timegraph.model.render.ColorDefinition;
+import com.efficios.jabberwocky.views.common.ColorDefinition;
 
 /**
  * Definition of a time graph arrow series.
