@@ -19,7 +19,7 @@
 
   <groupId>com.efficios.jabberwocky</groupId>
   <artifactId>jabberwocky-parent</artifactId>
-  <version>0.2.9-SNAPSHOT</version>
+  <version>0.2.10-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <properties>
@@ -245,12 +245,6 @@
         <version>0.1.2</version>
       </dependency>
 
-      <!-- FIXME Only keep the one JSON lib that is actually needed -->
-      <dependency>
-        <groupId>org.json</groupId>
-        <artifactId>json</artifactId>
-        <version>20160810</version>
-      </dependency>
       <dependency>
         <groupId>com.google.code.gson</groupId>
         <artifactId>gson</artifactId>
@@ -262,13 +256,13 @@
       <dependency>
         <groupId>com.efficios.jabberwocky</groupId>
         <artifactId>jabberwocky-core</artifactId>
-        <version>0.2.9-SNAPSHOT</version>
+        <version>0.2.10-SNAPSHOT</version>
       </dependency>
 
       <dependency>
         <groupId>com.efficios.jabberwocky</groupId>
         <artifactId>jabberwocky-ctf</artifactId>
-        <version>0.2.9-SNAPSHOT</version>
+        <version>0.2.10-SNAPSHOT</version>
       </dependency>
 
     </dependencies>
