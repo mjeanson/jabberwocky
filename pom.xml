@@ -235,7 +235,7 @@
       <dependency>
         <groupId>ca.polymtl.dorsal.libdelorean</groupId>
         <artifactId>libdelorean</artifactId>
-        <version>0.6.3</version>
+        <version>0.6.6-SNAPSHOT</version>
       </dependency>
 
       <dependency>
