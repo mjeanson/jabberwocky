@@ -40,7 +40,7 @@ public abstract class StateSystemModelProvider extends TimeGraphModelProvider {
      * generate the corresponding tree render, according to all configuration
      * options like sorting, filtering etc. specified by the user.
      */
-    protected static final class TreeRenderContext {
+    public static final class TreeRenderContext {
 
         /** Trace name */
         public final String traceName;
