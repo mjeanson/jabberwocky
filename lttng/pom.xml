@@ -118,6 +118,10 @@
     </dependency>
     <dependency>
       <groupId>com.efficios.jabberwocky</groupId>
+      <artifactId>jabberwocky-timegraph</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.efficios.jabberwocky</groupId>
       <artifactId>jabberwocky-ctf</artifactId>
     </dependency>
     <dependency>

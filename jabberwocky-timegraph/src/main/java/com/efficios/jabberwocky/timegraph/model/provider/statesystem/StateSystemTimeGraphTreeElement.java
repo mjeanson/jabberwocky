@@ -9,9 +9,10 @@
 
 package com.efficios.jabberwocky.timegraph.model.provider.statesystem;
 
-import java.util.List;
-
+import ca.polymtl.dorsal.libdelorean.ITmfStateSystem;
 import com.efficios.jabberwocky.timegraph.model.render.tree.TimeGraphTreeElement;
+
+import java.util.List;
 
 /**
  * Implementation of a {@link TimeGraphTreeElement} specific for use by
@@ -22,6 +23,7 @@ import com.efficios.jabberwocky.timegraph.model.render.tree.TimeGraphTreeElement
  */
 public class StateSystemTimeGraphTreeElement extends TimeGraphTreeElement {
 
+    private final ITmfStateSystem fStateSystem;
     private final int fSourceQuark;
 
     /**
@@ -32,14 +34,22 @@ public class StateSystemTimeGraphTreeElement extends TimeGraphTreeElement {
      * @param children
      *            The children tree elements. You can pass an empty list for no
      *            children.
+     * @param ss
+     *            Reference to the state system backing this time graph
      * @param sourceQuark
      *            The state system quark wrapped by this tree element
      */
     public StateSystemTimeGraphTreeElement(String name,
             List<TimeGraphTreeElement> children,
+            ITmfStateSystem ss,
             int sourceQuark) {
         super(name, children);
+        fStateSystem = ss;
         fSourceQuark = sourceQuark;
+    }
+
+    protected ITmfStateSystem getStateSystem() {
+        return fStateSystem;
     }
 
     /**

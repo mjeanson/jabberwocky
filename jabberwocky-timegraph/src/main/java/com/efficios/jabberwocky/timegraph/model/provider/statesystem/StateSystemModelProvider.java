@@ -147,6 +147,10 @@ public abstract class StateSystemModelProvider extends TimeGraphModelProvider {
         });
     }
 
+    public @Nullable ITmfStateSystem getStateSystem() {
+        return fStateSystem;
+    }
+
     // ------------------------------------------------------------------------
     // Render generation methods
     // ------------------------------------------------------------------------
