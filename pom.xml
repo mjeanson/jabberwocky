@@ -68,6 +68,8 @@
     <module>jabberwocky-core</module>
     <module>jabberwocky-ctf</module>
     <module>jabberwocky-lttng</module>
+
+    <module>javeltrace</module>
   </modules>
 
   <build>
@@ -156,6 +158,12 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-antrun-plugin</artifactId>
           <version>1.8</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>3.0.0</version>
         </plugin>
 
         <plugin>

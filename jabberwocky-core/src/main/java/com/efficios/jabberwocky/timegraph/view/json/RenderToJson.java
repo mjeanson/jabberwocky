@@ -12,7 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-final class RenderToJson {
+public final class RenderToJson {
 
     private RenderToJson() {}
 
@@ -55,6 +55,11 @@ final class RenderToJson {
             bw.flush();
         } catch (IOException e1) {
         }
+    }
+
+    public static void printRenderToStdout(Object obj) {
+        String json = GSON.toJson(obj);
+        System.out.println(json);
     }
 
 }
