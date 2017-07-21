@@ -64,14 +64,22 @@ public class ResourcesCpuIrqModelProvider extends ResourcesBaseModelProvider {
                     /* Add the "IRQ" children. */
                     int irqsQuark = ss.getQuarkRelative(cpuQuark, Attributes.IRQS);
                     for (int irqQuark : ss.getSubAttributes(irqsQuark, false)) {
-                        int irqNumber = Ints.tryParse(ss.getAttributeName(irqQuark));
+                        Integer irqNumber = Ints.tryParse(ss.getAttributeName(irqQuark));
+                        if (irqNumber == null) {
+                            /* Invalid attribute */
+                            continue;
+                        }
                         children.add(new ResourcesIrqTreeElement(IrqType.IRQ, irqNumber, ss, irqQuark));
                     }
 
                     /* Add the "SoftIRQ" children. */
                     int softIrqsQuark = ss.getQuarkRelative(cpuQuark, Attributes.SOFT_IRQS);
                     for (int softIrqQuark : ss.getSubAttributes(softIrqsQuark, false)) {
-                        int irqNumber = Ints.tryParse(ss.getAttributeName(softIrqQuark));
+                        Integer irqNumber = Ints.tryParse(ss.getAttributeName(softIrqQuark));
+                        if (irqNumber == null) {
+                            /* Invalid attribute */
+                            continue;
+                        }
                         children.add(new ResourcesIrqTreeElement(IrqType.SOFTIRQ, irqNumber, ss, softIrqQuark));
                     }
 
