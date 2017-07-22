@@ -23,8 +23,8 @@ import java.util.List;
  */
 public class StateSystemTimeGraphTreeElement extends TimeGraphTreeElement {
 
-    private final ITmfStateSystem fStateSystem;
     private final int fSourceQuark;
+    private final transient ITmfStateSystem fStateSystem;
 
     /**
      * Constructor
