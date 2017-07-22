@@ -67,7 +67,6 @@
   <modules>
     <module>ctf</module>
     <module>jabberwocky-core</module>
-    <module>jabberwocky-timegraph</module>
     <module>lttng</module>
   </modules>
 
@@ -328,12 +327,6 @@
       <dependency>
         <groupId>com.efficios.jabberwocky</groupId>
         <artifactId>jabberwocky-core</artifactId>
-        <version>0.2.14-SNAPSHOT</version>
-      </dependency>
-
-      <dependency>
-        <groupId>com.efficios.jabberwocky</groupId>
-        <artifactId>jabberwocky-timegraph</artifactId>
         <version>0.2.14-SNAPSHOT</version>
       </dependency>
 
