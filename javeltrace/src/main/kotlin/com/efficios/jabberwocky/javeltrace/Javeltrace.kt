@@ -10,14 +10,18 @@
 @file:JvmName("Javeltrace")
 package com.efficios.jabberwocky.javeltrace;
 
+import com.efficios.jabberwocky.ctf.trace.CtfTrace
+import com.efficios.jabberwocky.ctf.trace.event.CtfTraceEvent
 import com.efficios.jabberwocky.ctf.trace.generic.GenericCtfTrace
 import com.efficios.jabberwocky.project.TraceProject
+import com.efficios.jabberwocky.trace.event.FieldValue
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.util.*
 
 /**
  * Simple standalone program taking a trace path in parameter and printing all
- * its events to stdout, one perline.
+ * its events to stdout, one per line.
  *
  * Like Babeltrace, but in Java, hence the name.
  *
@@ -37,9 +41,15 @@ fun main(args: Array<String>) {
 
     /* Retrieve an iterator on the project and read its events. */
     project.iterator().use {
+        var prevTimestamp: Long = 0
+        var i = 0
+
         while (it.hasNext()) {
             val event = it.next()
-            println(event.toString())
+            val offset = event.timestamp - prevTimestamp
+            printEvent(trace, event, offset)
+            prevTimestamp = event.timestamp
+            i++
         }
     }
 
@@ -47,4 +57,27 @@ fun main(args: Array<String>) {
     projectPath.toFile().deleteRecursively()
 }
 
+private fun printEvent(trace: CtfTrace<CtfTraceEvent>, event: CtfTraceEvent, offset: Long) {
+    val ts = event.timestamp
+    // TODO Correct the timestamp
+//    val ts2 = trace.innerTrace.timestampCyclesToNanos(ts)
+//    val timestampStr = TS_FORMAT.format(ts2)
+//    val offsetStr = TS_FORMAT.format(offset)
+    val timestampStr = ts.toString()
+    val offsetStr = String.format("%09d", offset);
 
+    val sj = StringJoiner(" ")
+            .add("[$timestampStr]")
+            .add("(+$offsetStr)")
+            .add(event.eventName + ":")
+            .add("{ cpu_id = " + event.cpu.toString() + " },")
+
+    val fieldJoiner = StringJoiner(", ", "{ ", " }")
+    for (fieldName in event.fieldNames) {
+        val fieldValue = event.getField(fieldName, FieldValue::class.java)
+        fieldJoiner.add(fieldName + " = " + fieldValue.toString())
+    }
+    sj.add(fieldJoiner.toString())
+
+    System.out.println(sj.toString())
+}
