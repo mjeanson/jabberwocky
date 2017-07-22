@@ -9,9 +9,9 @@
 
 package com.efficios.jabberwocky.project
 
+import com.efficios.jabberwocky.collection.TraceCollection
 import com.efficios.jabberwocky.trace.ITrace
 import com.efficios.jabberwocky.trace.event.ITraceEvent
-import com.efficios.jabberwocky.collection.TraceCollection
 import java.nio.file.Files
 import java.nio.file.Path
 
@@ -22,6 +22,14 @@ class TraceProject<out E : ITraceEvent, out T : ITrace<E>> (override val name: S
     init {
         if (!Files.isReadable(directory) || !Files.isWritable(directory)) throw IllegalArgumentException("Invalid project directory")
         if (traceCollections.isEmpty()) throw IllegalArgumentException("Project needs at least 1 trace")
+    }
+
+    companion object {
+        @JvmStatic
+        fun <X: ITraceEvent, Y: ITrace<X>> ofSingleTrace(name: String, directory: Path, trace: Y): ITraceProject<X, Y> {
+            val collection = TraceCollection<X, Y>(setOf(trace))
+            return TraceProject<X, Y>(name, directory, setOf(collection))
+        }
     }
 
     override fun iterator(): ITraceProjectIterator<E> {
@@ -40,4 +48,5 @@ class TraceProject<out E : ITraceEvent, out T : ITrace<E>> (override val name: S
             .flatMap { collection -> collection.traces }
             .map { trace -> trace.endTime }
             .max() ?: 0L
+
 }

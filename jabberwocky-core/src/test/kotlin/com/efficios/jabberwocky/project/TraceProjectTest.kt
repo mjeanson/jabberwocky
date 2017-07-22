@@ -19,6 +19,7 @@ import org.junit.Test
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 
 class TraceProjectTest {
 
@@ -47,5 +48,41 @@ class TraceProjectTest {
     @Test
     fun testEndTime() {
         assertEquals(10L, project.endTime)
+    }
+
+    @Test
+    fun testSingleTraceFactoryMethod() {
+        val projectName1 = "test-proj1"
+        val projectName2 = "test-proj2"
+        val projectPath1 = Files.createTempDirectory(projectName1)
+        val projectPath2 = Files.createTempDirectory(projectName2)
+        try {
+
+            val collection1 = TraceCollection(listOf(TraceStubs.TraceStub1()))
+            val project1 = TraceProject(projectName1, projectPath1, listOf(collection1))
+            val project2 = TraceProject.ofSingleTrace(projectName2, projectPath2, TraceStubs.TraceStub1())
+
+            /* Ensure both projects see the same events */
+            // Java's try-with-resources would look better here!
+            val iter1 = project1.iterator()
+            val iter2 = project2.iterator()
+            try {
+                while(iter1.hasNext()) {
+                    val event1 = iter1.next()
+                    val event2 = iter2.next()
+                    assertEquals(event1, event2)
+                }
+                assertFalse(iter2.hasNext())
+
+            } finally {
+                iter1.close()
+                iter2.close()
+            }
+
+
+        } finally {
+            projectPath1.toFile().deleteRecursively()
+            projectPath2.toFile().deleteRecursively()
+        }
     }
 }
