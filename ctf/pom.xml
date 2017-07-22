@@ -24,28 +24,6 @@
 
   <name>Common Trace Format (CTF) Support for Jabberwocky</name>
 
-  <build>
-    <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
-    <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
-
-    <plugins>
-      <plugin>
-        <artifactId>kotlin-maven-plugin</artifactId>
-        <groupId>org.jetbrains.kotlin</groupId>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
-      </plugin>
-    </plugins>
-  </build>
-
   <dependencies>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
