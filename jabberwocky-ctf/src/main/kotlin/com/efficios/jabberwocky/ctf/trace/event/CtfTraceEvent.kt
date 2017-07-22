@@ -9,11 +9,13 @@
 
 package com.efficios.jabberwocky.ctf.trace.event
 
+import com.efficios.jabberwocky.ctf.trace.CtfTrace
 import com.efficios.jabberwocky.trace.event.TraceEvent
 import com.efficios.jabberwocky.trace.event.FieldValue
 
-open class CtfTraceEvent(timestamp: Long,
-                    cpu: Int,
-                    eventName: String,
-                    eventFields: Map<String, FieldValue>,
-                    attributes: Map<String, String>?) : TraceEvent(timestamp, cpu, eventName, eventFields, attributes)
+open class CtfTraceEvent(trace: CtfTrace<CtfTraceEvent>,
+                         timestamp: Long,
+                         cpu: Int,
+                         eventName: String,
+                         eventFields: Map<String, FieldValue>,
+                         attributes: Map<String, String>?) : TraceEvent(trace, timestamp, cpu, eventName, eventFields, attributes)

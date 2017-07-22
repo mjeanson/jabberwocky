@@ -44,7 +44,7 @@ class GenericCtfTraceEventFactory(private val trace: CtfTrace<CtfTraceEvent>) : 
             val duration = (durationDef as IntegerDefinition).getValue()
             val endTime = ts + duration
 
-            return CtfTraceLostEvent(ts, endTime, cpu, eventName, nbLostEvents)
+            return CtfTraceLostEvent(trace, ts, endTime, cpu, eventName, nbLostEvents)
         }
 
         // TODO Rest could be lazy-loaded at some point?
@@ -79,7 +79,7 @@ class GenericCtfTraceEventFactory(private val trace: CtfTrace<CtfTraceEvent>) : 
         }
 
         /* No custom attributes at the moment */
-        return CtfTraceEvent(ts, cpu, eventName, fields.build(), null)
+        return CtfTraceEvent(trace, ts, cpu, eventName, fields.build(), null)
     }
 
 }

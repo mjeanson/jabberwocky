@@ -25,21 +25,31 @@ internal class TraceStubs {
         override fun close() {}
     }
 
-    abstract class TraceStubBase(private val events: List<TraceEvent>) : Trace<TraceEvent>() {
+    abstract class TraceStubBase() : Trace<TraceEvent>() {
+
+        protected abstract val events: List<TraceEvent>
+
         final override fun iterator(): ITraceIterator<TraceEvent> {
             return TraceStubIterator(events.iterator())
         }
     }
 
-    class TraceStub1 : TraceStubBase(listOf(
-            TraceEvent( 2, 0, EVENT_NAME_A, emptyMap(), null),
-            TraceEvent( 5, 0, EVENT_NAME_B, emptyMap(), null),
-            TraceEvent(10, 1, EVENT_NAME_C, emptyMap(), null)
-    ))
+    class TraceStub1 : TraceStubBase() {
 
-    class TraceStub2 : TraceStubBase(listOf(
-            TraceEvent( 4, 1, EVENT_NAME_B, emptyMap(), null),
-            TraceEvent( 6, 0, EVENT_NAME_B, emptyMap(), null),
-            TraceEvent( 8, 1, EVENT_NAME_A, emptyMap(), null)
-    ))
+        override val events = listOf(
+                TraceEvent(this, 2, 0, EVENT_NAME_A, emptyMap(), null),
+                TraceEvent(this, 5, 0, EVENT_NAME_B, emptyMap(), null),
+                TraceEvent(this, 10, 1, EVENT_NAME_C, emptyMap(), null))
+    }
+
+    class TraceStub2 : TraceStubBase() {
+
+        override val events = listOf(
+                TraceEvent(this, 4, 1, EVENT_NAME_B, emptyMap(), null),
+                TraceEvent(this, 6, 0, EVENT_NAME_B, emptyMap(), null),
+                TraceEvent(this, 8, 1, EVENT_NAME_A, emptyMap(), null))
+
+    }
+
+
 }
