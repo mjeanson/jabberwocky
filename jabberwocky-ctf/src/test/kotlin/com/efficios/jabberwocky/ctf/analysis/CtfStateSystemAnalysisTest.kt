@@ -86,7 +86,7 @@ class CtfStateSystemAnalysisTest {
             return TraceCollection(project.traceCollections.flatMap { it.traces })
         }
 
-        override fun handleEvent(ss: ITmfStateSystemBuilder, event: ITraceEvent) {
+        override fun handleEvent(ss: ITmfStateSystemBuilder, event: ITraceEvent, trackedState: Array<Any>?) {
             /* Count the number of seen events in a "count" attribute */
             val quark = ss.getQuarkAbsoluteAndAdd(attribName)
             ss.incrementAttribute(event.timestamp, quark)

@@ -21,7 +21,7 @@ import com.efficios.jabberwocky.trace.event.ITraceEvent
 import java.io.IOException
 import java.nio.file.Files
 
-abstract class StateSystemAnalysis : IAnalysis  {
+abstract class StateSystemAnalysis : IAnalysis {
 
     companion object {
         private const val ANALYSES_DIRECTORY = "analyses"
@@ -63,23 +63,32 @@ abstract class StateSystemAnalysis : IAnalysis  {
 
     private fun buildForProject(project: ITraceProject<*, *>, stateSystem: ITmfStateSystemBuilder) {
         val traces = filterTraces(project)
-        // TODO This iteration could eventually moved to a central location, so that the events are
+        val trackedState = trackedState()
+        // TODO This iteration could eventually move to a central location, so that the events are
         // read once then dispatched to several "state providers".
         // However some analyses may not need all events from all traces in a project. We'll see...
         var latestTimestamp = project.startTime
         traces.iterator().use {
-            while(it.hasNext()) {
+            while (it.hasNext()) {
                 val event = it.next()
-                handleEvent(stateSystem, event)
+                handleEvent(stateSystem, event, trackedState)
                 latestTimestamp = event.timestamp
             }
         }
         stateSystem.closeHistory(latestTimestamp)
     }
 
-    abstract val providerVersion: Int
+    protected abstract val providerVersion: Int
 
-    abstract fun filterTraces(project: ITraceProject<*, *>) : ITraceCollection<*, *>
+    protected abstract fun filterTraces(project: ITraceProject<*, *>): ITraceCollection<*, *>
 
-    abstract fun handleEvent(ss: ITmfStateSystemBuilder, event: ITraceEvent)
+    /**
+     * Override this to specify tracked state objects. This exact array
+     * will be passed to each call to handleEvent(), so the implementation
+     * can use it to track state between every call.
+     */
+    protected open fun trackedState(): Array<Any>? = null
+
+    protected abstract fun handleEvent(ss: ITmfStateSystemBuilder, event: ITraceEvent, trackedState: Array<Any>?)
+
 }

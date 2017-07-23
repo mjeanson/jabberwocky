@@ -35,7 +35,7 @@ class EventStatsAnalysis : StateSystemAnalysis() {
         return TraceCollection(project.traceCollections.flatMap { it.traces })
     }
 
-    override fun handleEvent(ss: ITmfStateSystemBuilder, event: ITraceEvent) {
+    override fun handleEvent(ss: ITmfStateSystemBuilder, event: ITraceEvent, trackedState: Array<Any>?) {
         /* Increment the totals, then the attributes corresponding to this event's name and cpu */
         val ts = event.timestamp
 

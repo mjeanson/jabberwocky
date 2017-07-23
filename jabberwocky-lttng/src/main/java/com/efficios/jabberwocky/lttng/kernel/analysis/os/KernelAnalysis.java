@@ -190,12 +190,7 @@ public class KernelAnalysis extends StateSystemAnalysis {
     }
 
     @Override
-    public void handleEvent(@Nullable ITmfStateSystemBuilder ss, @Nullable ITraceEvent event) {
-        if (ss == null || event == null) {
-            /* JDT doesn't recognize Kotlin's non-null types */
-            throw new IllegalStateException();
-        }
-
+    public void handleEvent(ITmfStateSystemBuilder ss, ITraceEvent event, Object @Nullable [] trackedState) {
         final String eventName = event.getEventName();
 
         try {
