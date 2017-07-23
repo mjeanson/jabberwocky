@@ -12,7 +12,7 @@ package com.efficios.jabberwocky.views.timegraph.model.render.states;
 import java.util.Map;
 import java.util.Objects;
 
-import com.efficios.jabberwocky.config.ConfigOption;
+import com.efficios.jabberwocky.common.ConfigOption;
 import com.efficios.jabberwocky.views.timegraph.model.render.LineThickness;
 import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeElement;
 import com.efficios.jabberwocky.views.common.ColorDefinition;

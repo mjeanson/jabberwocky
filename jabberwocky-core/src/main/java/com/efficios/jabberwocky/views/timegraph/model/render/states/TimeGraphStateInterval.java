@@ -11,7 +11,7 @@ package com.efficios.jabberwocky.views.timegraph.model.render.states;
 
 import java.util.Map;
 
-import com.efficios.jabberwocky.config.ConfigOption;
+import com.efficios.jabberwocky.common.ConfigOption;
 import com.efficios.jabberwocky.views.common.ColorDefinition;
 import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeElement;
 import org.eclipse.jdt.annotation.Nullable;

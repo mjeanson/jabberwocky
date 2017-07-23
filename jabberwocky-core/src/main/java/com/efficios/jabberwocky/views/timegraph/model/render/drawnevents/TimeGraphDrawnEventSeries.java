@@ -9,7 +9,7 @@
 
 package com.efficios.jabberwocky.views.timegraph.model.render.drawnevents;
 
-import com.efficios.jabberwocky.config.ConfigOption;
+import com.efficios.jabberwocky.common.ConfigOption;
 import com.efficios.jabberwocky.views.common.ColorDefinition;
 
 /**
