@@ -22,14 +22,12 @@ import com.efficios.jabberwocky.collection.TraceCollection;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.handlers.*;
 import com.efficios.jabberwocky.lttng.kernel.trace.LttngKernelTrace;
 import com.efficios.jabberwocky.lttng.kernel.trace.layout.ILttngKernelEventLayout;
-import com.efficios.jabberwocky.lttng.kernel.trace.layout.Lttng29EventLayout;
 import com.efficios.jabberwocky.project.ITraceProject;
+import com.efficios.jabberwocky.trace.ITrace;
 import com.efficios.jabberwocky.trace.event.ITraceEvent;
-import com.google.common.collect.ImmutableMap;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.Collection;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
@@ -61,16 +59,11 @@ import static java.util.Objects.requireNonNull;
  */
 public class KernelAnalysis extends StateSystemAnalysis {
 
-    // FIXME Layout shouldn't be fixed, should come from the trace
-    private static final KernelAnalysis INSTANCE = new KernelAnalysis(Lttng29EventLayout.getInstance());
+    private static final KernelAnalysis INSTANCE = new KernelAnalysis();
 
-    public static final KernelAnalysis instance() {
+    public static KernelAnalysis instance() {
         return INSTANCE;
     }
-
-    // ------------------------------------------------------------------------
-    // Static fields
-    // ------------------------------------------------------------------------
 
     /**
      * Version number of this state provider. Please bump this if you modify the
@@ -78,76 +71,7 @@ public class KernelAnalysis extends StateSystemAnalysis {
      */
     private static final int VERSION = 27;
 
-    // ------------------------------------------------------------------------
-    // Fields
-    // ------------------------------------------------------------------------
-
-    private final Map<String, KernelEventHandler> fEventNames;
-    private final ILttngKernelEventLayout fLayout;
-
-    private final KernelEventHandler fSysEntryHandler;
-    private final KernelEventHandler fSysExitHandler;
-
-    // ------------------------------------------------------------------------
-    // Constructor
-    // ------------------------------------------------------------------------
-
-    /**
-     * Instantiate a new state provider plugin.
-     *
-     * FIXME Pass the layout to the call to execute(), somehow.
-     *
-     * @param layout
-     *            The event layout to use for this state provider. Usually
-     *            depending on the tracer implementation.
-     */
-    public KernelAnalysis(ILttngKernelEventLayout layout) {
-        super();
-        fLayout = layout;
-        fEventNames = buildEventNames(layout);
-
-        fSysEntryHandler = new SysEntryHandler(fLayout);
-        fSysExitHandler = new SysExitHandler(fLayout);
-    }
-
-    // ------------------------------------------------------------------------
-    // Event names management
-    // ------------------------------------------------------------------------
-
-    private static Map<String, KernelEventHandler> buildEventNames(ILttngKernelEventLayout layout) {
-        ImmutableMap.Builder<String, KernelEventHandler> builder = ImmutableMap.builder();
-
-        builder.put(layout.eventIrqHandlerEntry(), new IrqEntryHandler(layout));
-        builder.put(layout.eventIrqHandlerExit(), new IrqExitHandler(layout));
-        builder.put(layout.eventSoftIrqEntry(), new SoftIrqEntryHandler(layout));
-        builder.put(layout.eventSoftIrqExit(), new SoftIrqExitHandler(layout));
-        builder.put(layout.eventSoftIrqRaise(), new SoftIrqRaiseHandler(layout));
-        builder.put(layout.eventSchedSwitch(), new SchedSwitchHandler(layout));
-        builder.put(layout.eventSchedPiSetprio(), new PiSetprioHandler(layout));
-        builder.put(layout.eventSchedProcessFork(), new ProcessForkHandler(layout));
-        builder.put(layout.eventSchedProcessExit(), new ProcessExitHandler(layout));
-        builder.put(layout.eventSchedProcessFree(), new ProcessFreeHandler(layout));
-        builder.put(layout.eventSchedProcessWaking(), new SchedWakeupHandler(layout));
-        builder.put(layout.eventSchedMigrateTask(), new SchedMigrateTaskHandler(layout));
-
-        for (String s : layout.getIPIIrqVectorsEntries()) {
-            builder.put(s, new IPIEntryHandler(layout));
-        }
-        for (String s : layout.getIPIIrqVectorsExits()) {
-            builder.put(s, new IPIExitHandler(layout));
-        }
-
-        final String eventStatedumpProcessState = layout.eventStatedumpProcessState();
-        if (eventStatedumpProcessState != null) {
-            builder.put(eventStatedumpProcessState, new StateDumpHandler(layout));
-        }
-
-        for (String eventSchedWakeup : layout.eventsSchedWakeup()) {
-            builder.put(eventSchedWakeup, new SchedWakeupHandler(layout));
-        }
-
-        return builder.build();
-    }
+    private KernelAnalysis() {}
 
     // ------------------------------------------------------------------------
     // IAnalysis
@@ -191,6 +115,14 @@ public class KernelAnalysis extends StateSystemAnalysis {
 
     @Override
     public void handleEvent(ITmfStateSystemBuilder ss, ITraceEvent event, Object @Nullable [] trackedState) {
+        ITrace trace = event.getTrace();
+        if (!(trace instanceof LttngKernelTrace)) {
+            /* We shouldn't have received this event... */
+            return;
+        }
+        LttngKernelTrace kernelTrace = (LttngKernelTrace) trace;
+        KernelAnalysisEventDefinitions defs = KernelAnalysisEventDefinitions.getDefsFromLayout(kernelTrace.getKernelEventLayout());
+
         final String eventName = event.getEventName();
 
         try {
@@ -198,12 +130,12 @@ public class KernelAnalysis extends StateSystemAnalysis {
              * Feed event to the history system if it's known to cause a state
              * transition.
              */
-            KernelEventHandler handler = fEventNames.get(eventName);
+            KernelEventHandler handler = defs.getEventNames().get(eventName);
             if (handler == null) {
-                if (isSyscallExit(eventName)) {
-                    handler = fSysExitHandler;
-                } else if (isSyscallEntry(eventName)) {
-                    handler = fSysEntryHandler;
+                if (isSyscallExit(defs.getLayout(), eventName)) {
+                    handler = defs.getSysExitHandler();
+                } else if (isSyscallEntry(defs.getLayout(), eventName)) {
+                    handler = defs.getSysEntryHandler();
                 }
             }
             if (handler != null) {
@@ -237,14 +169,14 @@ public class KernelAnalysis extends StateSystemAnalysis {
         }
     }
 
-    private boolean isSyscallEntry(String eventName) {
-        return (eventName.startsWith(fLayout.eventSyscallEntryPrefix())
-                || eventName.startsWith(fLayout.eventCompatSyscallEntryPrefix()));
+    private static boolean isSyscallEntry(ILttngKernelEventLayout layout, String eventName) {
+        return (eventName.startsWith(layout.eventSyscallEntryPrefix())
+                || eventName.startsWith(layout.eventCompatSyscallEntryPrefix()));
     }
 
-    private boolean isSyscallExit(String eventName) {
-        return (eventName.startsWith(fLayout.eventSyscallExitPrefix()) ||
-                eventName.startsWith(fLayout.eventCompatSyscallExitPrefix()));
+    private static boolean isSyscallExit(ILttngKernelEventLayout layout, String eventName) {
+        return (eventName.startsWith(layout.eventSyscallExitPrefix())
+                || eventName.startsWith(layout.eventCompatSyscallExitPrefix()));
     }
 
 }

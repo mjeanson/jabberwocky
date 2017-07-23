@@ -53,7 +53,7 @@ public class KernelAnalysisTest {
     public static final ExtractedCtfTestTrace NON_KERNEL_TRACE = new ExtractedCtfTestTrace(CtfTestTrace.CYG_PROFILE);
 
     private static final String PROJECT_NAME = "test-proj";
-    private static final KernelAnalysis ANALYSIS = new KernelAnalysis(LttngEventLayout.getInstance());
+    private static final KernelAnalysis ANALYSIS = KernelAnalysis.instance();
 
     private Path fProjectPath;
 
