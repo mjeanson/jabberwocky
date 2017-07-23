@@ -16,10 +16,10 @@ import java.util.function.Supplier;
 import com.efficios.jabberwocky.lttng.kernel.views.timegraph.resources.elements.ResourcesIrqTreeElement;
 
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.KernelAnalysis;
-import com.efficios.jabberwocky.timegraph.model.provider.states.ITimeGraphModelStateProvider;
-import com.efficios.jabberwocky.timegraph.model.provider.statesystem.StateSystemModelProvider;
-import com.efficios.jabberwocky.timegraph.model.render.tree.TimeGraphTreeElement;
-import com.efficios.jabberwocky.timegraph.model.render.tree.TimeGraphTreeRender;
+import com.efficios.jabberwocky.views.timegraph.model.provider.states.ITimeGraphModelStateProvider;
+import com.efficios.jabberwocky.views.timegraph.model.provider.statesystem.StateSystemModelProvider;
+import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeElement;
+import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeRender;
 
 /**
  * Base class for Resources (for now, CPUs and IRQs) model providers.

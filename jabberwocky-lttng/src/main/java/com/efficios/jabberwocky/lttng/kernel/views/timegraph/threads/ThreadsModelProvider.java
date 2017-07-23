@@ -21,11 +21,11 @@ import java.util.stream.Stream;
 
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.Attributes;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.KernelAnalysis;
-import com.efficios.jabberwocky.timegraph.model.provider.arrows.ITimeGraphModelArrowProvider;
-import com.efficios.jabberwocky.timegraph.model.provider.states.ITimeGraphModelStateProvider;
-import com.efficios.jabberwocky.timegraph.model.provider.statesystem.StateSystemModelProvider;
-import com.efficios.jabberwocky.timegraph.model.render.tree.TimeGraphTreeElement;
-import com.efficios.jabberwocky.timegraph.model.render.tree.TimeGraphTreeRender;
+import com.efficios.jabberwocky.views.timegraph.model.provider.arrows.ITimeGraphModelArrowProvider;
+import com.efficios.jabberwocky.views.timegraph.model.provider.states.ITimeGraphModelStateProvider;
+import com.efficios.jabberwocky.views.timegraph.model.provider.statesystem.StateSystemModelProvider;
+import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeElement;
+import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeRender;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 

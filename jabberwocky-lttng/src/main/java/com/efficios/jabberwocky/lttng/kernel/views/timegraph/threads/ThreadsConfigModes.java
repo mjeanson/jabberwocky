@@ -9,8 +9,8 @@
 
 package com.efficios.jabberwocky.lttng.kernel.views.timegraph.threads;
 
-import com.efficios.jabberwocky.timegraph.model.provider.ITimeGraphModelProvider.FilterMode;
-import com.efficios.jabberwocky.timegraph.model.provider.ITimeGraphModelProvider.SortingMode;
+import com.efficios.jabberwocky.views.timegraph.model.provider.ITimeGraphModelProvider.FilterMode;
+import com.efficios.jabberwocky.views.timegraph.model.provider.ITimeGraphModelProvider.SortingMode;
 
 public interface ThreadsConfigModes {
 

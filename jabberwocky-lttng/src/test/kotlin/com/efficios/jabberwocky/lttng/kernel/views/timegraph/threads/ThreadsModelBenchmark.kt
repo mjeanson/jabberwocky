@@ -14,9 +14,9 @@ package com.efficios.jabberwocky.lttng.kernel.views.timegraph.threads
 import com.efficios.jabberwocky.common.TimeRange
 import com.efficios.jabberwocky.lttng.kernel.trace.LttngKernelTrace
 import com.efficios.jabberwocky.project.TraceProject
-import com.efficios.jabberwocky.timegraph.model.provider.states.ITimeGraphModelStateProvider
-import com.efficios.jabberwocky.timegraph.model.render.states.TimeGraphStateRender
-import com.efficios.jabberwocky.timegraph.model.render.tree.TimeGraphTreeRender
+import com.efficios.jabberwocky.views.timegraph.model.provider.states.ITimeGraphModelStateProvider
+import com.efficios.jabberwocky.views.timegraph.model.render.states.TimeGraphStateRender
+import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeRender
 import java.nio.file.Files
 import java.nio.file.Paths
 

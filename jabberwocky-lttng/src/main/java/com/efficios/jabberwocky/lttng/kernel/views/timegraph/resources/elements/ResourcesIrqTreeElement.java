@@ -12,7 +12,7 @@ package com.efficios.jabberwocky.lttng.kernel.views.timegraph.resources.elements
 import java.util.Collections;
 
 import ca.polymtl.dorsal.libdelorean.ITmfStateSystem;
-import com.efficios.jabberwocky.timegraph.model.provider.statesystem.StateSystemTimeGraphTreeElement;
+import com.efficios.jabberwocky.views.timegraph.model.provider.statesystem.StateSystemTimeGraphTreeElement;
 
 /**
  * Element of the Resources time graph which represents an IRQ (Software or

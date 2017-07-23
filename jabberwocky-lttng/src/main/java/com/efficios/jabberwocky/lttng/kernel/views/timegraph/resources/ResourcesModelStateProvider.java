@@ -16,11 +16,11 @@ import com.efficios.jabberwocky.lttng.kernel.views.timegraph.KernelAnalysisState
 
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.KernelAnalysis;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.StateValues;
-import com.efficios.jabberwocky.timegraph.model.provider.statesystem.StateSystemModelStateProvider;
-import com.efficios.jabberwocky.timegraph.model.provider.statesystem.StateSystemTimeGraphTreeElement;
-import com.efficios.jabberwocky.timegraph.model.render.StateDefinition;
-import com.efficios.jabberwocky.timegraph.model.render.states.BasicTimeGraphStateInterval;
-import com.efficios.jabberwocky.timegraph.model.render.states.TimeGraphStateInterval;
+import com.efficios.jabberwocky.views.timegraph.model.provider.statesystem.StateSystemModelStateProvider;
+import com.efficios.jabberwocky.views.timegraph.model.provider.statesystem.StateSystemTimeGraphTreeElement;
+import com.efficios.jabberwocky.views.timegraph.model.render.StateDefinition;
+import com.efficios.jabberwocky.views.timegraph.model.render.states.BasicTimeGraphStateInterval;
+import com.efficios.jabberwocky.views.timegraph.model.render.states.TimeGraphStateInterval;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 

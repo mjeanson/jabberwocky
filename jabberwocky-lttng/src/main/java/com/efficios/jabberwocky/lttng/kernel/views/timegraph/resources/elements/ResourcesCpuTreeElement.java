@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import ca.polymtl.dorsal.libdelorean.ITmfStateSystem;
-import com.efficios.jabberwocky.timegraph.model.provider.statesystem.StateSystemTimeGraphTreeElement;
-import com.efficios.jabberwocky.timegraph.model.render.tree.TimeGraphTreeElement;
+import com.efficios.jabberwocky.views.timegraph.model.provider.statesystem.StateSystemTimeGraphTreeElement;
+import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeElement;
 import com.efficios.jabberwocky.trace.event.ITraceEvent;
 
 /**

@@ -19,8 +19,8 @@ import java.util.function.Function;
 import com.efficios.jabberwocky.lttng.kernel.views.timegraph.resources.elements.ResourcesIrqTreeElement;
 
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.Attributes;
-import com.efficios.jabberwocky.timegraph.model.render.tree.TimeGraphTreeElement;
-import com.efficios.jabberwocky.timegraph.model.render.tree.TimeGraphTreeRender;
+import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeElement;
+import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeRender;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.primitives.Ints;
 
