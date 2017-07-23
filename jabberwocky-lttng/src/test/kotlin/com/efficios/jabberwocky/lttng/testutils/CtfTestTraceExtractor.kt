@@ -7,7 +7,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package com.efficios.jabberwocky.lttng.trace
+package com.efficios.jabberwocky.lttng.testutils
 
 import org.eclipse.tracecompass.ctf.core.CTFException
 import org.eclipse.tracecompass.ctf.core.trace.CTFTrace
@@ -16,10 +16,7 @@ import java.io.IOException
 import java.net.URL
 import java.nio.file.Files
 import java.nio.file.Path
-import java.util.*
-import java.util.jar.JarEntry
 import java.util.jar.JarFile
-import java.util.stream.Collectors
 
 /**
  * Wrapper around [CtfTestTrace] that will extract the resources to a

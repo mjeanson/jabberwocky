@@ -18,7 +18,7 @@ import com.efficios.jabberwocky.collection.TraceCollection;
 import com.efficios.jabberwocky.ctf.trace.generic.GenericCtfTrace;
 import com.efficios.jabberwocky.lttng.kernel.trace.LttngKernelTrace;
 import com.efficios.jabberwocky.lttng.kernel.trace.layout.LttngEventLayout;
-import com.efficios.jabberwocky.lttng.trace.ExtractedCtfTestTrace;
+import com.efficios.jabberwocky.lttng.testutils.ExtractedCtfTestTrace;
 import com.efficios.jabberwocky.project.ITraceProject;
 import com.efficios.jabberwocky.project.TraceProject;
 import com.efficios.jabberwocky.trace.ITrace;
