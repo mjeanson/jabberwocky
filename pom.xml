@@ -14,7 +14,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <prerequisites>
-    <maven>3.2.2</maven>
+    <maven>${required-maven-version}</maven>
   </prerequisites>
 
   <groupId>com.efficios.jabberwocky</groupId>
@@ -23,10 +23,11 @@
   <packaging>pom</packaging>
 
   <properties>
+    <required-maven-version>3.2.2</required-maven-version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
     <kotlin.version>1.1.2-4</kotlin.version>
     <kotlin.compiler.jvmTarget>1.8</kotlin.compiler.jvmTarget>
-
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
   <distributionManagement>
@@ -74,10 +75,15 @@
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+      </plugin>
+
       <!-- Config for mixed Java/Kotlin projects -->
       <plugin>
-        <artifactId>kotlin-maven-plugin</artifactId>
         <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-maven-plugin</artifactId>
         <executions>
           <execution>
             <id>compile</id>
@@ -180,6 +186,32 @@
             <source>1.8</source>
             <target>1.8</target>
           </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-enforcer-plugin</artifactId>
+          <version>1.4.1</version>
+          <inherited>true</inherited>
+          <executions>
+            <execution>
+              <id>enforce-maven-version</id>
+              <goals>
+                <goal>enforce</goal>
+              </goals>
+              <configuration>
+                <rules>
+                  <requireMavenVersion>
+                    <version>${required-maven-version}</version>
+                  </requireMavenVersion>
+                  <requireJavaVersion>
+                    <version>1.8</version>
+                  </requireJavaVersion>
+                </rules>
+                <fail>true</fail>
+              </configuration>
+            </execution>
+          </executions>
         </plugin>
 
         <plugin>
