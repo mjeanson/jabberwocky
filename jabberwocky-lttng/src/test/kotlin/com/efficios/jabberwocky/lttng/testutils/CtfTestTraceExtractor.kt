@@ -28,7 +28,7 @@ import java.util.jar.JarFile
 
  * @author Alexandre Montplaisir
  */
-class CtfTestTraceExtractor
+internal class CtfTestTraceExtractor
 /**
  * Constructor
 

@@ -15,19 +15,15 @@ import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
 import ca.polymtl.dorsal.libdelorean.exceptions.StateSystemDisposedException;
 import ca.polymtl.dorsal.libdelorean.interval.ITmfStateInterval;
 import ca.polymtl.dorsal.libdelorean.statevalue.ITmfStateValue;
-import com.efficios.jabberwocky.collection.ITraceCollection;
-import com.efficios.jabberwocky.collection.TraceCollection;
 import com.efficios.jabberwocky.common.TimeRange;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.Attributes;
-import com.efficios.jabberwocky.lttng.kernel.trace.LttngKernelTrace;
-import com.efficios.jabberwocky.lttng.testutils.ExtractedCtfTestTrace;
+import com.efficios.jabberwocky.lttng.testutils.ExtractedLttngKernelTestTrace;
 import com.efficios.jabberwocky.project.ITraceProject;
 import com.efficios.jabberwocky.project.TraceProject;
 import com.efficios.jabberwocky.views.timegraph.model.render.states.TimeGraphStateInterval;
 import com.efficios.jabberwocky.views.timegraph.model.render.states.TimeGraphStateRender;
 import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeElement;
 import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeRender;
-import com.efficios.jabberwocky.trace.ITrace;
 import com.google.common.collect.Iterables;
 import com.google.common.io.MoreFiles;
 import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace;
@@ -38,7 +34,6 @@ import org.junit.rules.Timeout;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -53,7 +48,7 @@ import static org.junit.Assert.*;
 public class ThreadsModelProviderTest {
 
     @ClassRule
-    public static final ExtractedCtfTestTrace TEST_TRACE = new ExtractedCtfTestTrace(CtfTestTrace.KERNEL);
+    public static final ExtractedLttngKernelTestTrace TEST_TRACE = new ExtractedLttngKernelTestTrace(CtfTestTrace.KERNEL);
 
     /** Timeout the tests after 2 minutes */
     @Rule
@@ -67,8 +62,7 @@ public class ThreadsModelProviderTest {
         provider.disableFilterMode(0);
     }
 
-    private Path fProjectPath;
-    private ITrace fTrace;
+    private Path projectPath;
 
     /**
      * Test class setup
@@ -76,20 +70,13 @@ public class ThreadsModelProviderTest {
     @Before
     public void setupClass() {
         try {
-            fProjectPath = Files.createTempDirectory(PROJECT_NAME);
+            projectPath = Files.createTempDirectory(PROJECT_NAME);
         } catch (IOException e) {
             fail(e.getMessage());
         }
 
-        fTrace = new LttngKernelTrace(TEST_TRACE.getTrace().getTracePath());
-        ITraceProject project = newProject(fTrace);
-
+        ITraceProject project = TraceProject.ofSingleTrace(PROJECT_NAME, projectPath, TEST_TRACE.getTrace());
         provider.setTraceProject(project);
-    }
-
-    private ITraceProject newProject(ITrace trace) {
-        ITraceCollection coll = new TraceCollection(Collections.singleton(trace));
-        return new TraceProject(PROJECT_NAME, fProjectPath, Collections.singleton(coll));
     }
 
     /**
@@ -99,10 +86,11 @@ public class ThreadsModelProviderTest {
     public void teardownClass() {
         provider.setTraceProject(null);
 
-        if (fProjectPath != null) {
+        if (projectPath != null) {
             try {
-                MoreFiles.deleteRecursively(fProjectPath);
+                MoreFiles.deleteRecursively(projectPath);
             } catch (IOException e) {
+                /* Ignore */
             }
         }
     }
@@ -114,12 +102,11 @@ public class ThreadsModelProviderTest {
     @Test
     public void test1s() {
         try {
-            ITrace trace = fTrace;
+
             final ITmfStateSystem ss = provider.getStateSystem();
-            assertNotNull(trace);
             assertNotNull(ss);
 
-            final long start = trace.getStartTime();
+            final long start = provider.getTraceProject().getStartTime();
             final long end = start + 1 * NANOS_PER_SECOND;
             final TimeRange range = TimeRange.of(start, end);
 
@@ -217,9 +204,9 @@ public class ThreadsModelProviderTest {
      */
     @Test
     public void testBounds() {
-        ITrace trace = fTrace;
+        final ITraceProject project = provider.getTraceProject();
         final ITmfStateSystem ss = provider.getStateSystem();
-        assertNotNull(trace);
+        assertNotNull(project);
         assertNotNull(ss);
 
         /*
@@ -229,7 +216,7 @@ public class ThreadsModelProviderTest {
          * multi-states at the beginning/end, since those may have synthetic
          * start/end times.
          */
-        TimeRange range = TimeRange.of(trace.getStartTime(), trace.getEndTime());
+        TimeRange range = TimeRange.of(project.getStartTime(), project.getEndTime());
         String treeElemName = "0/0 - swapper";
         long viewWidth = 1000;
 

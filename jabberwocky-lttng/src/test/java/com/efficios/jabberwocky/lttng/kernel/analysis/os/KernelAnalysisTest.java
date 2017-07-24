@@ -13,15 +13,10 @@
 package com.efficios.jabberwocky.lttng.kernel.analysis.os;
 
 import ca.polymtl.dorsal.libdelorean.ITmfStateSystem;
-import com.efficios.jabberwocky.collection.ITraceCollection;
-import com.efficios.jabberwocky.collection.TraceCollection;
-import com.efficios.jabberwocky.ctf.trace.generic.GenericCtfTrace;
-import com.efficios.jabberwocky.lttng.kernel.trace.LttngKernelTrace;
-import com.efficios.jabberwocky.lttng.kernel.trace.layout.LttngEventLayout;
-import com.efficios.jabberwocky.lttng.testutils.ExtractedCtfTestTrace;
+import com.efficios.jabberwocky.lttng.testutils.ExtractedGenericCtfTestTrace;
+import com.efficios.jabberwocky.lttng.testutils.ExtractedLttngKernelTestTrace;
 import com.efficios.jabberwocky.project.ITraceProject;
 import com.efficios.jabberwocky.project.TraceProject;
-import com.efficios.jabberwocky.trace.ITrace;
 import com.google.common.io.MoreFiles;
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace;
@@ -33,8 +28,8 @@ import org.junit.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
 
@@ -48,17 +43,17 @@ import static org.junit.Assert.*;
 public class KernelAnalysisTest {
 
     @ClassRule
-    public static final ExtractedCtfTestTrace KERNEL_TRACE = new ExtractedCtfTestTrace(CtfTestTrace.KERNEL);
+    public static final ExtractedLttngKernelTestTrace KERNEL_TRACE = new ExtractedLttngKernelTestTrace(CtfTestTrace.KERNEL);
     @ClassRule
-    public static final ExtractedCtfTestTrace NON_KERNEL_TRACE = new ExtractedCtfTestTrace(CtfTestTrace.CYG_PROFILE);
+    public static final ExtractedGenericCtfTestTrace NON_KERNEL_TRACE = new ExtractedGenericCtfTestTrace(CtfTestTrace.CYG_PROFILE);
 
     private static final String PROJECT_NAME = "test-proj";
     private static final KernelAnalysis ANALYSIS = KernelAnalysis.instance();
 
-    private Path fProjectPath;
-
-    private ITraceProject fKernelProject;
-    private ITraceProject fNonKernelProject;
+    private Path kernelProjectPath;
+    private Path nonKernelProjectPath;
+    private ITraceProject kernelProject;
+    private ITraceProject nonKernelProject;
 
 
     /**
@@ -67,21 +62,15 @@ public class KernelAnalysisTest {
     @Before
     public void setUp() {
         try {
-            fProjectPath = Files.createTempDirectory(PROJECT_NAME);
+            /* Will produce two different paths even if the prefix is the same. */
+            kernelProjectPath = Files.createTempDirectory(PROJECT_NAME);
+            nonKernelProjectPath = Files.createTempDirectory(PROJECT_NAME);
         } catch (IOException e) {
             fail(e.getMessage());
         }
 
-
-        LttngKernelTrace kTrace = new LttngKernelTrace(KERNEL_TRACE.getTrace().getTracePath());
-        GenericCtfTrace ustTrace = new GenericCtfTrace(NON_KERNEL_TRACE.getTrace().getTracePath());
-        fKernelProject = newProject(kTrace);
-        fNonKernelProject = newProject(ustTrace);
-    }
-
-    private ITraceProject newProject(ITrace trace) {
-        ITraceCollection coll = new TraceCollection(Collections.singleton(trace));
-        return new TraceProject(PROJECT_NAME, fProjectPath, Collections.singleton(coll));
+        kernelProject = TraceProject.ofSingleTrace(PROJECT_NAME, kernelProjectPath,  KERNEL_TRACE.getTrace());
+        nonKernelProject = TraceProject.ofSingleTrace(PROJECT_NAME, nonKernelProjectPath, NON_KERNEL_TRACE.getTrace());
     }
 
     /**
@@ -89,19 +78,21 @@ public class KernelAnalysisTest {
      */
     @After
     public void tearDown() {
-        if (fProjectPath != null) {
-            try {
-                MoreFiles.deleteRecursively(fProjectPath);
-            } catch (IOException e) {
+        Stream.of(kernelProjectPath, nonKernelProjectPath).forEach(path -> {
+            if (path != null) {
+                try {
+                    MoreFiles.deleteRecursively(path);
+                } catch (IOException e) {
+                    /* Ignore */
+                }
             }
-        }
-
+        });
     }
 
     @Test
     public void testAppliesTo() {
-        assertTrue(ANALYSIS.appliesTo(fKernelProject));
-        assertFalse(ANALYSIS.appliesTo(fNonKernelProject));
+        assertTrue(ANALYSIS.appliesTo(kernelProject));
+        assertFalse(ANALYSIS.appliesTo(nonKernelProject));
     }
 
     /**
@@ -109,8 +100,8 @@ public class KernelAnalysisTest {
      */
     @Test
     public void testCanExecute() {
-        assertTrue(ANALYSIS.canExecute(fKernelProject));
-        assertFalse(ANALYSIS.canExecute(fNonKernelProject));
+        assertTrue(ANALYSIS.canExecute(kernelProject));
+        assertFalse(ANALYSIS.canExecute(nonKernelProject));
     }
 
     /**
@@ -118,7 +109,7 @@ public class KernelAnalysisTest {
      */
     @Test
     public void testAnalysisExecution() {
-        ITmfStateSystem ss = ANALYSIS.execute(fKernelProject, null, null);
+        ITmfStateSystem ss = ANALYSIS.execute(kernelProject, null, null);
         assertNotNull(ss);
 
         List<Integer> quarks = ss.getQuarks("*");

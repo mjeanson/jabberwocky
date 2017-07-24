@@ -9,7 +9,8 @@
 
 package com.efficios.jabberwocky.lttng.ust.trace
 
-import com.efficios.jabberwocky.lttng.testutils.ExtractedCtfTestTrace
+import com.efficios.jabberwocky.lttng.testutils.ExtractedGenericCtfTestTrace
+import com.efficios.jabberwocky.lttng.testutils.ExtractedLttngUstTestTrace
 import com.efficios.jabberwocky.trace.TraceInitializationException
 import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
 import org.junit.ClassRule
@@ -19,9 +20,9 @@ class LttngUstTraceTest {
 
     companion object {
         @JvmField @ClassRule
-        val KERNEL_TRACE = ExtractedCtfTestTrace(CtfTestTrace.KERNEL)
+        val KERNEL_TRACE = ExtractedGenericCtfTestTrace(CtfTestTrace.KERNEL)
         @JvmField @ClassRule
-        val UST_TRACE = ExtractedCtfTestTrace(CtfTestTrace.CYG_PROFILE)
+        val UST_TRACE = ExtractedLttngUstTestTrace(CtfTestTrace.CYG_PROFILE)
     }
 
     @Test

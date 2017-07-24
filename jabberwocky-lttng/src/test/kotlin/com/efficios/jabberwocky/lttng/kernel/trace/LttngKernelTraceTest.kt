@@ -11,7 +11,8 @@ package com.efficios.jabberwocky.lttng.kernel.trace
 
 import com.efficios.jabberwocky.lttng.kernel.trace.layout.Lttng28EventLayout
 import com.efficios.jabberwocky.lttng.kernel.trace.layout.LttngEventLayout
-import com.efficios.jabberwocky.lttng.testutils.ExtractedCtfTestTrace
+import com.efficios.jabberwocky.lttng.testutils.ExtractedGenericCtfTestTrace
+import com.efficios.jabberwocky.lttng.testutils.ExtractedLttngKernelTestTrace
 import com.efficios.jabberwocky.trace.TraceInitializationException
 import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
 import org.junit.ClassRule
@@ -22,11 +23,11 @@ class LttngKernelTraceTest {
 
     companion object {
         @JvmField @ClassRule
-        val KERNEL_TRACE = ExtractedCtfTestTrace(CtfTestTrace.KERNEL)
+        val KERNEL_TRACE = ExtractedLttngKernelTestTrace(CtfTestTrace.KERNEL)
         @JvmField @ClassRule
-        val KERNEL_TRACE2 = ExtractedCtfTestTrace(CtfTestTrace.MANY_THREADS)
+        val KERNEL_TRACE2 = ExtractedLttngKernelTestTrace(CtfTestTrace.MANY_THREADS)
         @JvmField @ClassRule
-        val NON_KERNEL_TRACE = ExtractedCtfTestTrace(CtfTestTrace.CYG_PROFILE)
+        val NON_KERNEL_TRACE = ExtractedGenericCtfTestTrace(CtfTestTrace.CYG_PROFILE)
     }
 
     @Test
@@ -43,12 +44,7 @@ class LttngKernelTraceTest {
 
     @Test
     fun testEventLayout() {
-        val path1 = KERNEL_TRACE.trace.tracePath
-        val trace1 = LttngKernelTrace(path1)
-        assertEquals(LttngEventLayout.getInstance(), trace1.kernelEventLayout)
-
-        val path2 = KERNEL_TRACE2.trace.tracePath
-        val trace2 = LttngKernelTrace(path2)
-        assertEquals(Lttng28EventLayout.getInstance(), trace2.kernelEventLayout)
+        assertEquals(LttngEventLayout.getInstance(), KERNEL_TRACE.trace.kernelEventLayout)
+        assertEquals(Lttng28EventLayout.getInstance(), KERNEL_TRACE2.trace.kernelEventLayout)
     }
 }
