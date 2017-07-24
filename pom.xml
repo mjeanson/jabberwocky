@@ -19,7 +19,7 @@
 
   <groupId>com.efficios.jabberwocky</groupId>
   <artifactId>jabberwocky-parent</artifactId>
-  <version>0.2.18-SNAPSHOT</version>
+  <version>0.2.19-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <properties>
@@ -335,13 +335,13 @@
       <dependency>
         <groupId>com.efficios.jabberwocky</groupId>
         <artifactId>jabberwocky-core</artifactId>
-        <version>0.2.18-SNAPSHOT</version>
+        <version>0.2.19-SNAPSHOT</version>
       </dependency>
 
       <dependency>
         <groupId>com.efficios.jabberwocky</groupId>
         <artifactId>jabberwocky-ctf</artifactId>
-        <version>0.2.18-SNAPSHOT</version>
+        <version>0.2.19-SNAPSHOT</version>
       </dependency>
 
     </dependencies>
