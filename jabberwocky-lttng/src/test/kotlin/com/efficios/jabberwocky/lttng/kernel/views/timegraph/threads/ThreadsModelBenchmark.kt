@@ -21,7 +21,7 @@ import java.nio.file.Files
 import java.nio.file.Paths
 
 private const val PROJECT_NAME = "benchmark-project"
-private const val RUNS = 10
+private const val RUNS = 5
 private const val TARGET_NB_PIXELS = 2000
 
 /**
@@ -68,27 +68,37 @@ fun main(args: Array<String>) {
 
     /* Do a first set of queries to prime the caches. */
     println("Priming queries...")
-    query(stateProvider, treeRender, tr1, resolution)
-    query(stateProvider, treeRender, tr2, resolution)
+    val stateRenders1 = query(stateProvider, treeRender, tr1, resolution)
+    val stateRenders2 = query(stateProvider, treeRender, tr2, resolution)
+
+    /* Compute the number of intervals in each state render, we'll print that at the end. */
+    val count1 = stateRenders1.flatMap { it.stateIntervals }.count()
+    val count2 = stateRenders2.flatMap { it.stateIntervals }.count()
 
     println("Querying")
     val results = (1..RUNS)
             .onEach { println("Run #$it of $RUNS") }
             .map {
-                val start = System.nanoTime()
+                val start1 = System.nanoTime()
                 query(stateProvider, treeRender, tr1, resolution)
-                val end = System.nanoTime()
+                val end1 = System.nanoTime()
 
                 /* Second query elsewhere to wipe the cache locality */
+                val start2 = System.nanoTime()
                 query(stateProvider, treeRender, tr2, resolution)
-                end - start
+                val end2 = System.nanoTime()
+                Pair(end1 - start1, end2 - start2)
             }
 
     println()
-    val avg = results.average()
-    println("Benchmarked state model for trace $tracePath for range $tr1, averaged over $RUNS runs.")
-    println("$avg ns")
-
+    val avg1 = results.map { it.first }.average()
+    val avg2 = results.map { it.second }.average()
+    println("State model for trace $tracePath for range $tr1, averaged over $RUNS runs.")
+    println("Interval count in render: $count1")
+    println("Average: $avg1 ns")
+    println("State model for trace $tracePath for range $tr2, averaged over $RUNS runs.")
+    println("Interval count in render: $count2")
+    println("Average: $avg2 ns")
 
     /* Cleanup */
     projectPath.toFile().deleteRecursively()
