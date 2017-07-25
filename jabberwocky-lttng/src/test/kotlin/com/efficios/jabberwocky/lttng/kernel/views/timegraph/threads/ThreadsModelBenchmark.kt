@@ -109,10 +109,13 @@ private fun query(
         stateProvider: ITimeGraphModelStateProvider,
         treeRender: TimeGraphTreeRender,
         timeRange: TimeRange,
-        resolution: Long): List<TimeGraphStateRender> =
-    treeRender.allTreeElements
-            .onEach { println("Querying for tree element: $it") }
-            .map { stateProvider.getStateRender(it, timeRange, resolution, null) }
+        resolution: Long): List<TimeGraphStateRender> {
+
+    val ret = stateProvider.getAllStateRenders(treeRender, timeRange, resolution, null)
+    ret.forEach { println("Computed tree element: " + it.treeElement) }
+    return ret
+}
+
 
 
 private fun printErr(errorMsg: String) {

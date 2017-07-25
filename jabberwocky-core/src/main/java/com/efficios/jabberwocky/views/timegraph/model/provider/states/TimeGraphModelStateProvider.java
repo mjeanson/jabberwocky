@@ -42,12 +42,12 @@ public abstract class TimeGraphModelStateProvider implements ITimeGraphModelStat
     }
 
     @Override
-    public ObjectProperty<@Nullable ITraceProject<?, ?>> traceProjectProperty() {
+    public final ObjectProperty<@Nullable ITraceProject<?, ?>> traceProjectProperty() {
         return fTraceProjectProperty;
     }
 
     @Override
-    public List<StateDefinition> getStateDefinitions() {
+    public final List<StateDefinition> getStateDefinitions() {
         return fStateDefinitions;
     }
 

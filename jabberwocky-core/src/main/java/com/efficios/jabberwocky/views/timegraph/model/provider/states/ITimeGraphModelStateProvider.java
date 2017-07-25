@@ -10,7 +10,10 @@
 package com.efficios.jabberwocky.views.timegraph.model.provider.states;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.FutureTask;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.efficios.jabberwocky.views.timegraph.model.provider.ITimeGraphModelProvider;
@@ -68,6 +71,12 @@ public interface ITimeGraphModelStateProvider {
     TimeGraphStateRender getStateRender(TimeGraphTreeElement treeElement,
                                         TimeRange timeRange, long resolution, @Nullable FutureTask<?> task);
 
+    default Map<TimeGraphTreeElement, TimeGraphStateRender> getStateRenders(Set<TimeGraphTreeElement> treeElements,
+                                                                            TimeRange timeRange, long resolution, @Nullable FutureTask<?> task) {
+        return treeElements.stream()
+                .collect(Collectors.toMap(Function.identity(), treeElem -> getStateRender(treeElem, timeRange, resolution, task)));
+    }
+
     /**
      * Helper method to fetch all the state renders for all tree elements of a
      * *tree* render.
@@ -87,7 +96,7 @@ public interface ITimeGraphModelStateProvider {
      *            cancellation.
      * @return The corresponding state renders
      */
-    default List<TimeGraphStateRender> getStateRenders(TimeGraphTreeRender treeRender, TimeRange timeRange, long resolution, @Nullable FutureTask<?> task) {
+    default List<TimeGraphStateRender> getAllStateRenders(TimeGraphTreeRender treeRender, TimeRange timeRange, long resolution, @Nullable FutureTask<?> task) {
         return treeRender.getAllTreeElements().stream()
                 .map(treeElem -> getStateRender(treeElem, timeRange, resolution, task))
                 .collect(Collectors.toList());
