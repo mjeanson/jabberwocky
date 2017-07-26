@@ -52,6 +52,12 @@
         <version>0.6.8-SNAPSHOT</version>
       </dependency>
 
+      <dependency>
+        <groupId>org.eclipse.tracecompass</groupId>
+        <artifactId>ctfreader</artifactId>
+        <version>0.1.3-SNAPSHOT</version>
+      </dependency>
+
       <!-- Artifacts provided by this project. Version numbers should
            match the current ones. -->
       <dependency>
