@@ -13,57 +13,28 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <prerequisites>
-    <maven>${required-maven-version}</maven>
-  </prerequisites>
+  <parent>
+    <groupId>org.lttng.scope</groupId>
+    <artifactId>project-parent</artifactId>
+    <version>1.0.0</version>
+  </parent>
 
   <groupId>com.efficios.jabberwocky</groupId>
   <artifactId>jabberwocky-parent</artifactId>
   <version>0.2.19-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <properties>
-    <required-maven-version>3.2.2</required-maven-version>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-    <kotlin.version>1.1.3-2</kotlin.version>
-    <kotlin.compiler.jvmTarget>1.8</kotlin.compiler.jvmTarget>
-  </properties>
-
-  <distributionManagement>
-    <repository>
-      <uniqueVersion>false</uniqueVersion>
-      <id>efficios-releases-repo</id>
-      <name>EfficiOS Releases</name>
-      <url>https://mvn.efficios.com/maven/releases/</url>
-      <layout>default</layout>
-    </repository>
-    <snapshotRepository>
-      <uniqueVersion>true</uniqueVersion>
-      <id>efficios-snapshots-repo</id>
-      <name>EfficiOS Snapshots</name>
-      <url>https://mvn.efficios.com/maven/snapshots/</url>
-      <layout>default</layout>
-    </snapshotRepository>
-  </distributionManagement>
-
   <repositories>
     <repository>
-      <id>ttt-repo</id>
-      <name>Trace Compass Test Traces</name>
-      <url>http://archive.eclipse.org/tracecompass/tracecompass-test-traces/maven</url>
-    </repository>
-    <repository>
       <id>efficios-releases-repo</id>
       <name>EfficiOS Releases</name>
       <url>https://mvn.efficios.com/maven/releases/</url>
     </repository>
-    <repository>
-      <id>efficios-snapshots-repo</id>
-      <name>EfficiOS Snapshots</name>
-      <url>https://mvn.efficios.com/maven/snapshots/</url>
-    </repository>
   </repositories>
+
+  <properties>
+    <required-maven-version>3.2.2</required-maven-version>
+  </properties>
 
   <modules>
     <module>jabberwocky-core</module>
@@ -73,317 +44,12 @@
     <module>javeltrace</module>
   </modules>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-enforcer-plugin</artifactId>
-      </plugin>
-
-      <!-- Config for mixed Java/Kotlin projects -->
-      <plugin>
-        <groupId>org.jetbrains.kotlin</groupId>
-        <artifactId>kotlin-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>compile</id>
-            <goals>
-              <goal>compile</goal>
-            </goals>
-            <configuration>
-              <sourceDirs>
-                <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
-                <sourceDir>${project.basedir}/src/main/java</sourceDir>
-              </sourceDirs>
-            </configuration>
-          </execution>
-          <execution>
-            <id>test-compile</id>
-            <goals>
-              <goal>test-compile</goal>
-            </goals>
-            <configuration>
-              <sourceDirs>
-                <sourceDir>${project.basedir}/src/test/kotlin</sourceDir>
-                <sourceDir>${project.basedir}/src/test/java</sourceDir>
-              </sourceDirs>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <executions>
-          <!-- Replace default-compile/default-testCompile as they are treated specially by maven -->
-          <execution>
-            <id>default-compile</id>
-            <phase>none</phase>
-          </execution>
-          <execution>
-            <id>default-testCompile</id>
-            <phase>none</phase>
-          </execution>
-          <execution>
-            <id>java-compile</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>compile</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>java-test-compile</id>
-            <phase>test-compile</phase>
-            <goals>
-              <goal>testCompile</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
-      </plugin>
-    </plugins>
-
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-antrun-plugin</artifactId>
-          <version>1.8</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-assembly-plugin</artifactId>
-          <version>3.0.0</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-clean-plugin</artifactId>
-          <version>3.0.0</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.6.1</version>
-          <configuration>
-            <source>1.8</source>
-            <target>1.8</target>
-          </configuration>
-        </plugin>
-
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-deploy-plugin</artifactId>
-          <version>2.8.2</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-enforcer-plugin</artifactId>
-          <version>1.4.1</version>
-          <inherited>true</inherited>
-          <executions>
-            <execution>
-              <id>enforce-maven-version</id>
-              <goals>
-                <goal>enforce</goal>
-              </goals>
-              <configuration>
-                <rules>
-                  <requireMavenVersion>
-                    <version>${required-maven-version}</version>
-                  </requireMavenVersion>
-                  <requireJavaVersion>
-                    <version>1.8</version>
-                  </requireJavaVersion>
-                </rules>
-                <fail>true</fail>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
-
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-install-plugin</artifactId>
-          <version>2.5.2</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-jar-plugin</artifactId>
-          <version>3.0.2</version>
-          <configuration>
-            <archive>
-              <manifest>
-                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-              </manifest>
-              <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
-            </archive>
-          </configuration>
-        </plugin>
-
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-resources-plugin</artifactId>
-          <version>3.0.2</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-shade-plugin</artifactId>
-          <version>3.0.0</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-site-plugin</artifactId>
-          <version>3.6</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-source-plugin</artifactId>
-          <version>3.0.1</version>
-          <configuration>
-            <excludeResources>true</excludeResources>
-          </configuration>
-          <executions>
-            <execution>
-              <id>attach-sources</id>
-              <goals>
-                <goal>jar-no-fork</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.20</version>
-          <configuration>
-            <forkCount>3</forkCount>
-            <reuseForks>true</reuseForks>
-            <!-- This option should help for Travis. -->
-            <argLine>-Xmx1024m</argLine>
-          </configuration>
-        </plugin>
-
-        <plugin>
-          <groupId>org.apache.felix</groupId>
-          <artifactId>maven-bundle-plugin</artifactId>
-          <version>3.3.0</version>
-          <executions>
-            <execution>
-              <id>bundle-manifest</id>
-              <phase>process-classes</phase>
-              <goals>
-                <goal>manifest</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-
-        <plugin>
-          <artifactId>kotlin-maven-plugin</artifactId>
-          <groupId>org.jetbrains.kotlin</groupId>
-          <version>${kotlin.version}</version>
-          <executions>
-            <execution>
-              <id>compile</id>
-              <goals>
-                <goal>compile</goal>
-              </goals>
-            </execution>
-            <execution>
-              <id>test-compile</id>
-              <goals>
-                <goal>test-compile</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-
-  </build>
-
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>org.jetbrains.kotlin</groupId>
-        <artifactId>kotlin-stdlib-jre8</artifactId>
-        <version>${kotlin.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.jetbrains.kotlin</groupId>
-        <artifactId>kotlin-test</artifactId>
-        <version>${kotlin.version}</version>
-        <scope>test</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>org.jetbrains.kotlin</groupId>
-        <artifactId>kotlin-test-junit</artifactId>
-        <version>${kotlin.version}</version>
-        <scope>test</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>RELEASE</version>
-        <scope>test</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>org.eclipse.tracecompass.testtraces</groupId>
-        <artifactId>tracecompass-test-traces-ctf</artifactId>
-        <version>1.6.0</version>
-        <scope>test</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>com.google.guava</groupId>
-        <artifactId>guava</artifactId>
-        <version>21.0</version>
-      </dependency>
-
-      <dependency>
         <groupId>ca.polymtl.dorsal.libdelorean</groupId>
         <artifactId>libdelorean</artifactId>
-        <version>0.6.7-SNAPSHOT</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.eclipse.tracecompass</groupId>
-        <artifactId>ctfreader</artifactId>
-        <version>0.1.2</version>
-      </dependency>
-
-      <dependency>
-        <groupId>com.google.code.gson</groupId>
-        <artifactId>gson</artifactId>
-        <version> 2.8.0</version>
+        <version>0.6.8-SNAPSHOT</version>
       </dependency>
 
       <!-- Artifacts provided by this project. Version numbers should
@@ -399,7 +65,6 @@
         <artifactId>jabberwocky-ctf</artifactId>
         <version>0.2.19-SNAPSHOT</version>
       </dependency>
-
     </dependencies>
   </dependencyManagement>
 </project>
