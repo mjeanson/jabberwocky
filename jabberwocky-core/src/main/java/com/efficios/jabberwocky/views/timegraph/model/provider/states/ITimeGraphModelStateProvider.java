@@ -17,8 +17,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.efficios.jabberwocky.views.timegraph.model.provider.ITimeGraphModelProvider;
-import com.efficios.jabberwocky.views.timegraph.model.render.states.TimeGraphStateRender;
 import com.efficios.jabberwocky.views.timegraph.model.render.StateDefinition;
+import com.efficios.jabberwocky.views.timegraph.model.render.states.TimeGraphStateRender;
 import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeElement;
 import org.eclipse.jdt.annotation.Nullable;
 import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeRender;

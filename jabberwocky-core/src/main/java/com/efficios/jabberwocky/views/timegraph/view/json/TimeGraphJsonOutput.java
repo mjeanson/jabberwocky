@@ -2,9 +2,9 @@ package com.efficios.jabberwocky.views.timegraph.view.json;
 
 import java.util.List;
 
-import com.efficios.jabberwocky.views.timegraph.model.render.states.TimeGraphStateRender;
 import com.efficios.jabberwocky.views.timegraph.control.TimeGraphModelControl;
 import com.efficios.jabberwocky.views.timegraph.model.provider.ITimeGraphModelProvider;
+import com.efficios.jabberwocky.views.timegraph.model.render.states.TimeGraphStateRender;
 import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeRender;
 import com.efficios.jabberwocky.views.timegraph.view.TimeGraphModelView;
 
