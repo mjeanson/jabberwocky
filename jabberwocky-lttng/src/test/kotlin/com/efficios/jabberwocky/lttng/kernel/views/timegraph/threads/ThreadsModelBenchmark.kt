@@ -31,13 +31,37 @@ private const val TARGET_NB_PIXELS = 2000
  */
 fun main(args: Array<String>) {
 
-    if (args.isEmpty()) {
-        printErr("Please include the path to a LTTng kernel trace as parameter.")
+    if (args.size < 2) {
+        printUsage()
         return
     }
 
-    /* Setup the trace and project */
     val tracePath = args[0]
+    val requestedTreeElemNb = args[1].toIntOrNull()
+    if (requestedTreeElemNb == null) {
+        printUsage()
+        return
+    }
+
+    /** Function to query the given time range */
+    fun query(stateProvider: ITimeGraphModelStateProvider,
+              treeRender: TimeGraphTreeRender,
+              timeRange: TimeRange,
+              resolution: Long): List<TimeGraphStateRender> {
+
+        val ret = if (requestedTreeElemNb <= 0) {
+            stateProvider.getAllStateRenders(treeRender, timeRange, resolution, null)
+        } else {
+            val treeElems = treeRender.allTreeElements.subList(0, requestedTreeElemNb).toSet()
+            val renders = stateProvider.getStateRenders(treeElems, timeRange, resolution, null)
+            renders.values.toList()
+        }
+
+        ret.forEach { println("Computed tree element: " + it.treeElement) }
+        return ret
+    }
+
+    /* Setup the trace and project */
     val projectPath = Files.createTempDirectory(PROJECT_NAME)
     val trace = LttngKernelTrace(Paths.get(tracePath))
     println("Creating project from trace $tracePath")
@@ -64,6 +88,10 @@ fun main(args: Array<String>) {
         printErr("Analysis produced an empty tree model. Exiting.")
         return
     }
+    val actualTreeElemNb = treeRender.allTreeElements.size
+    if (requestedTreeElemNb >= actualTreeElemNb) {
+        printErr("Analysis produced ")
+    }
     val stateProvider = modelProvider.stateProvider
 
     /* Do a first set of queries to prime the caches. */
@@ -77,8 +105,9 @@ fun main(args: Array<String>) {
 
     println("Querying")
     val results = (1..RUNS)
-            .onEach { println("Run #$it of $RUNS") }
             .map {
+                println("Run #$it of $RUNS")
+
                 val start1 = System.nanoTime()
                 query(stateProvider, treeRender, tr1, resolution)
                 val end1 = System.nanoTime()
@@ -104,19 +133,11 @@ fun main(args: Array<String>) {
     projectPath.toFile().deleteRecursively()
 }
 
-/** Do a query for the given time range */
-private fun query(
-        stateProvider: ITimeGraphModelStateProvider,
-        treeRender: TimeGraphTreeRender,
-        timeRange: TimeRange,
-        resolution: Long): List<TimeGraphStateRender> {
-
-    val ret = stateProvider.getAllStateRenders(treeRender, timeRange, resolution, null)
-    ret.forEach { println("Computed tree element: " + it.treeElement) }
-    return ret
+private fun printUsage() {
+    printErr("Needs the following program arguments:")
+    printErr("1 - [Path to trace]")
+    printErr("2 - [Number of tree elements to render] (0 for all)")
 }
-
-
 
 private fun printErr(errorMsg: String) {
     System.err.println(errorMsg)
