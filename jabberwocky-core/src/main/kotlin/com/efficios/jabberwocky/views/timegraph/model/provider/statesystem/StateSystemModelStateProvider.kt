@@ -11,6 +11,7 @@ package com.efficios.jabberwocky.views.timegraph.model.provider.statesystem
 
 import ca.polymtl.dorsal.libdelorean.ITmfStateSystem
 import ca.polymtl.dorsal.libdelorean.interval.ITmfStateInterval
+import ca.polymtl.dorsal.libdelorean.iterator2D
 import com.efficios.jabberwocky.analysis.statesystem.StateSystemAnalysis
 import com.efficios.jabberwocky.common.TimeRange
 import com.efficios.jabberwocky.views.timegraph.model.provider.states.TimeGraphModelStateProvider
@@ -90,15 +91,7 @@ abstract class StateSystemModelStateProvider(stateDefinitions: List<StateDefinit
             return TimeGraphStateRender.EMPTY_RENDER
         }
 
-        val ss = stateSystem
-        if (ss == null || (task != null && task.isCancelled)) {
-            return TimeGraphStateRender.EMPTY_RENDER
-        }
-
-        val modelIntervals = queryHistoryRange(ss, treeElement, timeRange, resolution, task)
-        /* Fill the row with multi-states */
-        val filledIntervals = fillWithMultiStates(timeRange, treeElement, modelIntervals)
-        return TimeGraphStateRender(timeRange, treeElement, filledIntervals)
+        return getStateRenders(setOf(treeElement), timeRange, resolution, task).values.single()
     }
 
     override fun getStateRenders(treeElements: Set<TimeGraphTreeElement>,
@@ -106,7 +99,51 @@ abstract class StateSystemModelStateProvider(stateDefinitions: List<StateDefinit
                                  resolution: Long,
                                  task: FutureTask<*>?): Map<TimeGraphTreeElement, TimeGraphStateRender> {
 
-        return treeElements.associate { Pair(it, getStateRender(it, timeRange, resolution, task)) }
+        val ss = stateSystem
+        if (ss == null || (task != null && task.isCancelled)) {
+            return Collections.emptyMap()
+        }
+        val intervalsPerElement = treeElements.associateBy({ it }, { mutableListOf<TimeGraphStateInterval>() })
+
+        val ssTreeElements = treeElements
+                .filter { it is StateSystemTimeGraphTreeElement }
+                .map { it as StateSystemTimeGraphTreeElement }
+        val quarksToTreeElementMap = ssTreeElements.associateBy { it.sourceQuark }
+
+        // TODO Check the task parameter during the iteration (for loop?)
+
+        /* Query the intervals from the state system */
+        val quarks = ssTreeElements.map { it.sourceQuark }.toSet()
+        ss.iterator2D(timeRange.startTime, timeRange.endTime, resolution, quarks).asSequence()
+                .map { createInterval(ss, quarksToTreeElementMap[it.attribute]!!, it) }
+                /* Insert into the correct list among the ones we created earlier */
+                .forEach { intervalsPerElement[it.treeElement]!!.add(it) }
+
+        /*
+         * Manually add the entries for the last pixel [endTime - resolution, endTime].
+         * The iterator doesn't return them.
+         */
+        val lastResolutionPt = timeRange.startTime + (timeRange.duration / resolution) * resolution
+        ss.queryStates(timeRange.endTime, ssTreeElements.map { it.sourceQuark }.toSet())
+                .forEach { quark, interval ->
+                    val treeElem = quarksToTreeElementMap[quark]!!
+                    val targetIntervalList = intervalsPerElement[treeElem]!!
+                    if (interval.intersects(lastResolutionPt)
+                            && interval.endTime != targetIntervalList.last().endTime) {
+
+                        val modelInterval = createInterval(ss, treeElem, interval)
+                        targetIntervalList.add(modelInterval)
+                    }
+                }
+
+        /*
+         * 'intervalsPerElement' now contains all the real state intervals that
+         * will be part of our model. Poly-filla the holes between those
+         * intervals with multi-states before returning.
+         */
+        return intervalsPerElement
+                .mapValues { entry -> fillWithMultiStates(timeRange, entry.key, entry.value) }
+                .mapValues { entry -> TimeGraphStateRender(timeRange, entry.key, entry.value) }
     }
 
     override fun getAllStateRenders(treeRender: TimeGraphTreeRender,
@@ -117,92 +154,6 @@ abstract class StateSystemModelStateProvider(stateDefinitions: List<StateDefinit
         /* Ensure the returned list has the same order as the .allTreeElements */
         val rendersMap = getStateRenders(treeRender.allTreeElements.toSet(), timeRange, resolution, task)
         return treeRender.allTreeElements.map { rendersMap[it]!! }
-    }
-
-    private fun queryHistoryRange(ss: ITmfStateSystem,
-                                  treeElem: StateSystemTimeGraphTreeElement,
-                                  timeRange: TimeRange,
-                                  resolution: Long,
-                                  task: FutureTask<*>?): List<TimeGraphStateInterval> {
-
-        val t1 = timeRange.startTime
-        val t2 = timeRange.endTime
-
-        /* Validate the parameters. */
-        if (t2 < t1
-                || resolution <= 0
-                || t1 < ss.startTime
-                || t2 > ss.currentEndTime) {
-            throw IllegalArgumentException(ss.ssid + " Start:" + t1 + ", End:" + t2 + ", Resolution:" + resolution)
-        }
-
-        val modelIntervals = LinkedList<TimeGraphStateInterval>()
-        val attributeQuark = treeElem.sourceQuark
-        var lastAddedInterval: ITmfStateInterval? = null
-
-        /*
-         * First, iterate over the "resolution points" and keep all matching
-         * state intervals.
-         */
-        var ts = t1 - resolution // incremented to t1 at first loop
-        while (ts <= t2 - resolution) {
-            ts += resolution
-            /*
-             * Skip queries if the corresponding interval was already included
-             */
-            if (lastAddedInterval != null && lastAddedInterval.endTime >= ts) {
-                val nextTOffset = roundToClosestHigherMultiple(lastAddedInterval.endTime - t1, resolution)
-                val nextTs = t1 + nextTOffset
-                if (nextTs == ts) {
-                    /*
-                     * The end time of the last interval happened to be exactly
-                     * equal to the next resolution point. We will go to the
-                     * resolution point after that then.
-                     */
-                    ts = nextTs
-                } else {
-                    /* 'ts' will get incremented at next loop */
-                    ts = nextTs - resolution
-                }
-                continue
-            }
-
-            val stateSystemInterval = ss.querySingleState(ts, attributeQuark)
-
-            /*
-             * Only pick the interval if it fills the current resolution range,
-             * from 'ts' to 'ts + resolution' (or 'ts2').
-             */
-            val ts2 = ts + resolution
-            if (stateSystemInterval.startTime <= ts && stateSystemInterval.endTime >= ts2) {
-                val interval = createInterval(ss, treeElem, stateSystemInterval)
-                modelIntervals.add(interval)
-                lastAddedInterval = stateSystemInterval
-            }
-        }
-
-        /*
-         * For the very last interval, we'll use ['tEnd - resolution', 'tEnd']
-         * as a range condition instead.
-         */
-        ts = Math.max(t1, t2 - resolution)
-        val ts2 = t2
-        if (lastAddedInterval != null && lastAddedInterval.endTime >= ts) {
-            /* Interval already included */
-        } else {
-            val stateSystemInterval = ss.querySingleState(ts, attributeQuark)
-            if (stateSystemInterval.startTime <= ts && stateSystemInterval.endTime >= ts2) {
-                val interval = createInterval(ss, treeElem, stateSystemInterval)
-                modelIntervals.add(interval)
-            }
-        }
-
-        return modelIntervals
-    }
-
-
-    private fun roundToClosestHigherMultiple(number: Long, multipleOf: Long): Long {
-        return (Math.ceil(number.toDouble() / multipleOf) * multipleOf).toLong()
     }
 
     private fun fillWithMultiStates(timeRange: TimeRange,

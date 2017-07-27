@@ -79,7 +79,6 @@ class ThreadsModelProviderTest {
         test1s(TimeRange.of(start, end))
     }
 
-    @Ignore
     @Test
     fun test1sEnd() {
         val end = provider.traceProject!!.endTime
@@ -122,7 +121,6 @@ class ThreadsModelProviderTest {
         testIntervalsResolution(range, 1)
     }
 
-    @Ignore
     @Test
     fun testIntervalsResolutionStart() {
         val start = provider.traceProject!!.startTime
@@ -130,7 +128,6 @@ class ThreadsModelProviderTest {
         testIntervalsResolution(TimeRange.of(start, end), 10_000_000)
     }
 
-    @Ignore
     @Test
     fun testIntervalsResolutionMiddle() {
         val start = provider.traceProject!!.startTime + (2 * NANOS_PER_SECOND)
@@ -138,7 +135,6 @@ class ThreadsModelProviderTest {
         testIntervalsResolution(TimeRange.of(start, end), 10_000_000)
     }
 
-    @Ignore
     @Test
     fun testIntervalsResolutionEnd() {
         val start = provider.traceProject!!.startTime + (4 * NANOS_PER_SECOND)
