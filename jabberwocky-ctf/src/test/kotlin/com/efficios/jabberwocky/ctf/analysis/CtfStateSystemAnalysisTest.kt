@@ -47,7 +47,6 @@ class CtfStateSystemAnalysisTest {
 
     private lateinit var projectPath: Path
     private lateinit var project: ITraceProject<CtfTraceEvent, GenericCtfTrace>
-    private lateinit var analysis: TestAnalysis
 
     private lateinit var ss : ITmfStateSystem
 
@@ -60,11 +59,8 @@ class CtfStateSystemAnalysisTest {
         val collection2 = TraceCollection(listOf(ETT3.trace))
         project = TraceProject(projectName, projectPath, listOf(collection1, collection2))
 
-        /* Setup the analysis */
-        analysis = TestAnalysis()
-
         /* Execute the analysis */
-        ss = analysis.execute(project)
+        ss = TestAnalysis.execute(project)
     }
 
     @After
@@ -73,7 +69,7 @@ class CtfStateSystemAnalysisTest {
         projectPath.toFile().deleteRecursively()
     }
 
-    private class TestAnalysis : StateSystemAnalysis() {
+    private object TestAnalysis : StateSystemAnalysis() {
 
         override val providerVersion = 0
 

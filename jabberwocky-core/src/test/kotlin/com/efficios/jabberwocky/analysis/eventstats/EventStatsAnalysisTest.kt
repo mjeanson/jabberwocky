@@ -10,7 +10,6 @@
 package com.efficios.jabberwocky.analysis.eventstats
 
 import ca.polymtl.dorsal.libdelorean.ITmfStateSystem
-import ca.polymtl.dorsal.libdelorean.interval.ITmfStateInterval
 import com.efficios.jabberwocky.collection.TraceCollection
 import com.efficios.jabberwocky.project.TraceProject
 import com.efficios.jabberwocky.trace.TraceStubs
@@ -38,9 +37,8 @@ class EventStatsAnalysisTest {
         val collection = TraceCollection(listOf(TraceStubs.TraceStub1(), TraceStubs.TraceStub2()))
         val project = TraceProject(PROJECT_NAME, projectPath, listOf(collection))
 
-        /* Setup and execute the analysis */
-        val analysis = EventStatsAnalysis()
-        ss = analysis.execute(project)
+        /* Execute the analysis */
+        ss = EventStatsAnalysis.execute(project)
     }
 
     @After
