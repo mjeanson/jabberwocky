@@ -62,4 +62,38 @@ public final class RenderToJson {
         System.out.println(json);
     }
 
+    // Alternative implementation using org.json
+//    public static void printRenderTo(List<TimeGraphStateRender> renders) {
+//            try (Writer bw = Files.newBufferedWriter(OUTPUT_FILE, Charsets.UTF_8)) {
+//                    JSONObject root = new JSONObject();
+//                    root.put(VERSION_KEY, VERSION);
+//
+//                            JSONArray intervalsRoot = new JSONArray();
+//                    root.put(INTERVALS_KEY, intervalsRoot);
+//
+//                            renders.stream()
+//                                    .flatMap(render -> render.getStateIntervals().stream())
+//                                    .forEach(interval -> {
+//                                    try {
+//                                            JSONObject intervalObject = new JSONObject();
+//                                            intervalObject.put(TREE_ELEMENT_KEY, interval.getStartEvent().getTreeElement().getName());
+//                                            intervalObject.put(START_TIME_KEY, interval.getStartEvent().getTimestamp());
+//                                            intervalObject.put(END_TIME_KEY, interval.getEndEvent().getTimestamp());
+//                                            intervalObject.put(STATE_NAME_KEY, interval.getStateName());
+//                                            intervalObject.put(COLOR_KEY, interval.getColorDefinition().toString());
+//
+//                                                    intervalsRoot.put(intervalObject);
+//                                        } catch (JSONException e) {
+//                                            /* Skip this interval */
+//                                                }
+//                                });
+//
+//                            String json = (PRETTY_PRINT ? root.toString(1) : root.toString());
+//                    bw.write(json);
+//                    bw.flush();
+//
+//                        } catch (JSONException | IOException e) {
+//                }
+//        }
+
 }
