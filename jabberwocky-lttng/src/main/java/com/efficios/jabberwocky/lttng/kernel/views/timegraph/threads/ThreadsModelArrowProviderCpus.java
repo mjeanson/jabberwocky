@@ -9,19 +9,16 @@
 
 package com.efficios.jabberwocky.lttng.kernel.views.timegraph.threads;
 
-import static java.util.Objects.requireNonNull;
-
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.FutureTask;
-
-import org.eclipse.jdt.annotation.Nullable;
-
+import ca.polymtl.dorsal.libdelorean.ITmfStateSystem;
+import ca.polymtl.dorsal.libdelorean.StateSystemUtils;
+import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
+import ca.polymtl.dorsal.libdelorean.exceptions.StateSystemDisposedException;
+import ca.polymtl.dorsal.libdelorean.interval.ITmfStateInterval;
 import com.efficios.jabberwocky.common.TimeRange;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.Attributes;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.KernelAnalysis;
+import com.efficios.jabberwocky.views.common.FlatUIColors;
 import com.efficios.jabberwocky.views.timegraph.model.provider.statesystem.StateSystemModelArrowProvider;
-import com.efficios.jabberwocky.views.timegraph.model.render.FlatUIColors;
 import com.efficios.jabberwocky.views.timegraph.model.render.TimeGraphEvent;
 import com.efficios.jabberwocky.views.timegraph.model.render.arrows.TimeGraphArrow;
 import com.efficios.jabberwocky.views.timegraph.model.render.arrows.TimeGraphArrowRender;
@@ -31,12 +28,13 @@ import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeE
 import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeRender;
 import com.google.common.collect.Iterables;
 import com.google.common.primitives.Ints;
+import org.eclipse.jdt.annotation.Nullable;
 
-import ca.polymtl.dorsal.libdelorean.ITmfStateSystem;
-import ca.polymtl.dorsal.libdelorean.StateSystemUtils;
-import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
-import ca.polymtl.dorsal.libdelorean.exceptions.StateSystemDisposedException;
-import ca.polymtl.dorsal.libdelorean.interval.ITmfStateInterval;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.FutureTask;
+
+import static java.util.Objects.requireNonNull;
 
 public class ThreadsModelArrowProviderCpus extends StateSystemModelArrowProvider {
 

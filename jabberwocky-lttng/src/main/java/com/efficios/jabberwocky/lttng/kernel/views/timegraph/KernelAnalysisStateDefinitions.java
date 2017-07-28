@@ -9,7 +9,7 @@
 
 package com.efficios.jabberwocky.lttng.kernel.views.timegraph;
 
-import com.efficios.jabberwocky.views.timegraph.model.render.FlatUIColors;
+import com.efficios.jabberwocky.views.common.FlatUIColors;
 import com.efficios.jabberwocky.views.timegraph.model.render.LineThickness;
 import com.efficios.jabberwocky.views.timegraph.model.render.StateDefinition;
 import com.efficios.jabberwocky.views.common.ColorDefinition;
