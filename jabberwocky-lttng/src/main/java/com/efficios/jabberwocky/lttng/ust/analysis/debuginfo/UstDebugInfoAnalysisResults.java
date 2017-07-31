@@ -9,34 +9,28 @@
 
 package com.efficios.jabberwocky.lttng.ust.analysis.debuginfo;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.OptionalLong;
-import java.util.Set;
-import java.util.TreeSet;
-
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
-
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.ImmutableList;
-
-import ca.polymtl.dorsal.libdelorean.ITmfStateSystem;
+import ca.polymtl.dorsal.libdelorean.IStateSystemReader;
 import ca.polymtl.dorsal.libdelorean.StateSystemUtils;
 import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
 import ca.polymtl.dorsal.libdelorean.exceptions.StateSystemDisposedException;
 import ca.polymtl.dorsal.libdelorean.exceptions.TimeRangeException;
-import ca.polymtl.dorsal.libdelorean.interval.ITmfStateInterval;
-import ca.polymtl.dorsal.libdelorean.statevalue.ITmfStateValue;
+import ca.polymtl.dorsal.libdelorean.interval.IStateInterval;
+import ca.polymtl.dorsal.libdelorean.statevalue.IStateValue;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableList;
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.*;
 
 /**
  * Wrapper around a state system produced by the {@link UstDebugInfoAnalysis}.
  */
 public class UstDebugInfoAnalysisResults {
 
-    private final ITmfStateSystem stateSystem;
+    private final IStateSystemReader stateSystem;
 
-    public UstDebugInfoAnalysisResults(ITmfStateSystem ss) {
+    public UstDebugInfoAnalysisResults(IStateSystemReader ss) {
         stateSystem = ss;
     }
 
@@ -46,11 +40,11 @@ public class UstDebugInfoAnalysisResults {
      * @return The binaries (executables or libraries) referred to in the trace.
      */
     public Collection<UstDebugInfoBinaryFile> getAllBinaries() {
-        final ITmfStateSystem ss = stateSystem;
+        final IStateSystemReader ss = stateSystem;
 
         final @NonNull Set<UstDebugInfoBinaryFile> files = new TreeSet<>();
         ImmutableList.Builder<Integer> builder = ImmutableList.builder();
-        List<Integer> vpidQuarks = ss.getSubAttributes(ITmfStateSystem.ROOT_ATTRIBUTE, false);
+        List<Integer> vpidQuarks = ss.getSubAttributes(IStateSystemReader.ROOT_ATTRIBUTE, false);
         for (Integer vpidQuark : vpidQuarks) {
             builder.addAll(ss.getSubAttributes(vpidQuark, false));
         }
@@ -68,20 +62,20 @@ public class UstDebugInfoAnalysisResults {
                  * Iterate over each mapping there ever was at this base
                  * address.
                  */
-                ITmfStateInterval interval = StateSystemUtils.queryUntilNonNullValue(ss, baddrQuark, ts, Long.MAX_VALUE);
+                IStateInterval interval = StateSystemUtils.queryUntilNonNullValue(ss, baddrQuark, ts, Long.MAX_VALUE);
                 while (interval != null) {
                     ts = interval.getStartTime();
 
-                    ITmfStateValue filePathStateValue = ss.querySingleState(ts, pathQuark).getStateValue();
+                    IStateValue filePathStateValue = ss.querySingleState(ts, pathQuark).getStateValue();
                     String filePath = filePathStateValue.unboxStr();
 
-                    ITmfStateValue buildIdStateValue = ss.querySingleState(ts, buildIdQuark).getStateValue();
+                    IStateValue buildIdStateValue = ss.querySingleState(ts, buildIdQuark).getStateValue();
                     String buildId = unboxStrOrNull(buildIdStateValue);
 
-                    ITmfStateValue debuglinkStateValue = ss.querySingleState(ts, debugLinkQuark).getStateValue();
+                    IStateValue debuglinkStateValue = ss.querySingleState(ts, debugLinkQuark).getStateValue();
                     String debugLink = unboxStrOrNull(debuglinkStateValue);
 
-                    ITmfStateValue isPICStateValue = ss.querySingleState(ts, isPICQuark).getStateValue();
+                    IStateValue isPICStateValue = ss.querySingleState(ts, isPICQuark).getStateValue();
                     Boolean isPIC = isPICStateValue.unboxInt() != 0;
 
                     files.add(new UstDebugInfoBinaryFile(filePath, buildId, debugLink, isPIC));
@@ -113,23 +107,21 @@ public class UstDebugInfoAnalysisResults {
      *            from a 'ip' context.
      * @return A {@link UstDebugInfoLoadedBinaryFile} object, describing the
      *         binary file and its base address.
-     * @noreference Meant to be used internally by
-     *              {@link UstDebugInfoBinaryAspect} only.
      */
     @VisibleForTesting
     public @Nullable UstDebugInfoLoadedBinaryFile getMatchingFile(long ts, long vpid, long ip) {
         try {
-            final ITmfStateSystem ss = stateSystem;
+            final IStateSystemReader ss = stateSystem;
 
             List<Integer> possibleBaddrQuarks = ss.getQuarks(String.valueOf(vpid), "*"); //$NON-NLS-1$
-            List<ITmfStateInterval> state = ss.queryFullState(ts);
+            List<IStateInterval> state = ss.queryFullState(ts);
 
             /* Get the most probable base address from all the known ones */
             OptionalLong potentialBaddr = possibleBaddrQuarks.stream()
                     .filter(quark -> {
                         /* Keep only currently (at ts) mapped objects. */
-                        ITmfStateValue value = state.get(quark).getStateValue();
-                        return value.getType() == ITmfStateValue.Type.INTEGER && value.unboxInt() == 1;
+                        IStateValue value = state.get(quark).getStateValue();
+                        return value.getType() == IStateValue.Type.INTEGER && value.unboxInt() == 1;
                     })
                     .map(quark -> ss.getAttributeName(quark.intValue()))
                     .mapToLong(baddrStr -> Long.parseLong(baddrStr))
@@ -160,11 +152,11 @@ public class UstDebugInfoAnalysisResults {
             String filePath = state.get(pathQuark).getStateValue().unboxStr();
 
             final int buildIdQuark = ss.getQuarkRelative(baddrQuark, UstDebugInfoAnalysisStateProvider.BUILD_ID_ATTRIB);
-            ITmfStateValue buildIdValue = state.get(buildIdQuark).getStateValue();
+            IStateValue buildIdValue = state.get(buildIdQuark).getStateValue();
             String buildId = unboxStrOrNull(buildIdValue);
 
             final int debugLinkQuark = ss.getQuarkRelative(baddrQuark, UstDebugInfoAnalysisStateProvider.DEBUG_LINK_ATTRIB);
-            ITmfStateValue debugLinkValue = state.get(debugLinkQuark).getStateValue();
+            IStateValue debugLinkValue = state.get(debugLinkQuark).getStateValue();
             String debugLink = unboxStrOrNull(debugLinkValue);
 
             final int isPicQuark = ss.getQuarkRelative(baddrQuark, UstDebugInfoAnalysisStateProvider.IS_PIC_ATTRIB);
@@ -178,7 +170,7 @@ public class UstDebugInfoAnalysisResults {
         }
     }
 
-    private static @Nullable String unboxStrOrNull(ITmfStateValue value) {
+    private static @Nullable String unboxStrOrNull(IStateValue value) {
         return (value.isNull() ? null : value.unboxStr());
     }
 }

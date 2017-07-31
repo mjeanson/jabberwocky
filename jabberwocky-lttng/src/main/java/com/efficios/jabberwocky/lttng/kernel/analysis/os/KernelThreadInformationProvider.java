@@ -12,12 +12,11 @@
 
 package com.efficios.jabberwocky.lttng.kernel.analysis.os;
 
+import ca.polymtl.dorsal.libdelorean.IStateSystemReader;
+import ca.polymtl.dorsal.libdelorean.interval.IStateInterval;
+import ca.polymtl.dorsal.libdelorean.statevalue.IStateValue;
+import ca.polymtl.dorsal.libdelorean.statevalue.IStateValue.Type;
 import org.eclipse.jdt.annotation.Nullable;
-
-import ca.polymtl.dorsal.libdelorean.ITmfStateSystem;
-import ca.polymtl.dorsal.libdelorean.interval.ITmfStateInterval;
-import ca.polymtl.dorsal.libdelorean.statevalue.ITmfStateValue;
-import ca.polymtl.dorsal.libdelorean.statevalue.ITmfStateValue.Type;
 
 /**
  * Information provider utility class that retrieves thread-related information
@@ -36,8 +35,6 @@ public final class KernelThreadInformationProvider {
      * TODO: This method may later be replaced by an aspect, when the aspect can
      * resolve to something that is not an event
      *
-     * @param module
-     *            The kernel analysis instance to run this method on
      * @param cpuId
      *            The CPU number the process is running on
      * @param ts
@@ -45,10 +42,10 @@ public final class KernelThreadInformationProvider {
      * @return The TID of the thread running on CPU cpuId at time ts or
      *         {@code null} if either no thread is running or we do not know.
      */
-    public static @Nullable Integer getThreadOnCpu(ITmfStateSystem ss, long cpuId, long ts) {
+    public static @Nullable Integer getThreadOnCpu(IStateSystemReader ss, long cpuId, long ts) {
         int cpuQuark = ss.getQuarkAbsolute(Attributes.CPUS, Long.toString(cpuId), Attributes.CURRENT_THREAD);
-        ITmfStateInterval interval = ss.querySingleState(ts, cpuQuark);
-        ITmfStateValue val = interval.getStateValue();
+        IStateInterval interval = ss.querySingleState(ts, cpuQuark);
+        IStateValue val = interval.getStateValue();
         if (val.getType() == Type.INTEGER) {
             return val.unboxInt();
         }

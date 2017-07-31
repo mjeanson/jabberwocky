@@ -9,17 +9,17 @@
 
 package com.efficios.jabberwocky.views.timegraph.model.provider.statesystem;
 
-import ca.polymtl.dorsal.libdelorean.ITmfStateSystem;
+import ca.polymtl.dorsal.libdelorean.IStateSystemReader;
 import ca.polymtl.dorsal.libdelorean.exceptions.StateSystemDisposedException;
-import ca.polymtl.dorsal.libdelorean.interval.ITmfStateInterval;
+import ca.polymtl.dorsal.libdelorean.interval.IStateInterval;
 import com.efficios.jabberwocky.analysis.statesystem.StateSystemAnalysis;
 import com.efficios.jabberwocky.project.ITraceProject;
 import com.efficios.jabberwocky.views.timegraph.model.provider.TimeGraphModelProvider;
 import com.efficios.jabberwocky.views.timegraph.model.provider.arrows.ITimeGraphModelArrowProvider;
 import com.efficios.jabberwocky.views.timegraph.model.provider.states.ITimeGraphModelStateProvider;
+import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeRender;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
-import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeRender;
 
 import java.util.List;
 import java.util.Map;
@@ -45,13 +45,13 @@ public abstract class StateSystemModelProvider extends TimeGraphModelProvider {
         /** Trace name */
         public final String traceName;
         /** State system */
-        public final ITmfStateSystem ss;
+        public final IStateSystemReader ss;
         /** Sorting mode */
         public final SortingMode sortingMode;
         /** Filter modes */
         public final Set<FilterMode> filterModes;
         /** Full query */
-        public final List<ITmfStateInterval> fullQueryAtRangeStart;
+        public final List<IStateInterval> fullQueryAtRangeStart;
 
         /**
          * Constructor
@@ -66,10 +66,10 @@ public abstract class StateSystemModelProvider extends TimeGraphModelProvider {
          *            Full query at the start of the time range.
          */
         public TreeRenderContext(String traceName,
-                ITmfStateSystem ss,
-                SortingMode sortingMode,
-                Set<FilterMode> filterModes,
-                List<ITmfStateInterval> fullQueryAtRangeStart) {
+                                 IStateSystemReader ss,
+                                 SortingMode sortingMode,
+                                 Set<FilterMode> filterModes,
+                                 List<IStateInterval> fullQueryAtRangeStart) {
             this.traceName = traceName;
             this.ss = ss;
             this.sortingMode = sortingMode;
@@ -96,9 +96,9 @@ public abstract class StateSystemModelProvider extends TimeGraphModelProvider {
     }
 
     private final Function<TreeRenderContext, TimeGraphTreeRender> fTreeRenderFunction;
-    private final Map<ITmfStateSystem, CachedTreeRender> fLastTreeRenders = new WeakHashMap<>();
+    private final Map<IStateSystemReader, CachedTreeRender> fLastTreeRenders = new WeakHashMap<>();
 
-    private transient @Nullable ITmfStateSystem fStateSystem = null;
+    private transient @Nullable IStateSystemReader fStateSystem = null;
 
     /**
      * Constructor
@@ -147,7 +147,7 @@ public abstract class StateSystemModelProvider extends TimeGraphModelProvider {
         });
     }
 
-    public @Nullable ITmfStateSystem getStateSystem() {
+    public @Nullable IStateSystemReader getStateSystem() {
         return fStateSystem;
     }
 
@@ -157,7 +157,7 @@ public abstract class StateSystemModelProvider extends TimeGraphModelProvider {
 
     @Override
     public @NonNull TimeGraphTreeRender getTreeRender() {
-        ITmfStateSystem ss = fStateSystem;
+        IStateSystemReader ss = fStateSystem;
         if (ss == null) {
             /* This trace does not provide the expected state system */
             return TimeGraphTreeRender.EMPTY_RENDER;
@@ -170,7 +170,7 @@ public abstract class StateSystemModelProvider extends TimeGraphModelProvider {
       }
 
         /* First generate the tree render context */
-        List<ITmfStateInterval> fullStateAtStart;
+        List<IStateInterval> fullStateAtStart;
         try {
             fullStateAtStart = ss.queryFullState(ss.getStartTime());
         } catch (StateSystemDisposedException e) {

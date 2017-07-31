@@ -9,10 +9,10 @@
 
 package com.efficios.jabberwocky.lttng.ust.analysis.debuginfo;
 
-import ca.polymtl.dorsal.libdelorean.ITmfStateSystemBuilder;
+import ca.polymtl.dorsal.libdelorean.IStateSystemWriter;
 import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
 import ca.polymtl.dorsal.libdelorean.exceptions.StateValueTypeException;
-import ca.polymtl.dorsal.libdelorean.statevalue.TmfStateValue;
+import ca.polymtl.dorsal.libdelorean.statevalue.StateValue;
 import com.efficios.jabberwocky.lttng.ust.trace.layout.LttngUst28EventLayout;
 import com.efficios.jabberwocky.trace.event.FieldValue.ArrayValue;
 import com.efficios.jabberwocky.trace.event.FieldValue.IntegerValue;
@@ -143,7 +143,7 @@ class UstDebugInfoAnalysisStateProvider {
     }
 
     public void eventHandle(UstDebugInfoAnalysisDefinitions defs,
-            ITmfStateSystemBuilder ss, ITraceEvent event) {
+                            IStateSystemWriter ss, ITraceEvent event) {
 
         LttngUst28EventLayout layout = defs.getLayout();
 
@@ -210,7 +210,7 @@ class UstDebugInfoAnalysisStateProvider {
      * information for that binary.
      */
     private static void commitPendingToStateSystem(PendingBinInfo pending,
-            long ts, ITmfStateSystemBuilder ss) {
+            long ts, IStateSystemWriter ss) {
         if (!pending.done()) {
             throw new IllegalStateException();
         }
@@ -233,20 +233,20 @@ class UstDebugInfoAnalysisStateProvider {
         int buildIdQuark = ss.getQuarkRelativeAndAdd(baddrQuark, BUILD_ID_ATTRIB);
         int debugLinkQuark = ss.getQuarkRelativeAndAdd(baddrQuark, DEBUG_LINK_ATTRIB);
         try {
-            ss.modifyAttribute(ts, TmfStateValue.newValueInt(1), baddrQuark);
-            ss.modifyAttribute(ts, TmfStateValue.newValueLong(memsz), memszQuark);
-            ss.modifyAttribute(ts, TmfStateValue.newValueString(path), pathQuark);
-            ss.modifyAttribute(ts, TmfStateValue.newValueInt(isPIC ? 1 : 0), isPICQuark);
+            ss.modifyAttribute(ts, StateValue.newValueInt(1), baddrQuark);
+            ss.modifyAttribute(ts, StateValue.newValueLong(memsz), memszQuark);
+            ss.modifyAttribute(ts, StateValue.newValueString(path), pathQuark);
+            ss.modifyAttribute(ts, StateValue.newValueInt(isPIC ? 1 : 0), isPICQuark);
             if (buildId != null) {
-                ss.modifyAttribute(ts, TmfStateValue.newValueString(buildId), buildIdQuark);
+                ss.modifyAttribute(ts, StateValue.newValueString(buildId), buildIdQuark);
             } else {
-                ss.modifyAttribute(ts, TmfStateValue.nullValue(), buildIdQuark);
+                ss.modifyAttribute(ts, StateValue.nullValue(), buildIdQuark);
             }
 
             if (debugLink != null) {
-                ss.modifyAttribute(ts,  TmfStateValue.newValueString(debugLink), debugLinkQuark);
+                ss.modifyAttribute(ts,  StateValue.newValueString(debugLink), debugLinkQuark);
             } else {
-                ss.modifyAttribute(ts, TmfStateValue.nullValue(), debugLinkQuark);
+                ss.modifyAttribute(ts, StateValue.nullValue(), debugLinkQuark);
             }
         } catch (StateValueTypeException | AttributeNotFoundException e) {
             /* Something went very wrong. */
@@ -271,7 +271,7 @@ class UstDebugInfoAnalysisStateProvider {
      * Otherwise, put it in the map of pending binary informations.
      */
     private void processPendingBinInfo(PendingBinInfo pending, long ts,
-            ITmfStateSystemBuilder ss) {
+                                       IStateSystemWriter ss) {
         if (pending.done()) {
             commitPendingToStateSystem(pending, ts, ss);
         } else {
@@ -288,7 +288,7 @@ class UstDebugInfoAnalysisStateProvider {
      * When a process does an exec, a new statedump is done and all previous
      * mappings are now invalid.
      */
-    private void handleStatedumpStart(ITraceEvent event, final Long vpid, final ITmfStateSystemBuilder ss) {
+    private void handleStatedumpStart(ITraceEvent event, final Long vpid, final IStateSystemWriter ss) {
         long ts = event.getTimestamp();
         fLatestStatedumpStarts.put(vpid, ts);
 
@@ -312,7 +312,7 @@ class UstDebugInfoAnalysisStateProvider {
      *            dlopen/lib:load event.
      */
     private void handleBinInfo(LttngUst28EventLayout layout, ITraceEvent event, final Long vpid,
-            final ITmfStateSystemBuilder ss, boolean statedump) {
+            final IStateSystemWriter ss, boolean statedump) {
         // "?.getValue()" would be sooo much cleaner...
         IntegerValue baddrField = event.getField(layout.fieldBaddr(), IntegerValue.class);
         IntegerValue memszField = event.getField(layout.fieldMemsz(), IntegerValue.class);
@@ -363,7 +363,7 @@ class UstDebugInfoAnalysisStateProvider {
      *            dlopen/lib:build_id event.
      */
     private void handleBuildId(LttngUst28EventLayout layout, ITraceEvent event, final Long vpid,
-            final ITmfStateSystemBuilder ss, boolean statedump) {
+            final IStateSystemWriter ss, boolean statedump) {
         ArrayValue<IntegerValue> buildIdArrayField = event.getField(layout.fieldBuildId(), ArrayValue.class);
         IntegerValue baddrField = event.getField(layout.fieldBaddr(), IntegerValue.class);
 
@@ -399,7 +399,7 @@ class UstDebugInfoAnalysisStateProvider {
     }
 
     private void handleDebugLink(LttngUst28EventLayout layout, ITraceEvent event, final Long vpid,
-            final ITmfStateSystemBuilder ss, boolean statedump) {
+            final IStateSystemWriter ss, boolean statedump) {
         IntegerValue baddrField = event.getField(layout.fieldBaddr(), IntegerValue.class);
         StringValue debugLinkField = event.getField(layout.fieldDebugLinkFilename(), StringValue.class);
 
@@ -428,7 +428,7 @@ class UstDebugInfoAnalysisStateProvider {
      *
      * Uses fields: Long baddr
      */
-    private static void handleClose(LttngUst28EventLayout layout, ITraceEvent event, final Long vpid, final ITmfStateSystemBuilder ss) {
+    private static void handleClose(LttngUst28EventLayout layout, ITraceEvent event, final Long vpid, final IStateSystemWriter ss) {
         IntegerValue baddrField = event.getField(layout.fieldBaddr(), IntegerValue.class);
 
         if (baddrField == null) {

@@ -9,16 +9,10 @@
 
 package com.efficios.jabberwocky.lttng.kernel.views.timegraph.threads;
 
-import static java.util.Objects.requireNonNull;
-
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
+import ca.polymtl.dorsal.libdelorean.IStateSystemReader;
+import ca.polymtl.dorsal.libdelorean.StateSystemUtils;
+import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
+import ca.polymtl.dorsal.libdelorean.interval.IStateInterval;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.Attributes;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.KernelAnalysis;
 import com.efficios.jabberwocky.views.timegraph.model.provider.arrows.ITimeGraphModelArrowProvider;
@@ -29,10 +23,15 @@ import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeR
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 
-import ca.polymtl.dorsal.libdelorean.ITmfStateSystem;
-import ca.polymtl.dorsal.libdelorean.StateSystemUtils;
-import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
-import ca.polymtl.dorsal.libdelorean.interval.ITmfStateInterval;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.Objects.requireNonNull;
 
 public class ThreadsModelProvider extends StateSystemModelProvider {
 
@@ -92,7 +91,7 @@ public class ThreadsModelProvider extends StateSystemModelProvider {
      */
     @VisibleForTesting
     public static final Function<TreeRenderContext, TimeGraphTreeRender> SS_TO_TREE_RENDER_FUNCTION = (treeContext) -> {
-        ITmfStateSystem ss = treeContext.ss;
+        IStateSystemReader ss = treeContext.ss;
 //        List<ITmfStateInterval> fullState = treeContext.fullQueryAtRangeStart;
 
         Stream<ThreadsTreeElement> treeElems = ss.getQuarks(BASE_QUARK_PATTERN).stream()
@@ -106,7 +105,7 @@ public class ThreadsModelProvider extends StateSystemModelProvider {
                         // treeContext.renderTimeRangeStart first, and if we
                         // don't find anything use ss.getStartTime(), so that we
                         // catch subsequent process name changes
-                        ITmfStateInterval firstInterval = StateSystemUtils.queryUntilNonNullValue(ss,
+                        IStateInterval firstInterval = StateSystemUtils.queryUntilNonNullValue(ss,
                                 execNameQuark, ss.getStartTime(), Long.MAX_VALUE);
                         if (firstInterval == null) {
                             threadName = null;

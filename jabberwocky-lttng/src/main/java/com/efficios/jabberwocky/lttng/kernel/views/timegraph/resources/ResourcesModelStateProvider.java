@@ -9,13 +9,13 @@
 
 package com.efficios.jabberwocky.lttng.kernel.views.timegraph.resources;
 
-import java.util.Collections;
-import java.util.List;
-
-import com.efficios.jabberwocky.lttng.kernel.views.timegraph.KernelAnalysisStateDefinitions;
-
+import ca.polymtl.dorsal.libdelorean.IStateSystemReader;
+import ca.polymtl.dorsal.libdelorean.exceptions.StateValueTypeException;
+import ca.polymtl.dorsal.libdelorean.interval.IStateInterval;
+import ca.polymtl.dorsal.libdelorean.statevalue.IStateValue;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.KernelAnalysis;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.StateValues;
+import com.efficios.jabberwocky.lttng.kernel.views.timegraph.KernelAnalysisStateDefinitions;
 import com.efficios.jabberwocky.views.timegraph.model.provider.statesystem.StateSystemModelStateProvider;
 import com.efficios.jabberwocky.views.timegraph.model.provider.statesystem.StateSystemTimeGraphTreeElement;
 import com.efficios.jabberwocky.views.timegraph.model.render.StateDefinition;
@@ -24,10 +24,8 @@ import com.efficios.jabberwocky.views.timegraph.model.render.states.TimeGraphSta
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 
-import ca.polymtl.dorsal.libdelorean.ITmfStateSystem;
-import ca.polymtl.dorsal.libdelorean.exceptions.StateValueTypeException;
-import ca.polymtl.dorsal.libdelorean.interval.ITmfStateInterval;
-import ca.polymtl.dorsal.libdelorean.statevalue.ITmfStateValue;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * State provider of the Resources time graph.
@@ -52,7 +50,7 @@ public class ResourcesModelStateProvider extends StateSystemModelStateProvider {
             KernelAnalysisStateDefinitions.CPU_STATE_SOFTIRQ_RAISED);
 
     @VisibleForTesting
-    static final StateDefinition stateValueToStateDef(ITmfStateValue val) {
+    static final StateDefinition stateValueToStateDef(IStateValue val) {
         if (val.isNull()) {
             return KernelAnalysisStateDefinitions.NO_STATE;
         }
@@ -89,8 +87,8 @@ public class ResourcesModelStateProvider extends StateSystemModelStateProvider {
     }
 
     @Override
-    protected TimeGraphStateInterval createInterval(ITmfStateSystem ss,
-            StateSystemTimeGraphTreeElement treeElem, ITmfStateInterval interval) {
+    protected TimeGraphStateInterval createInterval(IStateSystemReader ss,
+            StateSystemTimeGraphTreeElement treeElem, IStateInterval interval) {
 
         StateDefinition stateDef = stateValueToStateDef(interval.getStateValue());
 

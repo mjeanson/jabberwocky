@@ -12,23 +12,21 @@
 
 package com.efficios.jabberwocky.lttng.kernel.analysis.os.handlers;
 
-import static java.util.Objects.requireNonNull;
-
-import com.efficios.jabberwocky.lttng.kernel.analysis.os.LinuxValues;
-import com.efficios.jabberwocky.lttng.kernel.trace.layout.ILttngKernelEventLayout;
-import org.eclipse.jdt.annotation.Nullable;
+import ca.polymtl.dorsal.libdelorean.IStateSystemWriter;
+import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
+import ca.polymtl.dorsal.libdelorean.exceptions.StateValueTypeException;
+import ca.polymtl.dorsal.libdelorean.statevalue.IStateValue;
+import ca.polymtl.dorsal.libdelorean.statevalue.StateValue;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.Attributes;
+import com.efficios.jabberwocky.lttng.kernel.analysis.os.LinuxValues;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.StateValues;
-
+import com.efficios.jabberwocky.lttng.kernel.trace.layout.ILttngKernelEventLayout;
 import com.efficios.jabberwocky.trace.event.FieldValue.IntegerValue;
 import com.efficios.jabberwocky.trace.event.FieldValue.StringValue;
 import com.efficios.jabberwocky.trace.event.ITraceEvent;
+import org.eclipse.jdt.annotation.Nullable;
 
-import ca.polymtl.dorsal.libdelorean.ITmfStateSystemBuilder;
-import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
-import ca.polymtl.dorsal.libdelorean.exceptions.StateValueTypeException;
-import ca.polymtl.dorsal.libdelorean.statevalue.ITmfStateValue;
-import ca.polymtl.dorsal.libdelorean.statevalue.TmfStateValue;
+import static java.util.Objects.requireNonNull;
 
 /**
  * LTTng Specific state dump event handler
@@ -46,7 +44,7 @@ public class StateDumpHandler extends KernelEventHandler {
     }
 
     @Override
-    public void handleEvent(ITmfStateSystemBuilder ss, ITraceEvent event) throws AttributeNotFoundException {
+    public void handleEvent(IStateSystemWriter ss, ITraceEvent event) throws AttributeNotFoundException {
         int eventCpu = event.getCpu();
         Long tid = requireNonNull(event.getField("tid", IntegerValue.class)).getValue(); //$NON-NLS-1$
         Long pid =  requireNonNull(event.getField("pid", IntegerValue.class)).getValue(); //$NON-NLS-1$
@@ -80,8 +78,8 @@ public class StateDumpHandler extends KernelEventHandler {
         setStatus(ss, status.intValue(), curThreadNode, cpuField, timestamp);
     }
 
-    private static void setStatus(ITmfStateSystemBuilder ss, int status, int curThreadNode, @Nullable Long cpu, long timestamp) {
-        ITmfStateValue value;
+    private static void setStatus(IStateSystemWriter ss, int status, int curThreadNode, @Nullable Long cpu, long timestamp) {
+        IStateValue value;
         if (ss.queryOngoingState(curThreadNode).isNull()) {
             switch (status) {
             case LinuxValues.STATEDUMP_PROCESS_STATUS_WAIT_CPU:
@@ -104,38 +102,38 @@ public class StateDumpHandler extends KernelEventHandler {
         }
     }
 
-    private static void setRunQueue(ITmfStateSystemBuilder ss, int curThreadNode, @Nullable Long cpu, long timestamp) {
+    private static void setRunQueue(IStateSystemWriter ss, int curThreadNode, @Nullable Long cpu, long timestamp) {
         if (cpu != null) {
             int quark = ss.getQuarkRelativeAndAdd(curThreadNode, Attributes.CURRENT_CPU_RQ);
-            ITmfStateValue value = TmfStateValue.newValueInt(cpu.intValue());
+            IStateValue value = StateValue.newValueInt(cpu.intValue());
             ss.modifyAttribute(timestamp, value, quark);
         }
     }
 
-    private static void setPpid(ITmfStateSystemBuilder ss, int tid, int pid, int ppid, int curThreadNode, long timestamp)
+    private static void setPpid(IStateSystemWriter ss, int tid, int pid, int ppid, int curThreadNode, long timestamp)
             throws StateValueTypeException, AttributeNotFoundException {
-        ITmfStateValue value;
+        IStateValue value;
         int quark;
         quark = ss.getQuarkRelativeAndAdd(curThreadNode, Attributes.PPID);
         if (ss.queryOngoingState(quark).isNull()) {
             if (pid == tid) {
                 /* We have a process. Use the 'PPID' field. */
-                value = TmfStateValue.newValueInt(ppid);
+                value = StateValue.newValueInt(ppid);
             } else {
                 /* We have a thread, use the 'PID' field for the parent. */
-                value = TmfStateValue.newValueInt(pid);
+                value = StateValue.newValueInt(pid);
             }
             ss.modifyAttribute(timestamp, value, quark);
         }
     }
 
-    private static void setProcessName(ITmfStateSystemBuilder ss, String name, int curThreadNode, long timestamp)
+    private static void setProcessName(IStateSystemWriter ss, String name, int curThreadNode, long timestamp)
             throws StateValueTypeException, AttributeNotFoundException {
-        ITmfStateValue value;
+        IStateValue value;
         int quark = ss.getQuarkRelativeAndAdd(curThreadNode, Attributes.EXEC_NAME);
         if (ss.queryOngoingState(quark).isNull()) {
             /* If the value didn't exist previously, set it */
-            value = TmfStateValue.newValueString(name);
+            value = StateValue.newValueString(name);
             ss.modifyAttribute(timestamp, value, quark);
         }
     }

@@ -9,7 +9,7 @@
 
 package com.efficios.jabberwocky.analysis.eventstats
 
-import ca.polymtl.dorsal.libdelorean.ITmfStateSystem
+import ca.polymtl.dorsal.libdelorean.IStateSystemReader
 import com.efficios.jabberwocky.collection.TraceCollection
 import com.efficios.jabberwocky.project.TraceProject
 import com.efficios.jabberwocky.trace.TraceStubs
@@ -28,7 +28,7 @@ class EventStatsAnalysisTest {
     }
 
     private lateinit var projectPath: Path
-    private lateinit var ss : ITmfStateSystem
+    private lateinit var ss : IStateSystemReader
 
     @Before
     fun setup() {

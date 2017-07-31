@@ -9,10 +9,10 @@
 
 package com.efficios.jabberwocky.lttng.kernel.views.timegraph.resources.elements;
 
-import java.util.Collections;
-
-import ca.polymtl.dorsal.libdelorean.ITmfStateSystem;
+import ca.polymtl.dorsal.libdelorean.IStateSystemReader;
 import com.efficios.jabberwocky.views.timegraph.model.provider.statesystem.StateSystemTimeGraphTreeElement;
+
+import java.util.Collections;
 
 /**
  * Element of the Resources time graph which represents an IRQ (Software or
@@ -44,7 +44,7 @@ public class ResourcesIrqTreeElement extends StateSystemTimeGraphTreeElement {
      *            The corresponding quark (under the "CPUs" sub-tree) in the state
      *            system.
      */
-    public ResourcesIrqTreeElement(IrqType irqType, int irqNumber, ITmfStateSystem ss, int sourceQuark) {
+    public ResourcesIrqTreeElement(IrqType irqType, int irqNumber, IStateSystemReader ss, int sourceQuark) {
         super(getName(irqType, irqNumber),
                 Collections.emptyList(),
                 ss,

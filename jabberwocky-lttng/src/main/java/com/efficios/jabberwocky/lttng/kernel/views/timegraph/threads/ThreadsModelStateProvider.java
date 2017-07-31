@@ -9,24 +9,15 @@
 
 package com.efficios.jabberwocky.lttng.kernel.views.timegraph.threads;
 
-import static java.util.Objects.requireNonNull;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import org.eclipse.jdt.annotation.Nullable;
-import com.efficios.jabberwocky.lttng.kernel.views.timegraph.KernelAnalysisStateDefinitions;
-
+import ca.polymtl.dorsal.libdelorean.IStateSystemReader;
+import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
+import ca.polymtl.dorsal.libdelorean.exceptions.StateValueTypeException;
+import ca.polymtl.dorsal.libdelorean.interval.IStateInterval;
+import ca.polymtl.dorsal.libdelorean.statevalue.IStateValue;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.Attributes;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.KernelAnalysis;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.StateValues;
+import com.efficios.jabberwocky.lttng.kernel.views.timegraph.KernelAnalysisStateDefinitions;
 import com.efficios.jabberwocky.views.timegraph.model.provider.statesystem.StateSystemModelStateProvider;
 import com.efficios.jabberwocky.views.timegraph.model.provider.statesystem.StateSystemTimeGraphTreeElement;
 import com.efficios.jabberwocky.views.timegraph.model.render.StateDefinition;
@@ -35,12 +26,13 @@ import com.efficios.jabberwocky.views.timegraph.model.render.states.TimeGraphSta
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import org.eclipse.jdt.annotation.Nullable;
 
-import ca.polymtl.dorsal.libdelorean.ITmfStateSystem;
-import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
-import ca.polymtl.dorsal.libdelorean.exceptions.StateValueTypeException;
-import ca.polymtl.dorsal.libdelorean.interval.ITmfStateInterval;
-import ca.polymtl.dorsal.libdelorean.statevalue.ITmfStateValue;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * State provider for the "Threads" timegraph model.
@@ -66,7 +58,7 @@ public class ThreadsModelStateProvider extends StateSystemModelStateProvider {
             KernelAnalysisStateDefinitions.THREAD_STATE_INTERRUPTED);
 
     @VisibleForTesting
-    static final StateDefinition stateValueToStateDef(ITmfStateValue val) {
+    static final StateDefinition stateValueToStateDef(IStateValue val) {
         if (val.isNull()) {
             return KernelAnalysisStateDefinitions.NO_STATE;
         }
@@ -103,12 +95,12 @@ public class ThreadsModelStateProvider extends StateSystemModelStateProvider {
     }
 
     @Override
-    protected TimeGraphStateInterval createInterval(ITmfStateSystem ss,
-            StateSystemTimeGraphTreeElement treeElem, ITmfStateInterval interval) {
+    protected TimeGraphStateInterval createInterval(IStateSystemReader ss,
+            StateSystemTimeGraphTreeElement treeElem, IStateInterval interval) {
 
         int statusQuark = treeElem.getSourceQuark();
         long startTime = interval.getStartTime();
-        ITmfStateValue val = interval.getStateValue();
+        IStateValue val = interval.getStateValue();
 
         StateDefinition stateDef = stateValueToStateDef(val);
 
@@ -139,7 +131,7 @@ public class ThreadsModelStateProvider extends StateSystemModelStateProvider {
         Set<Integer> quarks = Stream.of(syscallNameQuark, cpuQuark)
                 .filter(Objects::nonNull).map(Objects::requireNonNull)
                 .collect(Collectors.toSet());
-        Map<Integer, ITmfStateInterval> results = (quarks.isEmpty() ? Collections.emptyMap() : ss.queryStates(startTime, quarks));
+        Map<Integer, IStateInterval> results = (quarks.isEmpty() ? Collections.emptyMap() : ss.queryStates(startTime, quarks));
 
         /* Assign the results */
         String syscallName;
@@ -162,7 +154,7 @@ public class ThreadsModelStateProvider extends StateSystemModelStateProvider {
         if (cpuQuark == null) {
             cpuProperty = requireNonNull(Messages.propertyNotAvailable);
         } else {
-          ITmfStateValue sv = requireNonNull(results.get(cpuQuark)).getStateValue();
+          IStateValue sv = requireNonNull(results.get(cpuQuark)).getStateValue();
           cpuProperty = (sv.isNull() ? requireNonNull(Messages.propertyNotAvailable) : String.valueOf(sv.unboxInt()));
         }
 

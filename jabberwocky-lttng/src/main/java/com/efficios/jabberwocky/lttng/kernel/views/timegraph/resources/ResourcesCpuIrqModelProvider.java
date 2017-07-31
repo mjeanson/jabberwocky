@@ -9,17 +9,20 @@
 
 package com.efficios.jabberwocky.lttng.kernel.views.timegraph.resources;
 
-import ca.polymtl.dorsal.libdelorean.ITmfStateSystem;
+import ca.polymtl.dorsal.libdelorean.IStateSystemReader;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.Attributes;
+import com.efficios.jabberwocky.lttng.kernel.views.timegraph.resources.elements.ResourcesCpuTreeElement;
+import com.efficios.jabberwocky.lttng.kernel.views.timegraph.resources.elements.ResourcesIrqTreeElement;
+import com.efficios.jabberwocky.lttng.kernel.views.timegraph.resources.elements.ResourcesIrqTreeElement.IrqType;
 import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeElement;
 import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeRender;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.primitives.Ints;
-import com.efficios.jabberwocky.lttng.kernel.views.timegraph.resources.elements.ResourcesCpuTreeElement;
-import com.efficios.jabberwocky.lttng.kernel.views.timegraph.resources.elements.ResourcesIrqTreeElement;
-import com.efficios.jabberwocky.lttng.kernel.views.timegraph.resources.elements.ResourcesIrqTreeElement.IrqType;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -49,7 +52,7 @@ public class ResourcesCpuIrqModelProvider extends ResourcesBaseModelProvider {
      */
     @VisibleForTesting
     public static final Function<TreeRenderContext, TimeGraphTreeRender> SS_TO_TREE_RENDER_FUNCTION = (treeContext) -> {
-        ITmfStateSystem ss = treeContext.ss;
+        IStateSystemReader ss = treeContext.ss;
 
         List<TimeGraphTreeElement> treeElems = ss.getQuarks(CPUS_QUARK_PATTERN).stream()
                 .<TimeGraphTreeElement> map(cpuQuark -> {

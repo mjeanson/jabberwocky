@@ -12,7 +12,7 @@
 
 package com.efficios.jabberwocky.lttng.kernel.analysis.os;
 
-import ca.polymtl.dorsal.libdelorean.ITmfStateSystemBuilder;
+import ca.polymtl.dorsal.libdelorean.IStateSystemWriter;
 import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
 import ca.polymtl.dorsal.libdelorean.exceptions.StateValueTypeException;
 import ca.polymtl.dorsal.libdelorean.exceptions.TimeRangeException;
@@ -114,7 +114,7 @@ public class KernelAnalysis extends StateSystemAnalysis {
     }
 
     @Override
-    public void handleEvent(ITmfStateSystemBuilder ss, ITraceEvent event, Object @Nullable [] trackedState) {
+    public void handleEvent(IStateSystemWriter ss, ITraceEvent event, Object @Nullable [] trackedState) {
         ITrace trace = event.getTrace();
         if (!(trace instanceof LttngKernelTrace)) {
             /* We shouldn't have received this event... */

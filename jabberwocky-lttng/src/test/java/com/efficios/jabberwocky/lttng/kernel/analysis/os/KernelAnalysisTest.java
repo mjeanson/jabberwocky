@@ -12,7 +12,7 @@
 
 package com.efficios.jabberwocky.lttng.kernel.analysis.os;
 
-import ca.polymtl.dorsal.libdelorean.ITmfStateSystem;
+import ca.polymtl.dorsal.libdelorean.IStateSystemReader;
 import com.efficios.jabberwocky.lttng.testutils.ExtractedGenericCtfTestTrace;
 import com.efficios.jabberwocky.lttng.testutils.ExtractedLttngKernelTestTrace;
 import com.efficios.jabberwocky.project.ITraceProject;
@@ -109,7 +109,7 @@ public class KernelAnalysisTest {
      */
     @Test
     public void testAnalysisExecution() {
-        ITmfStateSystem ss = ANALYSIS.execute(kernelProject, null, null);
+        IStateSystemReader ss = ANALYSIS.execute(kernelProject, null, null);
         assertNotNull(ss);
 
         List<Integer> quarks = ss.getQuarks("*");

@@ -12,21 +12,19 @@
 
 package com.efficios.jabberwocky.lttng.kernel.analysis.os.handlers;
 
-import static java.util.Objects.requireNonNull;
+import ca.polymtl.dorsal.libdelorean.IStateSystemWriter;
+import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
+import ca.polymtl.dorsal.libdelorean.statevalue.IStateValue;
+import ca.polymtl.dorsal.libdelorean.statevalue.StateValue;
+import com.efficios.jabberwocky.lttng.kernel.analysis.os.StateValues;
+import com.efficios.jabberwocky.lttng.kernel.trace.layout.ILttngKernelEventLayout;
+import com.efficios.jabberwocky.trace.event.FieldValue.IntegerValue;
+import com.efficios.jabberwocky.trace.event.ITraceEvent;
+import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.List;
 
-import org.eclipse.jdt.annotation.Nullable;
-import com.efficios.jabberwocky.lttng.kernel.analysis.os.StateValues;
-import com.efficios.jabberwocky.lttng.kernel.trace.layout.ILttngKernelEventLayout;
-
-import com.efficios.jabberwocky.trace.event.FieldValue.IntegerValue;
-import com.efficios.jabberwocky.trace.event.ITraceEvent;
-
-import ca.polymtl.dorsal.libdelorean.ITmfStateSystemBuilder;
-import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
-import ca.polymtl.dorsal.libdelorean.statevalue.ITmfStateValue;
-import ca.polymtl.dorsal.libdelorean.statevalue.TmfStateValue;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Soft Irq exit handler
@@ -44,7 +42,7 @@ public class SoftIrqExitHandler extends KernelEventHandler {
     }
 
     @Override
-    public void handleEvent(ITmfStateSystemBuilder ss, ITraceEvent event) throws AttributeNotFoundException {
+    public void handleEvent(IStateSystemWriter ss, ITraceEvent event) throws AttributeNotFoundException {
         long timestamp = event.getTimestamp();
         int cpu = event.getCpu();
         Long softIrqId = requireNonNull(event.getField(getLayout().fieldVec(), IntegerValue.class)).getValue();
@@ -55,7 +53,7 @@ public class SoftIrqExitHandler extends KernelEventHandler {
         if (isSoftIrqRaised(ss.queryOngoingState(quark))) {
             ss.modifyAttribute(timestamp, StateValues.SOFT_IRQ_RAISED_VALUE, quark);
         } else {
-            ss.modifyAttribute(timestamp, TmfStateValue.nullValue(), quark);
+            ss.modifyAttribute(timestamp, StateValue.nullValue(), quark);
         }
         List<Integer> softIrqs = ss.getSubAttributes(ss.getParentAttributeQuark(quark), false);
         /* Only set status to running and no exit if ALL softirqs are exited. */
@@ -78,7 +76,7 @@ public class SoftIrqExitHandler extends KernelEventHandler {
      *            the state to check
      * @return true if in a softirq. The softirq may be pre-empted by an irq
      */
-    private static boolean isSoftIrqRaised(@Nullable ITmfStateValue state) {
+    private static boolean isSoftIrqRaised(@Nullable IStateValue state) {
         return (state != null &&
                 !state.isNull() &&
                 (state.unboxInt() & StateValues.CPU_STATUS_SOFT_IRQ_RAISED) == StateValues.CPU_STATUS_SOFT_IRQ_RAISED);

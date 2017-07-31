@@ -12,16 +12,14 @@
 
 package com.efficios.jabberwocky.lttng.kernel.analysis.os.handlers;
 
+import ca.polymtl.dorsal.libdelorean.IStateSystemWriter;
+import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
+import ca.polymtl.dorsal.libdelorean.statevalue.IStateValue;
+import ca.polymtl.dorsal.libdelorean.statevalue.StateValue;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.Attributes;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.StateValues;
 import com.efficios.jabberwocky.lttng.kernel.trace.layout.ILttngKernelEventLayout;
-
 import com.efficios.jabberwocky.trace.event.ITraceEvent;
-
-import ca.polymtl.dorsal.libdelorean.ITmfStateSystemBuilder;
-import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
-import ca.polymtl.dorsal.libdelorean.statevalue.ITmfStateValue;
-import ca.polymtl.dorsal.libdelorean.statevalue.TmfStateValue;
 
 /**
  * System call exit handler
@@ -39,14 +37,14 @@ public class SysExitHandler extends KernelEventHandler {
     }
 
     @Override
-    public void handleEvent(ITmfStateSystemBuilder ss, ITraceEvent event) throws AttributeNotFoundException {
+    public void handleEvent(IStateSystemWriter ss, ITraceEvent event) throws AttributeNotFoundException {
         int cpu = event.getCpu();
         long timestamp = event.getTimestamp();
 
         /* Assign the new system call to the process */
         int currentThreadNode = KernelEventHandlerUtils.getCurrentThreadNode(cpu, ss);
         int quark = ss.getQuarkRelativeAndAdd(currentThreadNode, Attributes.SYSTEM_CALL);
-        ITmfStateValue value = TmfStateValue.nullValue();
+        IStateValue value = StateValue.nullValue();
         ss.modifyAttribute(timestamp, value, quark);
 
         /* Put the process in system call mode */

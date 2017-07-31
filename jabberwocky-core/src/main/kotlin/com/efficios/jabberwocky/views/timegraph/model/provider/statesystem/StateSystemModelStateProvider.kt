@@ -9,8 +9,8 @@
 
 package com.efficios.jabberwocky.views.timegraph.model.provider.statesystem
 
-import ca.polymtl.dorsal.libdelorean.ITmfStateSystem
-import ca.polymtl.dorsal.libdelorean.interval.ITmfStateInterval
+import ca.polymtl.dorsal.libdelorean.IStateSystemReader
+import ca.polymtl.dorsal.libdelorean.interval.IStateInterval
 import ca.polymtl.dorsal.libdelorean.iterator2D
 import com.efficios.jabberwocky.analysis.statesystem.StateSystemAnalysis
 import com.efficios.jabberwocky.common.TimeRange
@@ -38,7 +38,7 @@ abstract class StateSystemModelStateProvider(stateDefinitions: List<StateDefinit
      * {@link StateSystemModelProvider}!
      */
     @Transient
-    private var stateSystem: ITmfStateSystem? = null
+    private var stateSystem: IStateSystemReader? = null
 
     init {
         /*
@@ -73,9 +73,9 @@ abstract class StateSystemModelStateProvider(stateDefinitions: List<StateDefinit
      * @return The timegraph model interval object, you can use
      *         {@link BasicTimeGraphStateInterval} for a simple implementation.
      */
-    protected abstract fun createInterval(ss: ITmfStateSystem,
+    protected abstract fun createInterval(ss: IStateSystemReader,
                                           treeElem: StateSystemTimeGraphTreeElement,
-                                          interval: ITmfStateInterval): TimeGraphStateInterval
+                                          interval: IStateInterval): TimeGraphStateInterval
 
     // ------------------------------------------------------------------------
     // Render generation methods

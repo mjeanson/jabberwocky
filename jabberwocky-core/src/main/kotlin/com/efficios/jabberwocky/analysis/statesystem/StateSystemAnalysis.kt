@@ -9,8 +9,8 @@
 
 package com.efficios.jabberwocky.analysis.statesystem
 
-import ca.polymtl.dorsal.libdelorean.ITmfStateSystem
-import ca.polymtl.dorsal.libdelorean.ITmfStateSystemBuilder
+import ca.polymtl.dorsal.libdelorean.IStateSystemReader
+import ca.polymtl.dorsal.libdelorean.IStateSystemWriter
 import ca.polymtl.dorsal.libdelorean.StateSystemFactory
 import ca.polymtl.dorsal.libdelorean.backend.StateHistoryBackendFactory
 import com.efficios.jabberwocky.analysis.IAnalysis
@@ -28,7 +28,7 @@ abstract class StateSystemAnalysis : IAnalysis {
         private const val HISTORY_FILE_EXTENSION = ".ht"
     }
 
-    final override fun execute(project: ITraceProject<*, *>, range: TimeRange?, extraParams: String?): ITmfStateSystem {
+    final override fun execute(project: ITraceProject<*, *>, range: TimeRange?, extraParams: String?): IStateSystemReader {
         if (range != null) throw UnsupportedOperationException("Partial ranges for state system analysis not yet implemented")
 //        if (extraParams != null) logWarning("Ignoring extra parameters: $extraParams")
 
@@ -61,7 +61,7 @@ abstract class StateSystemAnalysis : IAnalysis {
         return ss
     }
 
-    private fun buildForProject(project: ITraceProject<*, *>, stateSystem: ITmfStateSystemBuilder) {
+    private fun buildForProject(project: ITraceProject<*, *>, stateSystem: IStateSystemWriter) {
         val traces = filterTraces(project)
         val trackedState = trackedState()
         // TODO This iteration could eventually move to a central location, so that the events are
@@ -89,6 +89,6 @@ abstract class StateSystemAnalysis : IAnalysis {
      */
     protected open fun trackedState(): Array<Any>? = null
 
-    protected abstract fun handleEvent(ss: ITmfStateSystemBuilder, event: ITraceEvent, trackedState: Array<Any>?)
+    protected abstract fun handleEvent(ss: IStateSystemWriter, event: ITraceEvent, trackedState: Array<Any>?)
 
 }

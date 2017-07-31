@@ -12,20 +12,18 @@
 
 package com.efficios.jabberwocky.lttng.kernel.analysis.os.handlers;
 
-import static java.util.Objects.requireNonNull;
-
+import ca.polymtl.dorsal.libdelorean.IStateSystemWriter;
+import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
+import ca.polymtl.dorsal.libdelorean.statevalue.IStateValue;
+import ca.polymtl.dorsal.libdelorean.statevalue.StateValue;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.Attributes;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.StateValues;
 import com.efficios.jabberwocky.lttng.kernel.trace.layout.ILttngKernelEventLayout;
-
 import com.efficios.jabberwocky.trace.event.FieldValue.IntegerValue;
 import com.efficios.jabberwocky.trace.event.FieldValue.StringValue;
 import com.efficios.jabberwocky.trace.event.ITraceEvent;
 
-import ca.polymtl.dorsal.libdelorean.ITmfStateSystemBuilder;
-import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
-import ca.polymtl.dorsal.libdelorean.statevalue.ITmfStateValue;
-import ca.polymtl.dorsal.libdelorean.statevalue.TmfStateValue;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Fork Handler
@@ -43,7 +41,7 @@ public class ProcessForkHandler extends KernelEventHandler {
     }
 
     @Override
-    public void handleEvent(ITmfStateSystemBuilder ss, ITraceEvent event) throws AttributeNotFoundException {
+    public void handleEvent(IStateSystemWriter ss, ITraceEvent event) throws AttributeNotFoundException {
         int cpu = event.getCpu();
         String childProcessName = requireNonNull(event.getField(getLayout().fieldChildComm(), StringValue.class)).getValue();
         int parentTid = Long.valueOf(requireNonNull(event.getField(getLayout().fieldParentTid(), IntegerValue.class)).getValue()).intValue();
@@ -66,13 +64,13 @@ public class ProcessForkHandler extends KernelEventHandler {
 
         /* Assign the PPID to the new process */
         int quark = ss.getQuarkRelativeAndAdd(childTidNode, Attributes.PPID);
-        ITmfStateValue value = TmfStateValue.newValueInt(parentTid);
+        IStateValue value = StateValue.newValueInt(parentTid);
         long timestamp = event.getTimestamp();
         ss.modifyAttribute(timestamp, value, quark);
 
         /* Set the new process' exec_name */
         quark = ss.getQuarkRelativeAndAdd(childTidNode, Attributes.EXEC_NAME);
-        value = TmfStateValue.newValueString(childProcessName);
+        value = StateValue.newValueString(childProcessName);
         ss.modifyAttribute(timestamp, value, quark);
 
         /*

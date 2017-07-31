@@ -9,17 +9,16 @@
 
 package com.efficios.jabberwocky.lttng.kernel.analysis.os;
 
+import ca.polymtl.dorsal.libdelorean.IStateSystemWriter;
+import ca.polymtl.dorsal.libdelorean.aggregation.AttributePriorityAggregationRule;
+import ca.polymtl.dorsal.libdelorean.aggregation.IStateAggregationRule;
+import ca.polymtl.dorsal.libdelorean.statevalue.StateValue;
+import com.google.common.primitives.Ints;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import com.google.common.primitives.Ints;
-
-import ca.polymtl.dorsal.libdelorean.ITmfStateSystemBuilder;
-import ca.polymtl.dorsal.libdelorean.aggregation.AttributePriorityAggregationRule;
-import ca.polymtl.dorsal.libdelorean.aggregation.IStateAggregationRule;
-import ca.polymtl.dorsal.libdelorean.statevalue.TmfStateValue;
 
 /**
  * FIXME Placeholder for the aggregation that should be used in the kernel state
@@ -31,7 +30,7 @@ public class KernelStateAggregationRules {
      * @param ss
      *            Target state system
      */
-    protected void setupAggregationRules(ITmfStateSystemBuilder ss) {
+    protected void setupAggregationRules(IStateSystemWriter ss) {
         /* Set up the virtual "IRQs" and "SoftIRQs" sub-trees */
         final int cpusQuark = ss.getQuarkAbsoluteAndAdd(Attributes.CPUS);
         final List<Integer> cpuQuarks = ss.getSubAttributes(cpusQuark, false);
@@ -65,7 +64,7 @@ public class KernelStateAggregationRules {
              * it so that upcoming queries return something. Should be fixed in the state
              * system library.
              */
-            ss.modifyAttribute(ss.getStartTime(), TmfStateValue.nullValue(), irqsQuark);
+            ss.modifyAttribute(ss.getStartTime(), StateValue.nullValue(), irqsQuark);
         }
         for (int irqNumber : irqNumbers) {
             int irqQuark = ss.getQuarkRelativeAndAdd(irqsQuark, String.valueOf(irqNumber));
@@ -92,7 +91,7 @@ public class KernelStateAggregationRules {
              * it so that upcoming queries return something. Should be fixed in the state
              * system library.
              */
-            ss.modifyAttribute(ss.getStartTime(), TmfStateValue.nullValue(), softIrqsQuark);
+            ss.modifyAttribute(ss.getStartTime(), StateValue.nullValue(), softIrqsQuark);
         }
         for (int softIrqNumber : softIrqNumbers) {
             int softIrqQuark = ss.getQuarkRelativeAndAdd(softIrqsQuark, String.valueOf(softIrqNumber));

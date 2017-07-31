@@ -1,11 +1,11 @@
 package com.efficios.jabberwocky.lttng.kernel.views.timegraph.threads;
 
-import ca.polymtl.dorsal.libdelorean.ITmfStateSystem;
+import ca.polymtl.dorsal.libdelorean.IStateSystemReader;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.Attributes;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.KernelThreadInformationProvider;
+import com.efficios.jabberwocky.trace.event.ITraceEvent;
 import com.efficios.jabberwocky.views.timegraph.model.provider.statesystem.StateSystemTimeGraphTreeElement;
 import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeElement;
-import com.efficios.jabberwocky.trace.event.ITraceEvent;
 import com.google.common.primitives.Ints;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -24,7 +24,7 @@ public class ThreadsTreeElement extends StateSystemTimeGraphTreeElement {
     private final String fThreadName;
 
     public ThreadsTreeElement(String tidStr, @Nullable String threadName,
-                              List<TimeGraphTreeElement> children, ITmfStateSystem ss, int sourceQuark) {
+                              List<TimeGraphTreeElement> children, IStateSystemReader ss, int sourceQuark) {
         super(getElementName(tidStr, threadName),
                 children,
                 ss,

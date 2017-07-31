@@ -9,12 +9,12 @@
 
 package com.efficios.jabberwocky.lttng.kernel.analysis.os.handlers;
 
-import ca.polymtl.dorsal.libdelorean.ITmfStateSystemBuilder;
+import ca.polymtl.dorsal.libdelorean.IStateSystemWriter;
 import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
 import ca.polymtl.dorsal.libdelorean.exceptions.StateValueTypeException;
 import ca.polymtl.dorsal.libdelorean.exceptions.TimeRangeException;
-import ca.polymtl.dorsal.libdelorean.statevalue.ITmfStateValue;
-import ca.polymtl.dorsal.libdelorean.statevalue.TmfStateValue;
+import ca.polymtl.dorsal.libdelorean.statevalue.IStateValue;
+import ca.polymtl.dorsal.libdelorean.statevalue.StateValue;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.Attributes;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.StateValues;
 
@@ -59,7 +59,7 @@ public final class KernelEventHandlerUtils {
      *
      * @return the current CPU quark -1 for not set
      */
-    public static int getCurrentCPUNode(Integer cpuNumber, ITmfStateSystemBuilder ss) {
+    public static int getCurrentCPUNode(Integer cpuNumber, IStateSystemWriter ss) {
         return ss.getQuarkRelativeAndAdd(getNodeCPUs(ss), cpuNumber.toString());
     }
 
@@ -85,13 +85,13 @@ public final class KernelEventHandlerUtils {
      *
      * @return the current thread node quark
      */
-    public static int getCurrentThreadNode(Integer cpuNumber, ITmfStateSystemBuilder ss) {
+    public static int getCurrentThreadNode(Integer cpuNumber, IStateSystemWriter ss) {
         /*
          * Shortcut for the "current thread" attribute node. It requires
          * querying the current CPU's current thread.
          */
         int quark = ss.getQuarkRelativeAndAdd(getCurrentCPUNode(cpuNumber, ss), Attributes.CURRENT_THREAD);
-        ITmfStateValue value = ss.queryOngoingState(quark);
+        IStateValue value = ss.queryOngoingState(quark);
         int thread = value.isNull() ? -1 : value.unboxInt();
         return ss.getQuarkRelativeAndAdd(getNodeThreads(ss), Attributes.buildThreadAttributeName(thread, cpuNumber));
     }
@@ -115,10 +115,10 @@ public final class KernelEventHandlerUtils {
      * @throws AttributeNotFoundException
      *             If the attribute is invalid
      */
-    public static void setProcessToRunning(long timestamp, int currentThreadNode, ITmfStateSystemBuilder ssb)
+    public static void setProcessToRunning(long timestamp, int currentThreadNode, IStateSystemWriter ssb)
             throws TimeRangeException, StateValueTypeException, AttributeNotFoundException {
         int quark;
-        ITmfStateValue value;
+        IStateValue value;
 
         quark = ssb.getQuarkRelativeAndAdd(currentThreadNode, Attributes.SYSTEM_CALL);
         if (ssb.queryOngoingState(quark).isNull()) {
@@ -140,7 +140,7 @@ public final class KernelEventHandlerUtils {
      *            the state system
      * @return the IRQ node quark
      */
-    public static int getNodeIRQs(int cpuNumber, ITmfStateSystemBuilder ss) {
+    public static int getNodeIRQs(int cpuNumber, IStateSystemWriter ss) {
         return ss.getQuarkAbsoluteAndAdd(Attributes.CPUS, Integer.toString(cpuNumber), Attributes.IRQS);
     }
 
@@ -151,7 +151,7 @@ public final class KernelEventHandlerUtils {
      *            the state system
      * @return the CPU node quark
      */
-    public static int getNodeCPUs(ITmfStateSystemBuilder ss) {
+    public static int getNodeCPUs(IStateSystemWriter ss) {
         return ss.getQuarkAbsoluteAndAdd(Attributes.CPUS);
     }
 
@@ -164,7 +164,7 @@ public final class KernelEventHandlerUtils {
      *            the state system
      * @return the Soft IRQ node quark
      */
-    public static int getNodeSoftIRQs(int cpuNumber, ITmfStateSystemBuilder ss) {
+    public static int getNodeSoftIRQs(int cpuNumber, IStateSystemWriter ss) {
         return ss.getQuarkAbsoluteAndAdd(Attributes.CPUS, Integer.toString(cpuNumber), Attributes.SOFT_IRQS);
     }
 
@@ -175,7 +175,7 @@ public final class KernelEventHandlerUtils {
      *            the state system
      * @return the threads quark
      */
-    public static int getNodeThreads(ITmfStateSystemBuilder ss) {
+    public static int getNodeThreads(IStateSystemWriter ss) {
         return ss.getQuarkAbsoluteAndAdd(Attributes.THREADS);
     }
 
@@ -196,11 +196,11 @@ public final class KernelEventHandlerUtils {
      * @throws AttributeNotFoundException
      *             If the attribute is invalid
      */
-    public static void cpuExitInterrupt(long timestamp, Integer cpuNumber, ITmfStateSystemBuilder ssb)
+    public static void cpuExitInterrupt(long timestamp, Integer cpuNumber, IStateSystemWriter ssb)
             throws StateValueTypeException, TimeRangeException, AttributeNotFoundException {
         int currentCPUNode = getCurrentCPUNode(cpuNumber, ssb);
 
-        ITmfStateValue value = getCpuStatus(ssb, currentCPUNode);
+        IStateValue value = getCpuStatus(ssb, currentCPUNode);
         ssb.modifyAttribute(timestamp, value, currentCPUNode);
     }
 
@@ -226,14 +226,14 @@ public final class KernelEventHandlerUtils {
      * @return The state value that represents the status of the given CPU
      * @throws AttributeNotFoundException
      */
-    private static ITmfStateValue getCpuStatus(ITmfStateSystemBuilder ssb, int cpuQuark)
+    private static IStateValue getCpuStatus(IStateSystemWriter ssb, int cpuQuark)
             throws AttributeNotFoundException {
 
         /* Check if there is a IRQ running */
         int irqQuarks = ssb.getQuarkRelativeAndAdd(cpuQuark, Attributes.IRQS);
         List<Integer> irqs = ssb.getSubAttributes(irqQuarks, false);
         for (Integer quark : irqs) {
-            final ITmfStateValue irqState = ssb.queryOngoingState(quark.intValue());
+            final IStateValue irqState = ssb.queryOngoingState(quark.intValue());
             if (!irqState.isNull()) {
                 return irqState;
             }
@@ -243,7 +243,7 @@ public final class KernelEventHandlerUtils {
         int softIrqQuarks = ssb.getQuarkRelativeAndAdd(cpuQuark, Attributes.SOFT_IRQS);
         List<Integer> softIrqs = ssb.getSubAttributes(softIrqQuarks, false);
         for (Integer quark : softIrqs) {
-            final ITmfStateValue softIrqState = ssb.queryOngoingState(quark.intValue());
+            final IStateValue softIrqState = ssb.queryOngoingState(quark.intValue());
             if (!softIrqState.isNull()) {
                 return softIrqState;
             }
@@ -254,9 +254,9 @@ public final class KernelEventHandlerUtils {
          * report the running state of the thread (usermode or system call).
          */
         int currentThreadQuark = ssb.getQuarkRelativeAndAdd(cpuQuark, Attributes.CURRENT_THREAD);
-        ITmfStateValue currentThreadState = ssb.queryOngoingState(currentThreadQuark);
+        IStateValue currentThreadState = ssb.queryOngoingState(currentThreadQuark);
         if (currentThreadState.isNull()) {
-            return TmfStateValue.nullValue();
+            return StateValue.nullValue();
         }
         int tid = currentThreadState.unboxInt();
         if (tid == 0) {

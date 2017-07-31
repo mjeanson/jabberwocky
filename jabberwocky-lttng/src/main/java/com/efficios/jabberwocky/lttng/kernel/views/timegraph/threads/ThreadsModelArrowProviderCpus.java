@@ -9,11 +9,11 @@
 
 package com.efficios.jabberwocky.lttng.kernel.views.timegraph.threads;
 
-import ca.polymtl.dorsal.libdelorean.ITmfStateSystem;
+import ca.polymtl.dorsal.libdelorean.IStateSystemReader;
 import ca.polymtl.dorsal.libdelorean.StateSystemUtils;
 import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
 import ca.polymtl.dorsal.libdelorean.exceptions.StateSystemDisposedException;
-import ca.polymtl.dorsal.libdelorean.interval.ITmfStateInterval;
+import ca.polymtl.dorsal.libdelorean.interval.IStateInterval;
 import com.efficios.jabberwocky.common.TimeRange;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.Attributes;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.KernelAnalysis;
@@ -49,7 +49,7 @@ public class ThreadsModelArrowProviderCpus extends StateSystemModelArrowProvider
 
     @Override
     public TimeGraphArrowRender getArrowRender(TimeGraphTreeRender treeRender, TimeRange timeRange, @Nullable FutureTask<?> task) {
-        ITmfStateSystem ss = getStateSystem();
+        IStateSystemReader ss = getStateSystem();
         if (ss == null) {
             return TimeGraphArrowRender.EMPTY_RENDER;
         }
@@ -58,7 +58,7 @@ public class ThreadsModelArrowProviderCpus extends StateSystemModelArrowProvider
         List<List<TimeGraphArrow>> allArrows = new LinkedList<>();
         try {
             for (int threadLineQuark : threadLineQuarks) {
-                List<ITmfStateInterval> intervals = StateSystemUtils.queryHistoryRange(ss, threadLineQuark, timeRange.getStartTime(), timeRange.getEndTime(), 1, task);
+                List<IStateInterval> intervals = StateSystemUtils.queryHistoryRange(ss, threadLineQuark, timeRange.getStartTime(), timeRange.getEndTime(), 1, task);
                 if (task != null && task.isCancelled()) {
                     return TimeGraphArrowRender.EMPTY_RENDER;
                 }
@@ -82,11 +82,11 @@ public class ThreadsModelArrowProviderCpus extends StateSystemModelArrowProvider
         return new TimeGraphArrowRender(timeRange, flattenedArrows);
     }
 
-    private List<TimeGraphArrow> getArrowsFromStates(TimeGraphTreeRender treeRender, List<ITmfStateInterval> threadTimeline, @Nullable Integer cpu) {
+    private List<TimeGraphArrow> getArrowsFromStates(TimeGraphTreeRender treeRender, List<IStateInterval> threadTimeline, @Nullable Integer cpu) {
         List<TimeGraphArrow> arrows = new LinkedList<>();
         for (int i = 1; i < threadTimeline.size(); i++) {
-            ITmfStateInterval interval1 = threadTimeline.get(i - 1);
-            ITmfStateInterval interval2 = threadTimeline.get(i);
+            IStateInterval interval1 = threadTimeline.get(i - 1);
+            IStateInterval interval2 = threadTimeline.get(i);
             int thread1 = interval1.getStateValue().unboxInt();
             int thread2 = interval2.getStateValue().unboxInt();
 

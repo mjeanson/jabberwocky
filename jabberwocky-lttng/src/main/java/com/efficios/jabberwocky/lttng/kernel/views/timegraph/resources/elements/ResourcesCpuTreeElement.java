@@ -9,13 +9,13 @@
 
 package com.efficios.jabberwocky.lttng.kernel.views.timegraph.resources.elements;
 
-import java.util.List;
-import java.util.function.Predicate;
-
-import ca.polymtl.dorsal.libdelorean.ITmfStateSystem;
+import ca.polymtl.dorsal.libdelorean.IStateSystemReader;
+import com.efficios.jabberwocky.trace.event.ITraceEvent;
 import com.efficios.jabberwocky.views.timegraph.model.provider.statesystem.StateSystemTimeGraphTreeElement;
 import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeElement;
-import com.efficios.jabberwocky.trace.event.ITraceEvent;
+
+import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Element of the Resources time graph which represents a CPU.
@@ -39,7 +39,7 @@ public class ResourcesCpuTreeElement extends StateSystemTimeGraphTreeElement {
      */
     public ResourcesCpuTreeElement(int cpu,
                                    List<TimeGraphTreeElement> children,
-                                   ITmfStateSystem ss,
+                                   IStateSystemReader ss,
                                    int sourceQuark) {
         super(Messages.treeElementPrefixCpu + ' ' + String.valueOf(cpu),
                 children,

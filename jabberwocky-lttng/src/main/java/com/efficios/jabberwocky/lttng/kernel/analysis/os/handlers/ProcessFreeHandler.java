@@ -12,16 +12,14 @@
 
 package com.efficios.jabberwocky.lttng.kernel.analysis.os.handlers;
 
-import static java.util.Objects.requireNonNull;
-
+import ca.polymtl.dorsal.libdelorean.IStateSystemWriter;
+import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.Attributes;
 import com.efficios.jabberwocky.lttng.kernel.trace.layout.ILttngKernelEventLayout;
-
 import com.efficios.jabberwocky.trace.event.FieldValue.IntegerValue;
 import com.efficios.jabberwocky.trace.event.ITraceEvent;
 
-import ca.polymtl.dorsal.libdelorean.ITmfStateSystemBuilder;
-import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Process free event handler
@@ -39,7 +37,7 @@ public class ProcessFreeHandler extends KernelEventHandler {
     }
 
     @Override
-    public void handleEvent(ITmfStateSystemBuilder ss, ITraceEvent event) throws AttributeNotFoundException {
+    public void handleEvent(IStateSystemWriter ss, ITraceEvent event) throws AttributeNotFoundException {
         int cpu = event.getCpu();
         Long tid = requireNonNull(event.getField(getLayout().fieldTid(), IntegerValue.class)).getValue();
 

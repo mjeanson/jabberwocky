@@ -12,18 +12,16 @@
 
 package com.efficios.jabberwocky.lttng.kernel.analysis.os.handlers;
 
-import static java.util.Objects.requireNonNull;
-
-import org.eclipse.jdt.annotation.Nullable;
+import ca.polymtl.dorsal.libdelorean.IStateSystemWriter;
+import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
+import ca.polymtl.dorsal.libdelorean.statevalue.IStateValue;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.StateValues;
 import com.efficios.jabberwocky.lttng.kernel.trace.layout.ILttngKernelEventLayout;
-
 import com.efficios.jabberwocky.trace.event.FieldValue.IntegerValue;
 import com.efficios.jabberwocky.trace.event.ITraceEvent;
+import org.eclipse.jdt.annotation.Nullable;
 
-import ca.polymtl.dorsal.libdelorean.ITmfStateSystemBuilder;
-import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
-import ca.polymtl.dorsal.libdelorean.statevalue.ITmfStateValue;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Raise a soft irq event
@@ -41,7 +39,7 @@ public class SoftIrqRaiseHandler extends KernelEventHandler {
     }
 
     @Override
-    public void handleEvent(ITmfStateSystemBuilder ss, ITraceEvent event) throws AttributeNotFoundException {
+    public void handleEvent(IStateSystemWriter ss, ITraceEvent event) throws AttributeNotFoundException {
         int cpu = event.getCpu();
         Long softIrqId = requireNonNull(event.getField(getLayout().fieldVec(), IntegerValue.class)).getValue();
 
@@ -50,14 +48,14 @@ public class SoftIrqRaiseHandler extends KernelEventHandler {
          */
         int quark = ss.getQuarkRelativeAndAdd(KernelEventHandlerUtils.getNodeSoftIRQs(cpu, ss), softIrqId.toString());
 
-        ITmfStateValue value = (isInSoftirq(ss.queryOngoingState(quark)) ?
+        IStateValue value = (isInSoftirq(ss.queryOngoingState(quark)) ?
                 StateValues.SOFT_IRQ_RAISED_RUNNING_VALUE :
                 StateValues.SOFT_IRQ_RAISED_VALUE);
         ss.modifyAttribute(event.getTimestamp(), value, quark);
 
     }
 
-    private static boolean isInSoftirq(@Nullable ITmfStateValue state) {
+    private static boolean isInSoftirq(@Nullable IStateValue state) {
         return (state != null &&
                 !state.isNull() &&
                 (state.unboxInt() & StateValues.CPU_STATUS_SOFTIRQ) == StateValues.CPU_STATUS_SOFTIRQ);

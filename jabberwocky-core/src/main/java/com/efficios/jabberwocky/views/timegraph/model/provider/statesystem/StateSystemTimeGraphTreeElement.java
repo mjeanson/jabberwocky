@@ -9,7 +9,7 @@
 
 package com.efficios.jabberwocky.views.timegraph.model.provider.statesystem;
 
-import ca.polymtl.dorsal.libdelorean.ITmfStateSystem;
+import ca.polymtl.dorsal.libdelorean.IStateSystemReader;
 import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeElement;
 
 import java.util.List;
@@ -24,7 +24,7 @@ import java.util.List;
 public class StateSystemTimeGraphTreeElement extends TimeGraphTreeElement {
 
     private final int fSourceQuark;
-    private final transient ITmfStateSystem fStateSystem;
+    private final transient IStateSystemReader fStateSystem;
 
     /**
      * Constructor
@@ -41,14 +41,14 @@ public class StateSystemTimeGraphTreeElement extends TimeGraphTreeElement {
      */
     public StateSystemTimeGraphTreeElement(String name,
             List<TimeGraphTreeElement> children,
-            ITmfStateSystem ss,
+                                           IStateSystemReader ss,
             int sourceQuark) {
         super(name, children);
         fStateSystem = ss;
         fSourceQuark = sourceQuark;
     }
 
-    protected ITmfStateSystem getStateSystem() {
+    protected IStateSystemReader getStateSystem() {
         return fStateSystem;
     }
 

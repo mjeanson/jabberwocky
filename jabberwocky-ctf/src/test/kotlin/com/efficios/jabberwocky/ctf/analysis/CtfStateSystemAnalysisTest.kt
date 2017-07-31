@@ -9,8 +9,8 @@
 
 package com.efficios.jabberwocky.ctf.analysis
 
-import ca.polymtl.dorsal.libdelorean.ITmfStateSystem
-import ca.polymtl.dorsal.libdelorean.ITmfStateSystemBuilder
+import ca.polymtl.dorsal.libdelorean.IStateSystemReader
+import ca.polymtl.dorsal.libdelorean.IStateSystemWriter
 import com.efficios.jabberwocky.analysis.statesystem.StateSystemAnalysis
 import com.efficios.jabberwocky.collection.ITraceCollection
 import com.efficios.jabberwocky.collection.TraceCollection
@@ -48,7 +48,7 @@ class CtfStateSystemAnalysisTest {
     private lateinit var projectPath: Path
     private lateinit var project: ITraceProject<CtfTraceEvent, GenericCtfTrace>
 
-    private lateinit var ss : ITmfStateSystem
+    private lateinit var ss : IStateSystemReader
 
     @Before
     fun setup() {
@@ -82,7 +82,7 @@ class CtfStateSystemAnalysisTest {
             return TraceCollection(project.traceCollections.flatMap { it.traces })
         }
 
-        override fun handleEvent(ss: ITmfStateSystemBuilder, event: ITraceEvent, trackedState: Array<Any>?) {
+        override fun handleEvent(ss: IStateSystemWriter, event: ITraceEvent, trackedState: Array<Any>?) {
             /* Count the number of seen events in a "count" attribute */
             val quark = ss.getQuarkAbsoluteAndAdd(attribName)
             ss.incrementAttribute(event.timestamp, quark)

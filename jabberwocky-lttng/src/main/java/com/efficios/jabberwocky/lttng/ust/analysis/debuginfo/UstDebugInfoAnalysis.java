@@ -9,15 +9,7 @@
 
 package com.efficios.jabberwocky.lttng.ust.analysis.debuginfo;
 
-import static java.util.Objects.requireNonNull;
-
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
-
+import ca.polymtl.dorsal.libdelorean.IStateSystemWriter;
 import com.efficios.jabberwocky.analysis.statesystem.StateSystemAnalysis;
 import com.efficios.jabberwocky.collection.ITraceCollection;
 import com.efficios.jabberwocky.collection.TraceCollection;
@@ -28,8 +20,14 @@ import com.efficios.jabberwocky.lttng.ust.trace.layout.LttngUst28EventLayout;
 import com.efficios.jabberwocky.project.ITraceProject;
 import com.efficios.jabberwocky.trace.ITrace;
 import com.efficios.jabberwocky.trace.event.ITraceEvent;
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 
-import ca.polymtl.dorsal.libdelorean.ITmfStateSystemBuilder;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Analysis to provide TMF Callsite information by mapping IP (instruction
@@ -116,7 +114,7 @@ public class UstDebugInfoAnalysis extends StateSystemAnalysis {
     }
 
     @Override
-    protected void handleEvent(ITmfStateSystemBuilder ss, ITraceEvent event, Object @Nullable [] trackedState) {
+    protected void handleEvent(IStateSystemWriter ss, ITraceEvent event, Object @Nullable [] trackedState) {
         ITrace trace = event.getTrace();
         if (!(trace instanceof LttngUstTrace)) {
             return;

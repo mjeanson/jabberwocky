@@ -12,8 +12,8 @@
 
 package com.efficios.jabberwocky.lttng.kernel.analysis.os;
 
-import ca.polymtl.dorsal.libdelorean.statevalue.ITmfStateValue;
-import ca.polymtl.dorsal.libdelorean.statevalue.TmfStateValue;
+import ca.polymtl.dorsal.libdelorean.statevalue.IStateValue;
+import ca.polymtl.dorsal.libdelorean.statevalue.StateValue;
 
 /**
  * State values that are used in the kernel event handler. It's much better to
@@ -35,13 +35,13 @@ public interface StateValues {
     int PROCESS_STATUS_WAIT_FOR_CPU = 5;
     int PROCESS_STATUS_WAIT_UNKNOWN = 6;
 
-    ITmfStateValue PROCESS_STATUS_UNKNOWN_VALUE = TmfStateValue.newValueInt(PROCESS_STATUS_UNKNOWN);
-    ITmfStateValue PROCESS_STATUS_WAIT_UNKNOWN_VALUE = TmfStateValue.newValueInt(PROCESS_STATUS_WAIT_UNKNOWN);
-    ITmfStateValue PROCESS_STATUS_WAIT_BLOCKED_VALUE = TmfStateValue.newValueInt(PROCESS_STATUS_WAIT_BLOCKED);
-    ITmfStateValue PROCESS_STATUS_RUN_USERMODE_VALUE = TmfStateValue.newValueInt(PROCESS_STATUS_RUN_USERMODE);
-    ITmfStateValue PROCESS_STATUS_RUN_SYSCALL_VALUE = TmfStateValue.newValueInt(PROCESS_STATUS_RUN_SYSCALL);
-    ITmfStateValue PROCESS_STATUS_INTERRUPTED_VALUE = TmfStateValue.newValueInt(PROCESS_STATUS_INTERRUPTED);
-    ITmfStateValue PROCESS_STATUS_WAIT_FOR_CPU_VALUE = TmfStateValue.newValueInt(PROCESS_STATUS_WAIT_FOR_CPU);
+    IStateValue PROCESS_STATUS_UNKNOWN_VALUE = StateValue.newValueInt(PROCESS_STATUS_UNKNOWN);
+    IStateValue PROCESS_STATUS_WAIT_UNKNOWN_VALUE = StateValue.newValueInt(PROCESS_STATUS_WAIT_UNKNOWN);
+    IStateValue PROCESS_STATUS_WAIT_BLOCKED_VALUE = StateValue.newValueInt(PROCESS_STATUS_WAIT_BLOCKED);
+    IStateValue PROCESS_STATUS_RUN_USERMODE_VALUE = StateValue.newValueInt(PROCESS_STATUS_RUN_USERMODE);
+    IStateValue PROCESS_STATUS_RUN_SYSCALL_VALUE = StateValue.newValueInt(PROCESS_STATUS_RUN_SYSCALL);
+    IStateValue PROCESS_STATUS_INTERRUPTED_VALUE = StateValue.newValueInt(PROCESS_STATUS_INTERRUPTED);
+    IStateValue PROCESS_STATUS_WAIT_FOR_CPU_VALUE = StateValue.newValueInt(PROCESS_STATUS_WAIT_FOR_CPU);
 
     /* CPU Status */
     int CPU_STATUS_IDLE = 0;
@@ -55,15 +55,15 @@ public interface StateValues {
     int CPU_STATUS_SOFTIRQ = (1 << 3);
     int CPU_STATUS_IRQ = (1 << 4);
 
-    ITmfStateValue CPU_STATUS_IDLE_VALUE = TmfStateValue.newValueInt(CPU_STATUS_IDLE);
-    ITmfStateValue CPU_STATUS_RUN_USERMODE_VALUE = TmfStateValue.newValueInt(CPU_STATUS_RUN_USERMODE);
-    ITmfStateValue CPU_STATUS_RUN_SYSCALL_VALUE = TmfStateValue.newValueInt(CPU_STATUS_RUN_SYSCALL);
-    ITmfStateValue CPU_STATUS_IRQ_VALUE = TmfStateValue.newValueInt(CPU_STATUS_IRQ);
-    ITmfStateValue CPU_STATUS_SOFTIRQ_VALUE = TmfStateValue.newValueInt(CPU_STATUS_SOFTIRQ);
+    IStateValue CPU_STATUS_IDLE_VALUE = StateValue.newValueInt(CPU_STATUS_IDLE);
+    IStateValue CPU_STATUS_RUN_USERMODE_VALUE = StateValue.newValueInt(CPU_STATUS_RUN_USERMODE);
+    IStateValue CPU_STATUS_RUN_SYSCALL_VALUE = StateValue.newValueInt(CPU_STATUS_RUN_SYSCALL);
+    IStateValue CPU_STATUS_IRQ_VALUE = StateValue.newValueInt(CPU_STATUS_IRQ);
+    IStateValue CPU_STATUS_SOFTIRQ_VALUE = StateValue.newValueInt(CPU_STATUS_SOFTIRQ);
 
     /** Soft IRQ is raised, CPU is in user mode */
-    ITmfStateValue SOFT_IRQ_RAISED_VALUE = TmfStateValue.newValueInt(CPU_STATUS_SOFT_IRQ_RAISED);
+    IStateValue SOFT_IRQ_RAISED_VALUE = StateValue.newValueInt(CPU_STATUS_SOFT_IRQ_RAISED);
 
     /** If the softirq is running and another is raised at the same time. */
-    ITmfStateValue SOFT_IRQ_RAISED_RUNNING_VALUE = TmfStateValue.newValueInt(CPU_STATUS_SOFT_IRQ_RAISED | CPU_STATUS_SOFTIRQ);
+    IStateValue SOFT_IRQ_RAISED_RUNNING_VALUE = StateValue.newValueInt(CPU_STATUS_SOFT_IRQ_RAISED | CPU_STATUS_SOFTIRQ);
 }

@@ -9,7 +9,7 @@
 
 package com.efficios.jabberwocky.views.timegraph.model.provider.statesystem;
 
-import ca.polymtl.dorsal.libdelorean.ITmfStateSystem;
+import ca.polymtl.dorsal.libdelorean.IStateSystemReader;
 import com.efficios.jabberwocky.analysis.statesystem.StateSystemAnalysis;
 import com.efficios.jabberwocky.common.TimeRange;
 import com.efficios.jabberwocky.project.ITraceProject;
@@ -29,7 +29,7 @@ import java.util.concurrent.FutureTask;
  */
 public abstract class StateSystemModelArrowProvider extends TimeGraphModelArrowProvider {
 
-    private transient @Nullable ITmfStateSystem fStateSystem = null;
+    private transient @Nullable IStateSystemReader fStateSystem = null;
 
     /**
      * Constructor
@@ -68,7 +68,7 @@ public abstract class StateSystemModelArrowProvider extends TimeGraphModelArrowP
      * @return The target state system. It will be null if the current trace is
      *         null.
      */
-    protected final @Nullable ITmfStateSystem getStateSystem() {
+    protected final @Nullable IStateSystemReader getStateSystem() {
         return fStateSystem;
     }
 

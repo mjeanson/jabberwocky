@@ -10,9 +10,9 @@
 package com.efficios.jabberwocky.lttng.kernel.views.timegraph.threads
 
 import ca.polymtl.dorsal.libdelorean.StateSystemUtils
-import ca.polymtl.dorsal.libdelorean.interval.ITmfStateInterval
-import ca.polymtl.dorsal.libdelorean.interval.TmfStateInterval
-import ca.polymtl.dorsal.libdelorean.statevalue.TmfStateValue
+import ca.polymtl.dorsal.libdelorean.interval.IStateInterval
+import ca.polymtl.dorsal.libdelorean.interval.StateInterval
+import ca.polymtl.dorsal.libdelorean.statevalue.StateValue
 import com.efficios.jabberwocky.common.TimeRange
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.Attributes
 import com.efficios.jabberwocky.lttng.testutils.ExtractedLttngKernelTestTrace
@@ -20,7 +20,10 @@ import com.efficios.jabberwocky.project.TraceProject
 import com.efficios.jabberwocky.views.timegraph.model.render.states.MultiStateInterval
 import com.efficios.jabberwocky.views.timegraph.model.render.states.TimeGraphStateInterval
 import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
-import org.junit.*
+import org.junit.After
+import org.junit.Before
+import org.junit.ClassRule
+import org.junit.Test
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
@@ -165,16 +168,16 @@ class ThreadsModelProviderTest {
                 val resolutionPoints = (range.startTime..range.endTime step resolution).toMutableList()
                 /* The end time is also an expected resolution point */
                 resolutionPoints.add(range.endTime)
-                val sortedIntervals = sortedSetOf<ITmfStateInterval>(compareBy { it.endTime })
+                val sortedIntervals = sortedSetOf<IStateInterval>(compareBy { it.endTime })
                 sortedIntervals.addAll(intervalsFromSS)
-                val ret = mutableListOf<ITmfStateInterval>()
+                val ret = mutableListOf<IStateInterval>()
 
                 /* Only keep intervals that cross two consecutive resolution points */
                 for (i in 1 until resolutionPoints.size) {
                     val point1 = resolutionPoints[i - 1]
                     val point2 = resolutionPoints[i]
 
-                    val target = TmfStateInterval(0, point2, 0, TmfStateValue.nullValue())
+                    val target = StateInterval(0, point2, 0, StateValue.nullValue())
                     val toAdd = sortedIntervals.tailSet(target)
                             .filter { it.intersects(point1) && it.intersects(point2) }
                             .singleOrNull()
@@ -274,7 +277,7 @@ class ThreadsModelProviderTest {
         assertEquals(ssEnd, modelEnd)
     }
 
-    private fun verifySameIntervals(ssIntervals: List<ITmfStateInterval>,
+    private fun verifySameIntervals(ssIntervals: List<IStateInterval>,
                                     renderIntervals: List<TimeGraphStateInterval>) {
         assertEquals(ssIntervals.size, renderIntervals.size)
 

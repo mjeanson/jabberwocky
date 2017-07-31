@@ -9,18 +9,16 @@
 
 package com.efficios.jabberwocky.lttng.kernel.analysis.os.handlers;
 
-import static java.util.Objects.requireNonNull;
-
-import com.efficios.jabberwocky.lttng.kernel.trace.layout.ILttngKernelEventLayout;
+import ca.polymtl.dorsal.libdelorean.IStateSystemWriter;
+import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
+import ca.polymtl.dorsal.libdelorean.statevalue.IStateValue;
+import ca.polymtl.dorsal.libdelorean.statevalue.StateValue;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.StateValues;
-
+import com.efficios.jabberwocky.lttng.kernel.trace.layout.ILttngKernelEventLayout;
 import com.efficios.jabberwocky.trace.event.FieldValue.IntegerValue;
 import com.efficios.jabberwocky.trace.event.ITraceEvent;
 
-import ca.polymtl.dorsal.libdelorean.ITmfStateSystemBuilder;
-import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
-import ca.polymtl.dorsal.libdelorean.statevalue.ITmfStateValue;
-import ca.polymtl.dorsal.libdelorean.statevalue.TmfStateValue;
+import static java.util.Objects.requireNonNull;
 
 /**
  * IPI Entry Handler
@@ -40,7 +38,7 @@ public class IPIEntryHandler extends KernelEventHandler {
     }
 
     @Override
-    public void handleEvent(ITmfStateSystemBuilder ss, ITraceEvent event) throws AttributeNotFoundException {
+    public void handleEvent(IStateSystemWriter ss, ITraceEvent event) throws AttributeNotFoundException {
 
         int cpu = event.getCpu();
         Long irqId = requireNonNull(event.getField(getLayout().fieldIPIVector(), IntegerValue.class)).getValue();
@@ -51,7 +49,7 @@ public class IPIEntryHandler extends KernelEventHandler {
          */
         int quark = ss.getQuarkRelativeAndAdd(KernelEventHandlerUtils.getNodeIRQs(cpu, ss), irqId.toString());
 
-        ITmfStateValue value = TmfStateValue.newValueInt(cpu);
+        IStateValue value = StateValue.newValueInt(cpu);
         long timestamp = event.getTimestamp();
         ss.modifyAttribute(timestamp, value, quark);
 

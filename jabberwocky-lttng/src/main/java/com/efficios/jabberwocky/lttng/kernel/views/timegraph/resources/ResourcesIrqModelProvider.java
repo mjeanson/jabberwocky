@@ -9,22 +9,20 @@
 
 package com.efficios.jabberwocky.lttng.kernel.views.timegraph.resources;
 
-import static java.util.Objects.requireNonNull;
+import ca.polymtl.dorsal.libdelorean.IStateSystemReader;
+import com.efficios.jabberwocky.lttng.kernel.analysis.os.Attributes;
+import com.efficios.jabberwocky.lttng.kernel.views.timegraph.resources.elements.ResourcesIrqTreeElement;
+import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeElement;
+import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeRender;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.primitives.Ints;
 
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 
-import com.efficios.jabberwocky.lttng.kernel.views.timegraph.resources.elements.ResourcesIrqTreeElement;
-
-import com.efficios.jabberwocky.lttng.kernel.analysis.os.Attributes;
-import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeElement;
-import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeRender;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.primitives.Ints;
-
-import ca.polymtl.dorsal.libdelorean.ITmfStateSystem;
+import static java.util.Objects.requireNonNull;
 
 /**
  * View model for a Resources view showing IRQs and SoftIRQs.
@@ -41,7 +39,7 @@ public class ResourcesIrqModelProvider extends ResourcesBaseModelProvider {
      */
     @VisibleForTesting
     public static final Function<TreeRenderContext, TimeGraphTreeRender> SS_TO_TREE_RENDER_FUNCTION = (treeContext) -> {
-        ITmfStateSystem ss = treeContext.ss;
+        IStateSystemReader ss = treeContext.ss;
 
         List<ResourcesIrqTreeElement> treeElems = new LinkedList<>();
         /* Create "IRQ *" children */
