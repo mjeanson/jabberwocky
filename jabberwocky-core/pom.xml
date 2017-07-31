@@ -16,63 +16,13 @@
   <parent>
     <groupId>com.efficios.jabberwocky</groupId>
     <artifactId>jabberwocky-parent</artifactId>
-    <version>0.2.21-SNAPSHOT</version>
+    <version>0.2.24-SNAPSHOT</version>
   </parent>
 
   <artifactId>jabberwocky-core</artifactId>
   <packaging>jar</packaging>
 
   <name>Jabberwocky Trace Analysis Library</name>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-            <configuration>
-              <artifactSet>
-                <includes>
-                  <include>org.jetbrains.kotlin:kotlin-stdlib-jre8</include>
-                  <include>org.jetbrains.kotlin:kotlin-stdlib-jre7</include>
-                  <include>org.jetbrains.kotlin:kotlin-stdlib</include>
-                  <include>org.jetbrains:annotations</include>
-                </includes>
-              </artifactSet>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
-        <extensions>true</extensions>
-        <configuration>
-          <instructions>
-            <Export-Package>
-              com.efficios.jabberwocky.*,
-              kotlin,
-              kotlin.collections,
-              kotlin.comparisons,
-              kotlin.jvm,
-              kotlin.jvm.functions,
-              kotlin.jvm.internal,
-              kotlin.jvm.internal.markers,
-              kotlin.ranges,
-              kotlin.reflect,
-              kotlin.text
-            </Export-Package>
-          </instructions>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
 
   <dependencies>
     <dependency>

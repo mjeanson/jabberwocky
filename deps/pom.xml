@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Copyright (C) 2017 EfficiOS Inc.
+
+   All rights reserved. This program and the accompanying materials
+   are made available under the terms of the Eclipse Public License v1.0
+   which accompanies this distribution, and is available at
+   http://www.eclipse.org/legal/epl-v10.html
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.efficios.jabberwocky</groupId>
+    <artifactId>jabberwocky-parent</artifactId>
+    <version>0.2.24-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>deps</artifactId>
+  <packaging>jar</packaging>
+
+  <name>Jabberwocky Dependencies Package</name>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <artifactSet>
+                <includes>
+                  <include>org.jetbrains.kotlin:kotlin-stdlib-jre8</include>
+                  <include>org.jetbrains.kotlin:kotlin-stdlib-jre7</include>
+                  <include>org.jetbrains.kotlin:kotlin-stdlib</include>
+                  <include>org.jetbrains:annotations</include>
+                  <include>com.google.code.gson:gson</include>
+                  <include>org.json:json</include>
+                </includes>
+              </artifactSet>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <extensions>true</extensions>
+        <configuration>
+          <instructions>
+            <Export-Package>
+              kotlin,
+              kotlin.collections,
+              kotlin.comparisons,
+              kotlin.concurrent,
+              kotlin.io,
+              kotlin.jvm,
+              kotlin.jvm.functions,
+              kotlin.jvm.internal,
+              kotlin.jvm.internal.markers,
+              kotlin.properties,
+              kotlin.ranges,
+              kotlin.reflect,
+              kotlin.streams,
+              kotlin.sequences,
+              kotlin.system,
+              kotlin.text,
+
+              com.google.gson,
+              com.google.gson.annotations,
+              com.google.gson.reflect,
+              com.google.gson.stream,
+
+              org.json
+            </Export-Package>
+          </instructions>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <dependencies>
+  
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-stdlib-jre8</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+    </dependency>
+  </dependencies>
+
+</project>
