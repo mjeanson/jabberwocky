@@ -115,9 +115,16 @@ abstract class StateSystemModelStateProvider(stateDefinitions: List<StateDefinit
         /* Query the intervals from the state system */
         val quarks = ssTreeElements.map { it.sourceQuark }.toSet()
         ss.iterator2D(timeRange.startTime, timeRange.endTime, resolution, quarks).asSequence()
-                .map { createInterval(ss, quarksToTreeElementMap[it.attribute]!!, it) }
-                /* Insert into the correct list among the ones we created earlier */
-                .forEach { intervalsPerElement[it.treeElement]!!.add(it) }
+                .forEach{ partialQueryResults ->
+                    partialQueryResults.forEach {
+                        val quark = it.key
+                        val stateInterval = it.value
+                        val treeElement = quarksToTreeElementMap[quark]!!
+                        val modelInterval = createInterval(ss, treeElement, stateInterval)
+                        /* Insert into the correct list among the ones we created earlier */
+                        intervalsPerElement[treeElement]!!.add(modelInterval)
+                    }
+                }
 
         /*
          * Manually add the entries for the last pixel [endTime - resolution, endTime].
