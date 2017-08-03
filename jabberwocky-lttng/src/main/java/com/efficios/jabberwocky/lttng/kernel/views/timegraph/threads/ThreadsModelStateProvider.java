@@ -9,6 +9,7 @@
 
 package com.efficios.jabberwocky.lttng.kernel.views.timegraph.threads;
 
+import ca.polymtl.dorsal.libdelorean.IStateSystemQuarkResolver;
 import ca.polymtl.dorsal.libdelorean.IStateSystemReader;
 import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
 import ca.polymtl.dorsal.libdelorean.exceptions.StateValueTypeException;
@@ -95,11 +96,33 @@ public class ThreadsModelStateProvider extends StateSystemModelStateProvider {
     }
 
     @Override
-    protected TimeGraphStateInterval createInterval(IStateSystemReader ss,
-            StateSystemTimeGraphTreeElement treeElem, IStateInterval interval) {
+    protected Set<Integer> supplyExtraQuarks(IStateSystemQuarkResolver ss,
+                                             long ts,
+                                             IStateInterval stateInterval) {
+        /*
+         * We could be potentially interested in the "sycall" and "current cpu"
+         * sub-attributes.
+         */
+        int baseQuark = stateInterval.getAttribute();
+        Set<Integer> quarks = new HashSet<>();
+        Stream.of(Attributes.SYSTEM_CALL, Attributes.CURRENT_CPU_RQ)
+                .forEach(subPath -> {
+                    try {
+                        quarks.add(ss.getQuarkRelative(baseQuark, subPath));
+                    } catch (AttributeNotFoundException e) {
+                        // Skip this one
+                    }
+                });
+        return quarks;
+    }
+
+    @Override
+    protected TimeGraphStateInterval createInterval(IStateSystemQuarkResolver ss,
+                                                    Map<Integer, ? extends IStateInterval> ssQueryResult,
+                                                    StateSystemTimeGraphTreeElement treeElem,
+                                                    IStateInterval interval) {
 
         int statusQuark = treeElem.getSourceQuark();
-        long startTime = interval.getStartTime();
         IStateValue val = interval.getStateValue();
 
         StateDefinition stateDef = stateValueToStateDef(val);
@@ -131,14 +154,13 @@ public class ThreadsModelStateProvider extends StateSystemModelStateProvider {
         Set<Integer> quarks = Stream.of(syscallNameQuark, cpuQuark)
                 .filter(Objects::nonNull).map(Objects::requireNonNull)
                 .collect(Collectors.toSet());
-        Map<Integer, IStateInterval> results = (quarks.isEmpty() ? Collections.emptyMap() : ss.queryStates(startTime, quarks));
 
         /* Assign the results */
         String syscallName;
         if (syscallNameQuark == null) {
             syscallName = null;
         } else {
-            syscallName = requireNonNull(results.get(syscallNameQuark)).getStateValue().unboxStr();
+            syscallName = requireNonNull(ssQueryResult.get(syscallNameQuark)).getStateValue().unboxStr();
             /*
              * Strip the "syscall" prefix part if there is one, it's not useful in the
              * label.
@@ -154,7 +176,7 @@ public class ThreadsModelStateProvider extends StateSystemModelStateProvider {
         if (cpuQuark == null) {
             cpuProperty = requireNonNull(Messages.propertyNotAvailable);
         } else {
-          IStateValue sv = requireNonNull(results.get(cpuQuark)).getStateValue();
+          IStateValue sv = requireNonNull(ssQueryResult.get(cpuQuark)).getStateValue();
           cpuProperty = (sv.isNull() ? requireNonNull(Messages.propertyNotAvailable) : String.valueOf(sv.unboxInt()));
         }
 

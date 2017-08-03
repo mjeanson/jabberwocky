@@ -9,6 +9,7 @@
 
 package com.efficios.jabberwocky.lttng.kernel.views.timegraph.resources;
 
+import ca.polymtl.dorsal.libdelorean.IStateSystemQuarkResolver;
 import ca.polymtl.dorsal.libdelorean.IStateSystemReader;
 import ca.polymtl.dorsal.libdelorean.exceptions.StateValueTypeException;
 import ca.polymtl.dorsal.libdelorean.interval.IStateInterval;
@@ -26,6 +27,8 @@ import com.google.common.collect.ImmutableList;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * State provider of the Resources time graph.
@@ -87,8 +90,18 @@ public class ResourcesModelStateProvider extends StateSystemModelStateProvider {
     }
 
     @Override
-    protected TimeGraphStateInterval createInterval(IStateSystemReader ss,
-            StateSystemTimeGraphTreeElement treeElem, IStateInterval interval) {
+    protected Set<Integer> supplyExtraQuarks(IStateSystemQuarkResolver ss,
+                                             long ts,
+                                             IStateInterval stateInterval) {
+        /* No extra data for now */
+        return Collections.emptySet();
+    }
+
+    @Override
+    protected TimeGraphStateInterval createInterval(IStateSystemQuarkResolver ss,
+                                                    Map<Integer, ? extends IStateInterval> ssQueryResult,
+                                                    StateSystemTimeGraphTreeElement treeElem,
+                                                    IStateInterval interval) {
 
         StateDefinition stateDef = stateValueToStateDef(interval.getStateValue());
 

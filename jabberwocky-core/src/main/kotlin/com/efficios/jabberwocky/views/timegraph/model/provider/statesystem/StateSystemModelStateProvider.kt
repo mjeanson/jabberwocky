@@ -9,6 +9,7 @@
 
 package com.efficios.jabberwocky.views.timegraph.model.provider.statesystem
 
+import ca.polymtl.dorsal.libdelorean.IStateSystemQuarkResolver
 import ca.polymtl.dorsal.libdelorean.IStateSystemReader
 import ca.polymtl.dorsal.libdelorean.interval.IStateInterval
 import ca.polymtl.dorsal.libdelorean.iterator2D
@@ -60,10 +61,22 @@ abstract class StateSystemModelStateProvider(stateDefinitions: List<StateDefinit
     }
 
     /**
+     * Supply a list of additional quarks this provider would need to query to
+     * generate a complete model interval from the given state interval.
+     *
+     * The quarks included here will be queried, and the results will be passed
+     * back in {@link #createInterval}.
+     */
+    protected abstract fun supplyExtraQuarks(ss: IStateSystemQuarkResolver,
+                                             ts: Long,
+                                             stateInterval: IStateInterval): Set<Int>
+
+    /**
      * Define how this state provider generates model intervals.
      *
-     * @param ss
-     *            The target state system
+     * @param ssQueryResult
+     *            Results of the state system query containing the requested
+     *            extra data.
      * @param treeElem
      *            The timegraph tree element (FIXME Required because of the state
      *            interval's constructor, otherwise the subclasses should only need
@@ -73,7 +86,8 @@ abstract class StateSystemModelStateProvider(stateDefinitions: List<StateDefinit
      * @return The timegraph model interval object, you can use
      *         {@link BasicTimeGraphStateInterval} for a simple implementation.
      */
-    protected abstract fun createInterval(ss: IStateSystemReader,
+    protected abstract fun createInterval(ss: IStateSystemQuarkResolver,
+                                          ssQueryResult: Map<Int, IStateInterval>,
                                           treeElem: StateSystemTimeGraphTreeElement,
                                           interval: IStateInterval): TimeGraphStateInterval
 
@@ -115,12 +129,31 @@ abstract class StateSystemModelStateProvider(stateDefinitions: List<StateDefinit
         /* Query the intervals from the state system */
         val quarks = ssTreeElements.map { it.sourceQuark }.toSet()
         ss.iterator2D(timeRange.startTime, timeRange.endTime, resolution, quarks).asSequence()
-                .forEach{ partialQueryResults ->
-                    partialQueryResults.forEach {
+                .forEach{ iterationStep ->
+                    val ts = iterationStep.ts
+                    val queryResults = iterationStep.queryResults
+
+                    /*
+                     * Compute all the extra data the model implementation will
+                     * need to fetch from the state system.
+                     */
+                    val requestedQuarks = queryResults.values
+                            .flatMap { supplyExtraQuarks(ss, ts, it) }
+                            .distinct()
+                            .toSet()
+
+                    /* Query in one go all the requested extra data. */
+                    val extraData = ss.queryStates(ts, requestedQuarks)
+
+                    /*
+                     * Re-call the model implementation to generate the
+                     * corresponding model intervals, supplying the extra data.
+                     */
+                    queryResults.forEach {
                         val quark = it.key
                         val stateInterval = it.value
                         val treeElement = quarksToTreeElementMap[quark]!!
-                        val modelInterval = createInterval(ss, treeElement, stateInterval)
+                        val modelInterval = createInterval(ss, extraData, treeElement, stateInterval)
                         /* Insert into the correct list among the ones we created earlier */
                         intervalsPerElement[treeElement]!!.add(modelInterval)
                     }
@@ -131,6 +164,7 @@ abstract class StateSystemModelStateProvider(stateDefinitions: List<StateDefinit
          * The iterator doesn't return them.
          */
         val lastResolutionPt = timeRange.startTime + (timeRange.duration / resolution) * resolution
+        val extraData = ss.queryFullState(timeRange.endTime).associateBy { it.attribute }
         ss.queryStates(timeRange.endTime, ssTreeElements.map { it.sourceQuark }.toSet())
                 .forEach { quark, interval ->
                     val treeElem = quarksToTreeElementMap[quark]!!
@@ -138,7 +172,7 @@ abstract class StateSystemModelStateProvider(stateDefinitions: List<StateDefinit
                     if (interval.intersects(lastResolutionPt)
                             && interval.endTime != targetIntervalList.last().endTime) {
 
-                        val modelInterval = createInterval(ss, treeElem, interval)
+                        val modelInterval = createInterval(ss, extraData, treeElem, interval)
                         targetIntervalList.add(modelInterval)
                     }
                 }
