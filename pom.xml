@@ -21,7 +21,7 @@
 
   <groupId>com.efficios.jabberwocky</groupId>
   <artifactId>jabberwocky-parent</artifactId>
-  <version>0.2.24-SNAPSHOT</version>
+  <version>0.2.25-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <repositories>
@@ -51,7 +51,7 @@
       <dependency>
         <groupId>ca.polymtl.dorsal.libdelorean</groupId>
         <artifactId>libdelorean</artifactId>
-        <version>0.7.1-SNAPSHOT</version>
+        <version>0.7.2-SNAPSHOT</version>
       </dependency>
 
       <dependency>
@@ -65,13 +65,13 @@
       <dependency>
         <groupId>com.efficios.jabberwocky</groupId>
         <artifactId>jabberwocky-core</artifactId>
-        <version>0.2.24-SNAPSHOT</version>
+        <version>0.2.25-SNAPSHOT</version>
       </dependency>
 
       <dependency>
         <groupId>com.efficios.jabberwocky</groupId>
         <artifactId>jabberwocky-ctf</artifactId>
-        <version>0.2.24-SNAPSHOT</version>
+        <version>0.2.25-SNAPSHOT</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
