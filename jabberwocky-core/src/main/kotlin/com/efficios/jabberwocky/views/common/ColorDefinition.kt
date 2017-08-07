@@ -9,10 +9,11 @@
 
 package com.efficios.jabberwocky.views.common
 
-data class ColorDefinition(val red: Int,
-                           val green: Int,
-                           val blue: Int,
-                           val alpha: Int = ColorDefinition.MAX) {
+
+data class ColorDefinition @JvmOverloads constructor(val red: Int,
+                                                     val green: Int,
+                                                     val blue: Int,
+                                                     val alpha: Int = ColorDefinition.MAX) {
 
     companion object {
         const val MIN = 0
