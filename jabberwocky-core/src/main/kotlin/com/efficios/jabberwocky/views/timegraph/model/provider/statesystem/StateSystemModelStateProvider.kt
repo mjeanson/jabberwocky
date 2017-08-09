@@ -105,7 +105,9 @@ abstract class StateSystemModelStateProvider(stateDefinitions: List<StateDefinit
             return TimeGraphStateRender.EMPTY_RENDER
         }
 
-        return getStateRenders(setOf(treeElement), timeRange, resolution, task).values.single()
+        val renders = getStateRenders(setOf(treeElement), timeRange, resolution, task)
+        if (renders.isEmpty()) return TimeGraphStateRender.EMPTY_RENDER
+        return renders.values.single()
     }
 
     override fun getStateRenders(treeElements: Set<TimeGraphTreeElement>,
