@@ -21,7 +21,7 @@ import java.nio.file.Files
 import java.nio.file.Paths
 
 private const val PROJECT_NAME = "benchmark-project"
-private const val RUNS = 5
+private const val RUNS = 10
 private const val TARGET_NB_PIXELS = 2000
 
 /**
