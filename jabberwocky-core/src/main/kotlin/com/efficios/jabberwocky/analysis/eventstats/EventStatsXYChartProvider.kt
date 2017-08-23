@@ -9,6 +9,7 @@
 
 package com.efficios.jabberwocky.analysis.eventstats
 
+import ca.polymtl.dorsal.libdelorean.statevalue.IntegerStateValue
 import com.efficios.jabberwocky.common.TimeRange
 import com.efficios.jabberwocky.views.common.FlatUIColors
 import com.efficios.jabberwocky.views.xychart.model.provider.statesystem.StateSystemXYChartProvider
@@ -45,7 +46,7 @@ class EventStatsXYChartProvider: StateSystemXYChartProvider(NAME, SERIES, EventS
                 val eventCounts = (range.startTime until range.endTime step resolution).plus(range.endTime)
                         .map { ts ->
                             val sv = ss.querySingleState(ts, quark).stateValue
-                            val count = if (sv.isNull) 0L else sv.unboxInt().toLong()
+                            val count = if (sv.isNull) 0L else (sv as IntegerStateValue).value.toLong()
                             /* Return a Pair<ts, count> */
                             ts to count
                         }

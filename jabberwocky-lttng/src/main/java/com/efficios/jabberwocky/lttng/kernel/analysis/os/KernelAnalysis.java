@@ -14,12 +14,11 @@ package com.efficios.jabberwocky.lttng.kernel.analysis.os;
 
 import ca.polymtl.dorsal.libdelorean.IStateSystemWriter;
 import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
-import ca.polymtl.dorsal.libdelorean.exceptions.StateValueTypeException;
 import ca.polymtl.dorsal.libdelorean.exceptions.TimeRangeException;
 import com.efficios.jabberwocky.analysis.statesystem.StateSystemAnalysis;
 import com.efficios.jabberwocky.collection.ITraceCollection;
 import com.efficios.jabberwocky.collection.TraceCollection;
-import com.efficios.jabberwocky.lttng.kernel.analysis.os.handlers.*;
+import com.efficios.jabberwocky.lttng.kernel.analysis.os.handlers.KernelEventHandler;
 import com.efficios.jabberwocky.lttng.kernel.trace.LttngKernelTrace;
 import com.efficios.jabberwocky.lttng.kernel.trace.layout.ILttngKernelEventLayout;
 import com.efficios.jabberwocky.project.ITraceProject;
@@ -159,13 +158,6 @@ public class KernelAnalysis extends StateSystemAnalysis {
 //            Activator.instance().logError("TimeRangeExcpetion caught in the state system's event manager.\n" + //$NON-NLS-1$
 //                    "Are the events in the trace correctly ordered?\n" + tre.getMessage(), tre); //$NON-NLS-1$
 
-        } catch (StateValueTypeException sve) {
-            /*
-             * This would happen if we were trying to push/pop attributes not of
-             * type integer. Which, once again, should never happen.
-             */
-            // TODO Re-add logging
-//            Activator.instance().logError("State value error: " + sve.getMessage(), sve); //$NON-NLS-1$
         }
     }
 

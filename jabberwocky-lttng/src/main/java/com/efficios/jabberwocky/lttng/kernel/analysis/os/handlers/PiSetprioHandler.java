@@ -14,7 +14,6 @@ package com.efficios.jabberwocky.lttng.kernel.analysis.os.handlers;
 
 import ca.polymtl.dorsal.libdelorean.IStateSystemWriter;
 import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
-import ca.polymtl.dorsal.libdelorean.statevalue.IStateValue;
 import ca.polymtl.dorsal.libdelorean.statevalue.StateValue;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.Attributes;
 import com.efficios.jabberwocky.lttng.kernel.trace.layout.ILttngKernelEventLayout;
@@ -51,7 +50,7 @@ public class PiSetprioHandler extends KernelEventHandler {
 
         /* Set the current prio for the new process */
         int quark = ss.getQuarkRelativeAndAdd(updateThreadNode, Attributes.PRIO);
-        IStateValue value = StateValue.newValueInt(prio.intValue());
+        StateValue value = StateValue.newValueInt(prio.intValue());
         ss.modifyAttribute(event.getTimestamp(), value, quark);
     }
 }

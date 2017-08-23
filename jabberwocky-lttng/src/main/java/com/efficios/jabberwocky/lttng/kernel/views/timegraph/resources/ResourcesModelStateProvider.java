@@ -10,10 +10,9 @@
 package com.efficios.jabberwocky.lttng.kernel.views.timegraph.resources;
 
 import ca.polymtl.dorsal.libdelorean.IStateSystemQuarkResolver;
-import ca.polymtl.dorsal.libdelorean.IStateSystemReader;
-import ca.polymtl.dorsal.libdelorean.exceptions.StateValueTypeException;
 import ca.polymtl.dorsal.libdelorean.interval.IStateInterval;
-import ca.polymtl.dorsal.libdelorean.statevalue.IStateValue;
+import ca.polymtl.dorsal.libdelorean.statevalue.IntegerStateValue;
+import ca.polymtl.dorsal.libdelorean.statevalue.StateValue;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.KernelAnalysis;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.StateValues;
 import com.efficios.jabberwocky.lttng.kernel.views.timegraph.KernelAnalysisStateDefinitions;
@@ -53,14 +52,17 @@ public class ResourcesModelStateProvider extends StateSystemModelStateProvider {
             KernelAnalysisStateDefinitions.CPU_STATE_SOFTIRQ_RAISED);
 
     @VisibleForTesting
-    static final StateDefinition stateValueToStateDef(IStateValue val) {
+    static final StateDefinition stateValueToStateDef(StateValue val) {
         if (val.isNull()) {
             return KernelAnalysisStateDefinitions.NO_STATE;
         }
 
-        try {
-            int status = val.unboxInt();
-            switch (status) {
+        if (!(val instanceof IntegerStateValue)) {
+            return KernelAnalysisStateDefinitions.CPU_STATE_UNKNOWN;
+        }
+
+        int status = ((IntegerStateValue) val).getValue();
+        switch (status) {
             case StateValues.CPU_STATUS_IDLE:
                 return KernelAnalysisStateDefinitions.CPU_STATE_IDLE;
             case StateValues.CPU_STATUS_RUN_SYSCALL:
@@ -75,10 +77,6 @@ public class ResourcesModelStateProvider extends StateSystemModelStateProvider {
                 return KernelAnalysisStateDefinitions.CPU_STATE_SOFTIRQ_RAISED;
             default:
                 return KernelAnalysisStateDefinitions.CPU_STATE_UNKNOWN;
-            }
-
-        } catch (StateValueTypeException e) {
-            return KernelAnalysisStateDefinitions.CPU_STATE_UNKNOWN;
         }
     }
 

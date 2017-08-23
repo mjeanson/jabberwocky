@@ -13,6 +13,7 @@ import ca.polymtl.dorsal.libdelorean.IStateSystemReader;
 import ca.polymtl.dorsal.libdelorean.StateSystemUtils;
 import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
 import ca.polymtl.dorsal.libdelorean.interval.IStateInterval;
+import ca.polymtl.dorsal.libdelorean.statevalue.StringStateValue;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.Attributes;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.KernelAnalysis;
 import com.efficios.jabberwocky.views.timegraph.model.provider.arrows.ITimeGraphModelArrowProvider;
@@ -110,7 +111,7 @@ public class ThreadsModelProvider extends StateSystemModelProvider {
                         if (firstInterval == null) {
                             threadName = null;
                         } else {
-                            threadName = firstInterval.getStateValue().unboxStr();
+                            threadName = ((StringStateValue) firstInterval.getStateValue()).getValue();
                         }
                     } catch (AttributeNotFoundException e) {
                         threadName = null;

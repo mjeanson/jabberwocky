@@ -10,11 +10,11 @@
 package com.efficios.jabberwocky.lttng.kernel.views.timegraph.threads;
 
 import ca.polymtl.dorsal.libdelorean.IStateSystemQuarkResolver;
-import ca.polymtl.dorsal.libdelorean.IStateSystemReader;
 import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
-import ca.polymtl.dorsal.libdelorean.exceptions.StateValueTypeException;
 import ca.polymtl.dorsal.libdelorean.interval.IStateInterval;
-import ca.polymtl.dorsal.libdelorean.statevalue.IStateValue;
+import ca.polymtl.dorsal.libdelorean.statevalue.IntegerStateValue;
+import ca.polymtl.dorsal.libdelorean.statevalue.StateValue;
+import ca.polymtl.dorsal.libdelorean.statevalue.StringStateValue;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.Attributes;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.KernelAnalysis;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.StateValues;
@@ -59,14 +59,17 @@ public class ThreadsModelStateProvider extends StateSystemModelStateProvider {
             KernelAnalysisStateDefinitions.THREAD_STATE_INTERRUPTED);
 
     @VisibleForTesting
-    static final StateDefinition stateValueToStateDef(IStateValue val) {
+    static final StateDefinition stateValueToStateDef(StateValue val) {
         if (val.isNull()) {
             return KernelAnalysisStateDefinitions.NO_STATE;
         }
 
-        try {
-            int status = val.unboxInt();
-            switch (status) {
+        if (!(val instanceof IntegerStateValue)) {
+            return KernelAnalysisStateDefinitions.THREAD_STATE_UNKNOWN;
+        }
+
+        int status = ((IntegerStateValue) val).getValue();
+        switch (status) {
             case StateValues.PROCESS_STATUS_WAIT_UNKNOWN:
                 return KernelAnalysisStateDefinitions.THREAD_STATE_WAIT_UNKNOWN;
             case StateValues.PROCESS_STATUS_WAIT_BLOCKED:
@@ -81,10 +84,6 @@ public class ThreadsModelStateProvider extends StateSystemModelStateProvider {
                 return KernelAnalysisStateDefinitions.THREAD_STATE_INTERRUPTED;
             default:
                 return KernelAnalysisStateDefinitions.THREAD_STATE_UNKNOWN;
-            }
-
-        } catch (StateValueTypeException e) {
-            return KernelAnalysisStateDefinitions.THREAD_STATE_UNKNOWN;
         }
     }
 
@@ -123,7 +122,7 @@ public class ThreadsModelStateProvider extends StateSystemModelStateProvider {
                                                     IStateInterval interval) {
 
         int statusQuark = treeElem.getSourceQuark();
-        IStateValue val = interval.getStateValue();
+        StateValue val = interval.getStateValue();
 
         StateDefinition stateDef = stateValueToStateDef(val);
 
@@ -160,7 +159,8 @@ public class ThreadsModelStateProvider extends StateSystemModelStateProvider {
         if (syscallNameQuark == null) {
             syscallName = null;
         } else {
-            syscallName = requireNonNull(ssQueryResult.get(syscallNameQuark)).getStateValue().unboxStr();
+            StateValue sv = ssQueryResult.get(syscallNameQuark).getStateValue();
+            syscallName = ((StringStateValue) sv).getValue();
             /*
              * Strip the "syscall" prefix part if there is one, it's not useful in the
              * label.
@@ -176,8 +176,12 @@ public class ThreadsModelStateProvider extends StateSystemModelStateProvider {
         if (cpuQuark == null) {
             cpuProperty = requireNonNull(Messages.propertyNotAvailable);
         } else {
-          IStateValue sv = requireNonNull(ssQueryResult.get(cpuQuark)).getStateValue();
-          cpuProperty = (sv.isNull() ? requireNonNull(Messages.propertyNotAvailable) : String.valueOf(sv.unboxInt()));
+          StateValue sv = ssQueryResult.get(cpuQuark).getStateValue();
+          if (sv instanceof IntegerStateValue) {
+              cpuProperty = String.valueOf(((IntegerStateValue) sv).getValue());
+          } else {
+              cpuProperty = Messages.propertyNotAvailable;
+          }
         }
 
         /*

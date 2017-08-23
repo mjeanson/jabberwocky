@@ -14,7 +14,6 @@ package com.efficios.jabberwocky.lttng.kernel.analysis.os.handlers;
 
 import ca.polymtl.dorsal.libdelorean.IStateSystemWriter;
 import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
-import ca.polymtl.dorsal.libdelorean.statevalue.IStateValue;
 import ca.polymtl.dorsal.libdelorean.statevalue.StateValue;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.Attributes;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.StateValues;
@@ -44,7 +43,7 @@ public class SysExitHandler extends KernelEventHandler {
         /* Assign the new system call to the process */
         int currentThreadNode = KernelEventHandlerUtils.getCurrentThreadNode(cpu, ss);
         int quark = ss.getQuarkRelativeAndAdd(currentThreadNode, Attributes.SYSTEM_CALL);
-        IStateValue value = StateValue.nullValue();
+        StateValue value = StateValue.nullValue();
         ss.modifyAttribute(timestamp, value, quark);
 
         /* Put the process in system call mode */

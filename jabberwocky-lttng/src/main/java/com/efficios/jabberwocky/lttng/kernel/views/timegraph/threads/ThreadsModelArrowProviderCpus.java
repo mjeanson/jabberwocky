@@ -14,6 +14,7 @@ import ca.polymtl.dorsal.libdelorean.StateSystemUtils;
 import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
 import ca.polymtl.dorsal.libdelorean.exceptions.StateSystemDisposedException;
 import ca.polymtl.dorsal.libdelorean.interval.IStateInterval;
+import ca.polymtl.dorsal.libdelorean.statevalue.IntegerStateValue;
 import com.efficios.jabberwocky.common.TimeRange;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.Attributes;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.KernelAnalysis;
@@ -87,8 +88,8 @@ public class ThreadsModelArrowProviderCpus extends StateSystemModelArrowProvider
         for (int i = 1; i < threadTimeline.size(); i++) {
             IStateInterval interval1 = threadTimeline.get(i - 1);
             IStateInterval interval2 = threadTimeline.get(i);
-            int thread1 = interval1.getStateValue().unboxInt();
-            int thread2 = interval2.getStateValue().unboxInt();
+            int thread1 = ((IntegerStateValue) interval1.getStateValue()).getValue();
+            int thread2 = ((IntegerStateValue) interval2.getStateValue()).getValue();
 
             if (thread1 == -1 || thread2 == -1) {
                 /* No arrow to draw here */

@@ -14,7 +14,8 @@ package com.efficios.jabberwocky.lttng.kernel.analysis.os.handlers;
 
 import ca.polymtl.dorsal.libdelorean.IStateSystemWriter;
 import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
-import ca.polymtl.dorsal.libdelorean.statevalue.IStateValue;
+import ca.polymtl.dorsal.libdelorean.statevalue.IntegerStateValue;
+import ca.polymtl.dorsal.libdelorean.statevalue.StateValue;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.StateValues;
 import com.efficios.jabberwocky.lttng.kernel.trace.layout.ILttngKernelEventLayout;
 import com.efficios.jabberwocky.trace.event.FieldValue.IntegerValue;
@@ -48,16 +49,16 @@ public class SoftIrqRaiseHandler extends KernelEventHandler {
          */
         int quark = ss.getQuarkRelativeAndAdd(KernelEventHandlerUtils.getNodeSoftIRQs(cpu, ss), softIrqId.toString());
 
-        IStateValue value = (isInSoftirq(ss.queryOngoingState(quark)) ?
+        StateValue value = (isInSoftirq(ss.queryOngoingState(quark)) ?
                 StateValues.SOFT_IRQ_RAISED_RUNNING_VALUE :
                 StateValues.SOFT_IRQ_RAISED_VALUE);
         ss.modifyAttribute(event.getTimestamp(), value, quark);
 
     }
 
-    private static boolean isInSoftirq(@Nullable IStateValue state) {
+    private static boolean isInSoftirq(@Nullable StateValue state) {
         return (state != null &&
                 !state.isNull() &&
-                (state.unboxInt() & StateValues.CPU_STATUS_SOFTIRQ) == StateValues.CPU_STATUS_SOFTIRQ);
+                (((IntegerStateValue) state).getValue() & StateValues.CPU_STATUS_SOFTIRQ) == StateValues.CPU_STATUS_SOFTIRQ);
     }
 }

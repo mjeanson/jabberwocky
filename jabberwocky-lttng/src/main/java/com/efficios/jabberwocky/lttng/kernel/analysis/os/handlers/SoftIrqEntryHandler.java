@@ -14,7 +14,7 @@ package com.efficios.jabberwocky.lttng.kernel.analysis.os.handlers;
 
 import ca.polymtl.dorsal.libdelorean.IStateSystemWriter;
 import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
-import ca.polymtl.dorsal.libdelorean.statevalue.IStateValue;
+import ca.polymtl.dorsal.libdelorean.statevalue.StateValue;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.StateValues;
 import com.efficios.jabberwocky.lttng.kernel.trace.layout.ILttngKernelEventLayout;
 import com.efficios.jabberwocky.trace.event.FieldValue.IntegerValue;
@@ -49,7 +49,7 @@ public class SoftIrqEntryHandler extends KernelEventHandler {
          * Mark this SoftIRQ as active in the resource tree.
          */
         int quark = ss.getQuarkRelativeAndAdd(KernelEventHandlerUtils.getNodeSoftIRQs(cpu, ss), softIrqId.toString());
-        IStateValue value = StateValues.CPU_STATUS_SOFTIRQ_VALUE;
+        StateValue value = StateValues.CPU_STATUS_SOFTIRQ_VALUE;
         ss.modifyAttribute(timestamp, value, quark);
 
         /* Change the status of the running process to interrupted */

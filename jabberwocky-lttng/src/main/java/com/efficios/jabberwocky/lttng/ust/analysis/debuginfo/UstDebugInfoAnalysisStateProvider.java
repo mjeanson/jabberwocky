@@ -11,7 +11,6 @@ package com.efficios.jabberwocky.lttng.ust.analysis.debuginfo;
 
 import ca.polymtl.dorsal.libdelorean.IStateSystemWriter;
 import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
-import ca.polymtl.dorsal.libdelorean.exceptions.StateValueTypeException;
 import ca.polymtl.dorsal.libdelorean.statevalue.StateValue;
 import com.efficios.jabberwocky.lttng.ust.trace.layout.LttngUst28EventLayout;
 import com.efficios.jabberwocky.trace.event.FieldValue.ArrayValue;
@@ -248,7 +247,7 @@ class UstDebugInfoAnalysisStateProvider {
             } else {
                 ss.modifyAttribute(ts, StateValue.nullValue(), debugLinkQuark);
             }
-        } catch (StateValueTypeException | AttributeNotFoundException e) {
+        } catch (AttributeNotFoundException e) {
             /* Something went very wrong. */
             throw new IllegalStateException(e);
         }

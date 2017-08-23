@@ -11,6 +11,7 @@ package com.efficios.jabberwocky.ctf.analysis
 
 import ca.polymtl.dorsal.libdelorean.IStateSystemReader
 import ca.polymtl.dorsal.libdelorean.IStateSystemWriter
+import ca.polymtl.dorsal.libdelorean.statevalue.IntegerStateValue
 import com.efficios.jabberwocky.analysis.statesystem.StateSystemAnalysis
 import com.efficios.jabberwocky.collection.ITraceCollection
 import com.efficios.jabberwocky.collection.TraceCollection
@@ -98,13 +99,13 @@ class CtfStateSystemAnalysisTest {
         val expectedEventCount = CtfTestTrace.KERNEL.nbEvents + CtfTestTrace.TRACE2.nbEvents + CtfTestTrace.KERNEL_VM.nbEvents
         val endTime = ss.currentEndTime
         val quark = ss.getQuarkAbsolute(attribName)
-        val eventCount = ss.querySingleState(endTime, quark).stateValue.unboxInt()
+        val eventCount = (ss.querySingleState(endTime, quark).stateValue as IntegerStateValue).value
         assertEquals(expectedEventCount, eventCount)
 
         /* Check the event count at some point in the middle. */
         val halfwayTimestamp = 1347684508_932149675L
         val expectedHWCount = 1290960
-        val halfwayCount = ss.querySingleState(halfwayTimestamp, quark).stateValue.unboxInt()
+        val halfwayCount = (ss.querySingleState(halfwayTimestamp, quark).stateValue as IntegerStateValue).value
         assertEquals(expectedHWCount, halfwayCount)
     }
 

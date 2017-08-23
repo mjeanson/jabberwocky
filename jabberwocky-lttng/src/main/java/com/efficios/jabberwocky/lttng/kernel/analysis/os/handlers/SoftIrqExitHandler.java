@@ -14,7 +14,7 @@ package com.efficios.jabberwocky.lttng.kernel.analysis.os.handlers;
 
 import ca.polymtl.dorsal.libdelorean.IStateSystemWriter;
 import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
-import ca.polymtl.dorsal.libdelorean.statevalue.IStateValue;
+import ca.polymtl.dorsal.libdelorean.statevalue.IntegerStateValue;
 import ca.polymtl.dorsal.libdelorean.statevalue.StateValue;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.StateValues;
 import com.efficios.jabberwocky.lttng.kernel.trace.layout.ILttngKernelEventLayout;
@@ -76,10 +76,10 @@ public class SoftIrqExitHandler extends KernelEventHandler {
      *            the state to check
      * @return true if in a softirq. The softirq may be pre-empted by an irq
      */
-    private static boolean isSoftIrqRaised(@Nullable IStateValue state) {
+    private static boolean isSoftIrqRaised(@Nullable StateValue state) {
         return (state != null &&
                 !state.isNull() &&
-                (state.unboxInt() & StateValues.CPU_STATUS_SOFT_IRQ_RAISED) == StateValues.CPU_STATUS_SOFT_IRQ_RAISED);
+                (((IntegerStateValue) state).getValue() & StateValues.CPU_STATUS_SOFT_IRQ_RAISED) == StateValues.CPU_STATUS_SOFT_IRQ_RAISED);
     }
 
 }

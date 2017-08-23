@@ -14,8 +14,6 @@ package com.efficios.jabberwocky.lttng.kernel.analysis.os.handlers;
 
 import ca.polymtl.dorsal.libdelorean.IStateSystemWriter;
 import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
-import ca.polymtl.dorsal.libdelorean.exceptions.StateValueTypeException;
-import ca.polymtl.dorsal.libdelorean.statevalue.IStateValue;
 import ca.polymtl.dorsal.libdelorean.statevalue.StateValue;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.Attributes;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.LinuxValues;
@@ -79,7 +77,7 @@ public class StateDumpHandler extends KernelEventHandler {
     }
 
     private static void setStatus(IStateSystemWriter ss, int status, int curThreadNode, @Nullable Long cpu, long timestamp) {
-        IStateValue value;
+        StateValue value;
         if (ss.queryOngoingState(curThreadNode).isNull()) {
             switch (status) {
             case LinuxValues.STATEDUMP_PROCESS_STATUS_WAIT_CPU:
@@ -105,14 +103,14 @@ public class StateDumpHandler extends KernelEventHandler {
     private static void setRunQueue(IStateSystemWriter ss, int curThreadNode, @Nullable Long cpu, long timestamp) {
         if (cpu != null) {
             int quark = ss.getQuarkRelativeAndAdd(curThreadNode, Attributes.CURRENT_CPU_RQ);
-            IStateValue value = StateValue.newValueInt(cpu.intValue());
+            StateValue value = StateValue.newValueInt(cpu.intValue());
             ss.modifyAttribute(timestamp, value, quark);
         }
     }
 
     private static void setPpid(IStateSystemWriter ss, int tid, int pid, int ppid, int curThreadNode, long timestamp)
-            throws StateValueTypeException, AttributeNotFoundException {
-        IStateValue value;
+            throws AttributeNotFoundException {
+        StateValue value;
         int quark;
         quark = ss.getQuarkRelativeAndAdd(curThreadNode, Attributes.PPID);
         if (ss.queryOngoingState(quark).isNull()) {
@@ -128,8 +126,8 @@ public class StateDumpHandler extends KernelEventHandler {
     }
 
     private static void setProcessName(IStateSystemWriter ss, String name, int curThreadNode, long timestamp)
-            throws StateValueTypeException, AttributeNotFoundException {
-        IStateValue value;
+            throws AttributeNotFoundException {
+        StateValue value;
         int quark = ss.getQuarkRelativeAndAdd(curThreadNode, Attributes.EXEC_NAME);
         if (ss.queryOngoingState(quark).isNull()) {
             /* If the value didn't exist previously, set it */

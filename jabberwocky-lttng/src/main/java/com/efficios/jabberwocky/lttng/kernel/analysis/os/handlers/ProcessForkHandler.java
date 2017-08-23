@@ -14,7 +14,6 @@ package com.efficios.jabberwocky.lttng.kernel.analysis.os.handlers;
 
 import ca.polymtl.dorsal.libdelorean.IStateSystemWriter;
 import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
-import ca.polymtl.dorsal.libdelorean.statevalue.IStateValue;
 import ca.polymtl.dorsal.libdelorean.statevalue.StateValue;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.Attributes;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.StateValues;
@@ -64,7 +63,7 @@ public class ProcessForkHandler extends KernelEventHandler {
 
         /* Assign the PPID to the new process */
         int quark = ss.getQuarkRelativeAndAdd(childTidNode, Attributes.PPID);
-        IStateValue value = StateValue.newValueInt(parentTid);
+        StateValue value = StateValue.newValueInt(parentTid);
         long timestamp = event.getTimestamp();
         ss.modifyAttribute(timestamp, value, quark);
 

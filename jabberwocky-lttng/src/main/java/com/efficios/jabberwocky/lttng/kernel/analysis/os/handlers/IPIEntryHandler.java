@@ -11,7 +11,6 @@ package com.efficios.jabberwocky.lttng.kernel.analysis.os.handlers;
 
 import ca.polymtl.dorsal.libdelorean.IStateSystemWriter;
 import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
-import ca.polymtl.dorsal.libdelorean.statevalue.IStateValue;
 import ca.polymtl.dorsal.libdelorean.statevalue.StateValue;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.StateValues;
 import com.efficios.jabberwocky.lttng.kernel.trace.layout.ILttngKernelEventLayout;
@@ -49,7 +48,7 @@ public class IPIEntryHandler extends KernelEventHandler {
          */
         int quark = ss.getQuarkRelativeAndAdd(KernelEventHandlerUtils.getNodeIRQs(cpu, ss), irqId.toString());
 
-        IStateValue value = StateValue.newValueInt(cpu);
+        StateValue value = StateValue.newValueInt(cpu);
         long timestamp = event.getTimestamp();
         ss.modifyAttribute(timestamp, value, quark);
 

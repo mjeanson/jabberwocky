@@ -14,7 +14,7 @@ package com.efficios.jabberwocky.lttng.kernel.analysis.os.handlers;
 
 import ca.polymtl.dorsal.libdelorean.IStateSystemWriter;
 import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
-import ca.polymtl.dorsal.libdelorean.statevalue.IStateValue;
+import ca.polymtl.dorsal.libdelorean.statevalue.IntegerStateValue;
 import ca.polymtl.dorsal.libdelorean.statevalue.StateValue;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.Attributes;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.StateValues;
@@ -60,8 +60,15 @@ public class SchedWakeupHandler extends KernelEventHandler {
          * Assign it to the "wait for cpu" state, but only if it was not already
          * running.
          */
-        int status = ss.queryOngoingState(threadNode).unboxInt();
-        IStateValue value = null;
+        StateValue ongoingSv = ss.queryOngoingState(threadNode);
+        int status;
+        if (ongoingSv.isNull()) {
+            status = -1;
+        } else {
+            status = ((IntegerStateValue) ongoingSv).getValue();
+        }
+
+        StateValue value;
         long timestamp = event.getTimestamp();
         if (status != StateValues.PROCESS_STATUS_RUN_SYSCALL &&
                 status != StateValues.PROCESS_STATUS_RUN_USERMODE) {

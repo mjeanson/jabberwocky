@@ -11,7 +11,6 @@ package com.efficios.jabberwocky.lttng.kernel.analysis.os.handlers;
 
 import ca.polymtl.dorsal.libdelorean.IStateSystemWriter;
 import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
-import ca.polymtl.dorsal.libdelorean.statevalue.IStateValue;
 import ca.polymtl.dorsal.libdelorean.statevalue.StateValue;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.Attributes;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.StateValues;
@@ -61,7 +60,7 @@ public class SchedMigrateTaskHandler extends KernelEventHandler {
          * the kernel/tracers may not have the corresponding sched_waking events
          * that also does so, so we can set it at the migrate, if applicable.
          */
-        IStateValue value = StateValues.PROCESS_STATUS_WAIT_FOR_CPU_VALUE;
+        StateValue value = StateValues.PROCESS_STATUS_WAIT_FOR_CPU_VALUE;
         ss.modifyAttribute(t, value, threadNode);
 
         /* Update the thread's running queue to the new one indicated by the event */

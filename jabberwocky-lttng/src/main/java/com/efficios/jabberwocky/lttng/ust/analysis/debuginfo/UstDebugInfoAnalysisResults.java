@@ -15,7 +15,10 @@ import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
 import ca.polymtl.dorsal.libdelorean.exceptions.StateSystemDisposedException;
 import ca.polymtl.dorsal.libdelorean.exceptions.TimeRangeException;
 import ca.polymtl.dorsal.libdelorean.interval.IStateInterval;
-import ca.polymtl.dorsal.libdelorean.statevalue.IStateValue;
+import ca.polymtl.dorsal.libdelorean.statevalue.IntegerStateValue;
+import ca.polymtl.dorsal.libdelorean.statevalue.LongStateValue;
+import ca.polymtl.dorsal.libdelorean.statevalue.StateValue;
+import ca.polymtl.dorsal.libdelorean.statevalue.StringStateValue;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import org.eclipse.jdt.annotation.NonNull;
@@ -66,17 +69,17 @@ public class UstDebugInfoAnalysisResults {
                 while (interval != null) {
                     ts = interval.getStartTime();
 
-                    IStateValue filePathStateValue = ss.querySingleState(ts, pathQuark).getStateValue();
-                    String filePath = filePathStateValue.unboxStr();
+                    StringStateValue filePathStateValue = (StringStateValue) ss.querySingleState(ts, pathQuark).getStateValue();
+                    String filePath = filePathStateValue.getValue();
 
-                    IStateValue buildIdStateValue = ss.querySingleState(ts, buildIdQuark).getStateValue();
+                    StateValue buildIdStateValue = ss.querySingleState(ts, buildIdQuark).getStateValue();
                     String buildId = unboxStrOrNull(buildIdStateValue);
 
-                    IStateValue debuglinkStateValue = ss.querySingleState(ts, debugLinkQuark).getStateValue();
+                    StateValue debuglinkStateValue = ss.querySingleState(ts, debugLinkQuark).getStateValue();
                     String debugLink = unboxStrOrNull(debuglinkStateValue);
 
-                    IStateValue isPICStateValue = ss.querySingleState(ts, isPICQuark).getStateValue();
-                    Boolean isPIC = isPICStateValue.unboxInt() != 0;
+                    IntegerStateValue isPICStateValue = (IntegerStateValue) ss.querySingleState(ts, isPICQuark).getStateValue();
+                    Boolean isPIC = isPICStateValue.getValue() != 0;
 
                     files.add(new UstDebugInfoBinaryFile(filePath, buildId, debugLink, isPIC));
 
@@ -120,8 +123,9 @@ public class UstDebugInfoAnalysisResults {
             OptionalLong potentialBaddr = possibleBaddrQuarks.stream()
                     .filter(quark -> {
                         /* Keep only currently (at ts) mapped objects. */
-                        IStateValue value = state.get(quark).getStateValue();
-                        return value.getType() == IStateValue.Type.INTEGER && value.unboxInt() == 1;
+                        StateValue value = state.get(quark).getStateValue();
+                        return (value instanceof IntegerStateValue
+                                && ((IntegerStateValue) value).getValue() == 1);
                     })
                     .map(quark -> ss.getAttributeName(quark.intValue()))
                     .mapToLong(baddrStr -> Long.parseLong(baddrStr))
@@ -137,7 +141,7 @@ public class UstDebugInfoAnalysisResults {
                                                        String.valueOf(baddr));
 
             final int memszQuark = ss.getQuarkRelative(baddrQuark, UstDebugInfoAnalysisStateProvider.MEMSZ_ATTRIB);
-            final long memsz = state.get(memszQuark).getStateValue().unboxLong();
+            final long memsz = ((LongStateValue) state.get(memszQuark).getStateValue()).getValue();
 
             /* Make sure the 'ip' fits the range of this object. */
             if (!(ip < baddr + memsz)) {
@@ -149,18 +153,18 @@ public class UstDebugInfoAnalysisResults {
             }
 
             final int pathQuark = ss.getQuarkRelative(baddrQuark, UstDebugInfoAnalysisStateProvider.PATH_ATTRIB);
-            String filePath = state.get(pathQuark).getStateValue().unboxStr();
+            String filePath = ((StringStateValue) state.get(pathQuark).getStateValue()).getValue();
 
             final int buildIdQuark = ss.getQuarkRelative(baddrQuark, UstDebugInfoAnalysisStateProvider.BUILD_ID_ATTRIB);
-            IStateValue buildIdValue = state.get(buildIdQuark).getStateValue();
+            StateValue buildIdValue = state.get(buildIdQuark).getStateValue();
             String buildId = unboxStrOrNull(buildIdValue);
 
             final int debugLinkQuark = ss.getQuarkRelative(baddrQuark, UstDebugInfoAnalysisStateProvider.DEBUG_LINK_ATTRIB);
-            IStateValue debugLinkValue = state.get(debugLinkQuark).getStateValue();
+            StateValue debugLinkValue = state.get(debugLinkQuark).getStateValue();
             String debugLink = unboxStrOrNull(debugLinkValue);
 
             final int isPicQuark = ss.getQuarkRelative(baddrQuark, UstDebugInfoAnalysisStateProvider.IS_PIC_ATTRIB);
-            boolean isPic = state.get(isPicQuark).getStateValue().unboxInt() != 0;
+            boolean isPic = ((IntegerStateValue) state.get(isPicQuark).getStateValue()).getValue() != 0;
 
             return new UstDebugInfoLoadedBinaryFile(baddr, filePath, buildId, debugLink, isPic);
 
@@ -170,7 +174,7 @@ public class UstDebugInfoAnalysisResults {
         }
     }
 
-    private static @Nullable String unboxStrOrNull(IStateValue value) {
-        return (value.isNull() ? null : value.unboxStr());
+    private static @Nullable String unboxStrOrNull(StateValue value) {
+        return (value.isNull() ? null : ((StringStateValue) value).getValue());
     }
 }

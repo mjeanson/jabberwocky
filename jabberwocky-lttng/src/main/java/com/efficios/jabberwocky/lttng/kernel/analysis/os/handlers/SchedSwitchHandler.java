@@ -14,8 +14,6 @@ package com.efficios.jabberwocky.lttng.kernel.analysis.os.handlers;
 
 import ca.polymtl.dorsal.libdelorean.IStateSystemWriter;
 import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
-import ca.polymtl.dorsal.libdelorean.exceptions.StateValueTypeException;
-import ca.polymtl.dorsal.libdelorean.statevalue.IStateValue;
 import ca.polymtl.dorsal.libdelorean.statevalue.StateValue;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.Attributes;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.LinuxValues;
@@ -78,7 +76,7 @@ public class SchedSwitchHandler extends KernelEventHandler {
          * it here too.
          */
         int quark = ss.getQuarkRelativeAndAdd(newCurrentThreadNode, Attributes.CURRENT_CPU_RQ);
-        IStateValue value = StateValue.newValueInt(cpu);
+        StateValue value = StateValue.newValueInt(cpu);
         ss.modifyAttribute(timestamp, value, quark);
 
         /* Set the exec name of the former process */
@@ -103,7 +101,7 @@ public class SchedSwitchHandler extends KernelEventHandler {
 
     private static void setOldProcessStatus(IStateSystemWriter ss,
             long prevState, int formerThreadNode, int cpu, long timestamp) {
-        IStateValue value;
+        StateValue value;
         boolean staysOnRunQueue = false;
         /*
          * Empirical observations and look into the linux code have
@@ -158,13 +156,13 @@ public class SchedSwitchHandler extends KernelEventHandler {
     }
 
     private static void setCpuStatus(IStateSystemWriter ss, int nextTid, int newCurrentThreadNode, long timestamp, int currentCPUNode)
-            throws StateValueTypeException, AttributeNotFoundException {
+            throws AttributeNotFoundException {
         int quark;
-        IStateValue value;
+        StateValue value;
         if (nextTid > 0) {
             /* Check if the entering process is in kernel or user mode */
             quark = ss.getQuarkRelativeAndAdd(newCurrentThreadNode, Attributes.SYSTEM_CALL);
-            IStateValue queryOngoingState = ss.queryOngoingState(quark);
+            StateValue queryOngoingState = ss.queryOngoingState(quark);
             if (queryOngoingState.isNull()) {
                 value = StateValues.CPU_STATUS_RUN_USERMODE_VALUE;
             } else {
@@ -177,29 +175,23 @@ public class SchedSwitchHandler extends KernelEventHandler {
     }
 
     private static void setCpuProcess(IStateSystemWriter ss, int nextTid, long timestamp, int currentCPUNode)
-            throws StateValueTypeException, AttributeNotFoundException {
-        int quark;
-        IStateValue value;
-        quark = ss.getQuarkRelativeAndAdd(currentCPUNode, Attributes.CURRENT_THREAD);
-        value = StateValue.newValueInt(nextTid);
+            throws AttributeNotFoundException {
+        int quark = ss.getQuarkRelativeAndAdd(currentCPUNode, Attributes.CURRENT_THREAD);
+        StateValue value = StateValue.newValueInt(nextTid);
         ss.modifyAttribute(timestamp, value, quark);
     }
 
     private static void setProcessPrio(IStateSystemWriter ss, int prio, int threadNode, long timestamp)
-            throws StateValueTypeException, AttributeNotFoundException {
-        int quark;
-        IStateValue value;
-        quark = ss.getQuarkRelativeAndAdd(threadNode, Attributes.PRIO);
-        value = StateValue.newValueInt(prio);
+            throws AttributeNotFoundException {
+        int quark = ss.getQuarkRelativeAndAdd(threadNode, Attributes.PRIO);
+        StateValue value = StateValue.newValueInt(prio);
         ss.modifyAttribute(timestamp, value, quark);
     }
 
     private static void setProcessExecName(IStateSystemWriter ss, String processName, int threadNode, long timestamp)
-            throws StateValueTypeException, AttributeNotFoundException {
-        int quark;
-        IStateValue value;
-        quark = ss.getQuarkRelativeAndAdd(threadNode, Attributes.EXEC_NAME);
-        value = StateValue.newValueString(processName);
+            throws AttributeNotFoundException {
+        int quark = ss.getQuarkRelativeAndAdd(threadNode, Attributes.EXEC_NAME);
+        StateValue value = StateValue.newValueString(processName);
         ss.modifyAttribute(timestamp, value, quark);
     }
 

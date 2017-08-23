@@ -10,6 +10,7 @@
 package com.efficios.jabberwocky.analysis.eventstats
 
 import ca.polymtl.dorsal.libdelorean.IStateSystemReader
+import ca.polymtl.dorsal.libdelorean.statevalue.IntegerStateValue
 import com.efficios.jabberwocky.collection.TraceCollection
 import com.efficios.jabberwocky.project.TraceProject
 import com.efficios.jabberwocky.trace.TraceStubs
@@ -58,13 +59,13 @@ class EventStatsAnalysisTest {
         /* Test values in the middle */
         val results = ss.queryFullState(6).map{ it.stateValue }
         with(results) {
-            assertEquals(4, get(totalsQuark).unboxInt())
+            assertEquals(4, (get(totalsQuark) as IntegerStateValue).value)
 
-            assertEquals(3, get(ss.getQuarkRelative(cpusQuark, "0")).unboxInt())
-            assertEquals(1, get(ss.getQuarkRelative(cpusQuark, "1")).unboxInt())
+            assertEquals(3, (get(ss.getQuarkRelative(cpusQuark, "0")) as IntegerStateValue).value)
+            assertEquals(1, (get(ss.getQuarkRelative(cpusQuark, "1")) as IntegerStateValue).value)
 
-            assertEquals(1, get(ss.getQuarkRelative(eventNamesQuark, TraceStubs.EVENT_NAME_A)).unboxInt())
-            assertEquals(3, get(ss.getQuarkRelative(eventNamesQuark, TraceStubs.EVENT_NAME_B)).unboxInt())
+            assertEquals(1, (get(ss.getQuarkRelative(eventNamesQuark, TraceStubs.EVENT_NAME_A)) as IntegerStateValue).value)
+            assertEquals(3, (get(ss.getQuarkRelative(eventNamesQuark, TraceStubs.EVENT_NAME_B)) as IntegerStateValue).value)
             /* The value is null if we have never seen the event before */
             assertTrue(get(ss.getQuarkRelative(eventNamesQuark, TraceStubs.EVENT_NAME_C)).isNull)
         }
@@ -73,14 +74,14 @@ class EventStatsAnalysisTest {
         val endTime = ss.currentEndTime
         val endResults = ss.queryFullState(endTime).map{ it.stateValue }
         with(endResults) {
-            assertEquals(6, get(totalsQuark).unboxInt())
+            assertEquals(6, (get(totalsQuark) as IntegerStateValue).value)
 
-            assertEquals(3, get(ss.getQuarkRelative(cpusQuark, "0")).unboxInt())
-            assertEquals(3, get(ss.getQuarkRelative(cpusQuark, "1")).unboxInt())
+            assertEquals(3, (get(ss.getQuarkRelative(cpusQuark, "0")) as IntegerStateValue).value)
+            assertEquals(3, (get(ss.getQuarkRelative(cpusQuark, "1")) as IntegerStateValue).value)
 
-            assertEquals(2, get(ss.getQuarkRelative(eventNamesQuark, TraceStubs.EVENT_NAME_A)).unboxInt())
-            assertEquals(3, get(ss.getQuarkRelative(eventNamesQuark, TraceStubs.EVENT_NAME_B)).unboxInt())
-            assertEquals(1, get(ss.getQuarkRelative(eventNamesQuark, TraceStubs.EVENT_NAME_C)).unboxInt())
+            assertEquals(2, (get(ss.getQuarkRelative(eventNamesQuark, TraceStubs.EVENT_NAME_A)) as IntegerStateValue).value)
+            assertEquals(3, (get(ss.getQuarkRelative(eventNamesQuark, TraceStubs.EVENT_NAME_B)) as IntegerStateValue).value)
+            assertEquals(1, (get(ss.getQuarkRelative(eventNamesQuark, TraceStubs.EVENT_NAME_C)) as IntegerStateValue).value)
         }
     }
 
