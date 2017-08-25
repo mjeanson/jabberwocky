@@ -62,7 +62,7 @@ public class SchedWakeupHandler extends KernelEventHandler {
          */
         int status = ss.queryOngoingState(threadNode).unboxInt();
         IStateValue value = null;
-        long timestamp = event.getCpu();
+        long timestamp = event.getTimestamp();
         if (status != StateValues.PROCESS_STATUS_RUN_SYSCALL &&
                 status != StateValues.PROCESS_STATUS_RUN_USERMODE) {
             value = StateValues.PROCESS_STATUS_WAIT_FOR_CPU_VALUE;
