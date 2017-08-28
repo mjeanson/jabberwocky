@@ -10,7 +10,7 @@
 package com.efficios.jabberwocky.lttng.kernel.views.timegraph.resources;
 
 import ca.polymtl.dorsal.libdelorean.IStateSystemQuarkResolver;
-import ca.polymtl.dorsal.libdelorean.interval.IStateInterval;
+import ca.polymtl.dorsal.libdelorean.interval.StateInterval;
 import ca.polymtl.dorsal.libdelorean.statevalue.IntegerStateValue;
 import ca.polymtl.dorsal.libdelorean.statevalue.StateValue;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.KernelAnalysis;
@@ -90,22 +90,22 @@ public class ResourcesModelStateProvider extends StateSystemModelStateProvider {
     @Override
     protected Set<Integer> supplyExtraQuarks(IStateSystemQuarkResolver ss,
                                              long ts,
-                                             IStateInterval stateInterval) {
+                                             StateInterval stateInterval) {
         /* No extra data for now */
         return Collections.emptySet();
     }
 
     @Override
     protected TimeGraphStateInterval createInterval(IStateSystemQuarkResolver ss,
-                                                    Map<Integer, ? extends IStateInterval> ssQueryResult,
+                                                    Map<Integer, ? extends StateInterval> ssQueryResult,
                                                     StateSystemTimeGraphTreeElement treeElem,
-                                                    IStateInterval interval) {
+                                                    StateInterval interval) {
 
         StateDefinition stateDef = stateValueToStateDef(interval.getStateValue());
 
         return new BasicTimeGraphStateInterval(
-                interval.getStartTime(),
-                interval.getEndTime(),
+                interval.getStart(),
+                interval.getEnd(),
                 treeElem,
                 stateDef,
                 // Label, none for now TODO

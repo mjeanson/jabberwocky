@@ -11,7 +11,7 @@ package com.efficios.jabberwocky.views.timegraph.model.provider.statesystem
 
 import ca.polymtl.dorsal.libdelorean.IStateSystemQuarkResolver
 import ca.polymtl.dorsal.libdelorean.IStateSystemReader
-import ca.polymtl.dorsal.libdelorean.interval.IStateInterval
+import ca.polymtl.dorsal.libdelorean.interval.StateInterval
 import ca.polymtl.dorsal.libdelorean.iterator2D
 import com.efficios.jabberwocky.analysis.statesystem.StateSystemAnalysis
 import com.efficios.jabberwocky.common.TimeRange
@@ -69,7 +69,7 @@ abstract class StateSystemModelStateProvider(stateDefinitions: List<StateDefinit
      */
     protected abstract fun supplyExtraQuarks(ss: IStateSystemQuarkResolver,
                                              ts: Long,
-                                             stateInterval: IStateInterval): Set<Int>
+                                             stateInterval: StateInterval): Set<Int>
 
     /**
      * Define how this state provider generates model intervals.
@@ -87,9 +87,9 @@ abstract class StateSystemModelStateProvider(stateDefinitions: List<StateDefinit
      *         {@link BasicTimeGraphStateInterval} for a simple implementation.
      */
     protected abstract fun createInterval(ss: IStateSystemQuarkResolver,
-                                          ssQueryResult: Map<Int, IStateInterval>,
+                                          ssQueryResult: Map<Int, StateInterval>,
                                           treeElem: StateSystemTimeGraphTreeElement,
-                                          interval: IStateInterval): TimeGraphStateInterval
+                                          interval: StateInterval): TimeGraphStateInterval
 
     // ------------------------------------------------------------------------
     // Render generation methods
@@ -172,7 +172,7 @@ abstract class StateSystemModelStateProvider(stateDefinitions: List<StateDefinit
                     val treeElem = quarksToTreeElementMap[quark]!!
                     val targetIntervalList = intervalsPerElement[treeElem]!!
                     if (interval.intersects(lastResolutionPt)
-                            && interval.endTime != targetIntervalList.last().endTime) {
+                            && interval.end != targetIntervalList.last().endTime) {
 
                         val modelInterval = createInterval(ss, extraData, treeElem, interval)
                         targetIntervalList.add(modelInterval)

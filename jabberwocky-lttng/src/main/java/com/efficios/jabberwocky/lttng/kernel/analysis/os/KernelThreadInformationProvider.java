@@ -13,7 +13,7 @@
 package com.efficios.jabberwocky.lttng.kernel.analysis.os;
 
 import ca.polymtl.dorsal.libdelorean.IStateSystemReader;
-import ca.polymtl.dorsal.libdelorean.interval.IStateInterval;
+import ca.polymtl.dorsal.libdelorean.interval.StateInterval;
 import ca.polymtl.dorsal.libdelorean.statevalue.IntegerStateValue;
 import ca.polymtl.dorsal.libdelorean.statevalue.StateValue;
 import org.eclipse.jdt.annotation.Nullable;
@@ -44,7 +44,7 @@ public final class KernelThreadInformationProvider {
      */
     public static @Nullable Integer getThreadOnCpu(IStateSystemReader ss, long cpuId, long ts) {
         int cpuQuark = ss.getQuarkAbsolute(Attributes.CPUS, Long.toString(cpuId), Attributes.CURRENT_THREAD);
-        IStateInterval interval = ss.querySingleState(ts, cpuQuark);
+        StateInterval interval = ss.querySingleState(ts, cpuQuark);
         StateValue val = interval.getStateValue();
         if (val instanceof IntegerStateValue) {
             return ((IntegerStateValue) val).getValue();

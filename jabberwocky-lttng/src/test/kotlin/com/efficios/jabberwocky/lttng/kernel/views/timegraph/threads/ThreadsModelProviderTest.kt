@@ -10,7 +10,6 @@
 package com.efficios.jabberwocky.lttng.kernel.views.timegraph.threads
 
 import ca.polymtl.dorsal.libdelorean.StateSystemUtils
-import ca.polymtl.dorsal.libdelorean.interval.IStateInterval
 import ca.polymtl.dorsal.libdelorean.interval.StateInterval
 import ca.polymtl.dorsal.libdelorean.statevalue.StateValue
 import com.efficios.jabberwocky.common.TimeRange
@@ -168,9 +167,9 @@ class ThreadsModelProviderTest {
                 val resolutionPoints = (range.startTime..range.endTime step resolution).toMutableList()
                 /* The end time is also an expected resolution point */
                 resolutionPoints.add(range.endTime)
-                val sortedIntervals = sortedSetOf<IStateInterval>(compareBy { it.endTime })
+                val sortedIntervals = sortedSetOf<StateInterval>(compareBy { it.end })
                 sortedIntervals.addAll(intervalsFromSS)
-                val ret = mutableListOf<IStateInterval>()
+                val ret = mutableListOf<StateInterval>()
 
                 /* Only keep intervals that cross two consecutive resolution points */
                 for (i in 1 until resolutionPoints.size) {
@@ -268,16 +267,16 @@ class ThreadsModelProviderTest {
 
         /* Check that the first intervals start at the same timestamp. */
         val modelStart = intervalsFromRender.first().startTime
-        val ssStart = intervalsFromSS.first().startTime
+        val ssStart = intervalsFromSS.first().start
         assertEquals(ssStart, modelStart)
 
         /* Check that the last intervals end at the same timestamp too. */
         val modelEnd = intervalsFromRender.last().endTime
-        val ssEnd = intervalsFromSS.last().endTime
+        val ssEnd = intervalsFromSS.last().end
         assertEquals(ssEnd, modelEnd)
     }
 
-    private fun verifySameIntervals(ssIntervals: List<IStateInterval>,
+    private fun verifySameIntervals(ssIntervals: List<StateInterval>,
                                     renderIntervals: List<TimeGraphStateInterval>) {
         assertEquals(ssIntervals.size, renderIntervals.size)
 
@@ -285,8 +284,8 @@ class ThreadsModelProviderTest {
             val ssInterval = ssIntervals[i]
             val renderInterval = renderIntervals[i]
 
-            assertEquals(ssInterval.startTime, renderInterval.startEvent.timestamp)
-            assertEquals(ssInterval.endTime, renderInterval.endEvent.timestamp)
+            assertEquals(ssInterval.start, renderInterval.startEvent.timestamp)
+            assertEquals(ssInterval.end, renderInterval.endEvent.timestamp)
 
             val stateValue = ssInterval.stateValue
             val stateName = ThreadsModelStateProvider.stateValueToStateDef(stateValue).name

@@ -11,7 +11,7 @@ package com.efficios.jabberwocky.lttng.kernel.views.timegraph.threads;
 
 import ca.polymtl.dorsal.libdelorean.IStateSystemQuarkResolver;
 import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
-import ca.polymtl.dorsal.libdelorean.interval.IStateInterval;
+import ca.polymtl.dorsal.libdelorean.interval.StateInterval;
 import ca.polymtl.dorsal.libdelorean.statevalue.IntegerStateValue;
 import ca.polymtl.dorsal.libdelorean.statevalue.StateValue;
 import ca.polymtl.dorsal.libdelorean.statevalue.StringStateValue;
@@ -97,7 +97,7 @@ public class ThreadsModelStateProvider extends StateSystemModelStateProvider {
     @Override
     protected Set<Integer> supplyExtraQuarks(IStateSystemQuarkResolver ss,
                                              long ts,
-                                             IStateInterval stateInterval) {
+                                             StateInterval stateInterval) {
         /*
          * We could be potentially interested in the "sycall" and "current cpu"
          * sub-attributes.
@@ -117,9 +117,9 @@ public class ThreadsModelStateProvider extends StateSystemModelStateProvider {
 
     @Override
     protected TimeGraphStateInterval createInterval(IStateSystemQuarkResolver ss,
-                                                    Map<Integer, ? extends IStateInterval> ssQueryResult,
+                                                    Map<Integer, ? extends StateInterval> ssQueryResult,
                                                     StateSystemTimeGraphTreeElement treeElem,
-                                                    IStateInterval interval) {
+                                                    StateInterval interval) {
 
         int statusQuark = treeElem.getSourceQuark();
         StateValue val = interval.getStateValue();
@@ -195,8 +195,8 @@ public class ThreadsModelStateProvider extends StateSystemModelStateProvider {
                 requireNonNull(Messages.propertyNameSyscall), syscallProperty);
 
         return new BasicTimeGraphStateInterval(
-                interval.getStartTime(),
-                interval.getEndTime(),
+                interval.getStart(),
+                interval.getEnd(),
                 treeElem,
                 stateDef,
                 syscallName,

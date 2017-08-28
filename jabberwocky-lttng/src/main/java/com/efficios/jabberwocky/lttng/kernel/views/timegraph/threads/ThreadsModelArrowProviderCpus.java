@@ -13,7 +13,7 @@ import ca.polymtl.dorsal.libdelorean.IStateSystemReader;
 import ca.polymtl.dorsal.libdelorean.StateSystemUtils;
 import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
 import ca.polymtl.dorsal.libdelorean.exceptions.StateSystemDisposedException;
-import ca.polymtl.dorsal.libdelorean.interval.IStateInterval;
+import ca.polymtl.dorsal.libdelorean.interval.StateInterval;
 import ca.polymtl.dorsal.libdelorean.statevalue.IntegerStateValue;
 import com.efficios.jabberwocky.common.TimeRange;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.Attributes;
@@ -59,7 +59,7 @@ public class ThreadsModelArrowProviderCpus extends StateSystemModelArrowProvider
         List<List<TimeGraphArrow>> allArrows = new LinkedList<>();
         try {
             for (int threadLineQuark : threadLineQuarks) {
-                List<IStateInterval> intervals = StateSystemUtils.queryHistoryRange(ss, threadLineQuark, timeRange.getStartTime(), timeRange.getEndTime(), 1, task);
+                List<StateInterval> intervals = StateSystemUtils.queryHistoryRange(ss, threadLineQuark, timeRange.getStartTime(), timeRange.getEndTime(), 1, task);
                 if (task != null && task.isCancelled()) {
                     return TimeGraphArrowRender.EMPTY_RENDER;
                 }
@@ -83,11 +83,11 @@ public class ThreadsModelArrowProviderCpus extends StateSystemModelArrowProvider
         return new TimeGraphArrowRender(timeRange, flattenedArrows);
     }
 
-    private List<TimeGraphArrow> getArrowsFromStates(TimeGraphTreeRender treeRender, List<IStateInterval> threadTimeline, @Nullable Integer cpu) {
+    private List<TimeGraphArrow> getArrowsFromStates(TimeGraphTreeRender treeRender, List<StateInterval> threadTimeline, @Nullable Integer cpu) {
         List<TimeGraphArrow> arrows = new LinkedList<>();
         for (int i = 1; i < threadTimeline.size(); i++) {
-            IStateInterval interval1 = threadTimeline.get(i - 1);
-            IStateInterval interval2 = threadTimeline.get(i);
+            StateInterval interval1 = threadTimeline.get(i - 1);
+            StateInterval interval2 = threadTimeline.get(i);
             int thread1 = ((IntegerStateValue) interval1.getStateValue()).getValue();
             int thread2 = ((IntegerStateValue) interval2.getStateValue()).getValue();
 
@@ -98,8 +98,8 @@ public class ThreadsModelArrowProviderCpus extends StateSystemModelArrowProvider
 
             TimeGraphTreeElement startTreeElem = getTreeElementFromThread(treeRender, thread1, cpu);
             TimeGraphTreeElement endTreeElem = getTreeElementFromThread(treeRender, thread2, cpu);
-            TimeGraphEvent startEvent = new TimeGraphEvent(interval1.getEndTime(), startTreeElem);
-            TimeGraphEvent endEvent  = new TimeGraphEvent(interval2.getStartTime(), endTreeElem);
+            TimeGraphEvent startEvent = new TimeGraphEvent(interval1.getEnd(), startTreeElem);
+            TimeGraphEvent endEvent  = new TimeGraphEvent(interval2.getStart(), endTreeElem);
 
             TimeGraphArrow arrow = new TimeGraphArrow(startEvent, endEvent, getArrowSeries());
             arrows.add(arrow);

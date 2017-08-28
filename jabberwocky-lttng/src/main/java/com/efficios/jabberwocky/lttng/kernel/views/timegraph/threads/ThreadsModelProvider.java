@@ -12,7 +12,7 @@ package com.efficios.jabberwocky.lttng.kernel.views.timegraph.threads;
 import ca.polymtl.dorsal.libdelorean.IStateSystemReader;
 import ca.polymtl.dorsal.libdelorean.StateSystemUtils;
 import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
-import ca.polymtl.dorsal.libdelorean.interval.IStateInterval;
+import ca.polymtl.dorsal.libdelorean.interval.StateInterval;
 import ca.polymtl.dorsal.libdelorean.statevalue.StringStateValue;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.Attributes;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.KernelAnalysis;
@@ -106,7 +106,7 @@ public class ThreadsModelProvider extends StateSystemModelProvider {
                         // treeContext.renderTimeRangeStart first, and if we
                         // don't find anything use ss.getStartTime(), so that we
                         // catch subsequent process name changes
-                        IStateInterval firstInterval = StateSystemUtils.queryUntilNonNullValue(ss,
+                        StateInterval firstInterval = StateSystemUtils.queryUntilNonNullValue(ss,
                                 execNameQuark, ss.getStartTime(), Long.MAX_VALUE);
                         if (firstInterval == null) {
                             threadName = null;

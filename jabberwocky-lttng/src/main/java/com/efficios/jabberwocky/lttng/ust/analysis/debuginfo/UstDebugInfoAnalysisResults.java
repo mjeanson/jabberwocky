@@ -14,7 +14,7 @@ import ca.polymtl.dorsal.libdelorean.StateSystemUtils;
 import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
 import ca.polymtl.dorsal.libdelorean.exceptions.StateSystemDisposedException;
 import ca.polymtl.dorsal.libdelorean.exceptions.TimeRangeException;
-import ca.polymtl.dorsal.libdelorean.interval.IStateInterval;
+import ca.polymtl.dorsal.libdelorean.interval.StateInterval;
 import ca.polymtl.dorsal.libdelorean.statevalue.IntegerStateValue;
 import ca.polymtl.dorsal.libdelorean.statevalue.LongStateValue;
 import ca.polymtl.dorsal.libdelorean.statevalue.StateValue;
@@ -65,9 +65,9 @@ public class UstDebugInfoAnalysisResults {
                  * Iterate over each mapping there ever was at this base
                  * address.
                  */
-                IStateInterval interval = StateSystemUtils.queryUntilNonNullValue(ss, baddrQuark, ts, Long.MAX_VALUE);
+                StateInterval interval = StateSystemUtils.queryUntilNonNullValue(ss, baddrQuark, ts, Long.MAX_VALUE);
                 while (interval != null) {
-                    ts = interval.getStartTime();
+                    ts = interval.getStart();
 
                     StringStateValue filePathStateValue = (StringStateValue) ss.querySingleState(ts, pathQuark).getStateValue();
                     String filePath = filePathStateValue.getValue();
@@ -87,7 +87,7 @@ public class UstDebugInfoAnalysisResults {
                      * Go one past the end of the interval, and perform the
                      * query again to find the next mapping at this address.
                      */
-                    ts = interval.getEndTime() + 1;
+                    ts = interval.getEnd() + 1;
                     interval = StateSystemUtils.queryUntilNonNullValue(ss, baddrQuark, ts, Long.MAX_VALUE);
                 }
             }
@@ -117,7 +117,7 @@ public class UstDebugInfoAnalysisResults {
             final IStateSystemReader ss = stateSystem;
 
             List<Integer> possibleBaddrQuarks = ss.getQuarks(String.valueOf(vpid), "*"); //$NON-NLS-1$
-            List<IStateInterval> state = ss.queryFullState(ts);
+            List<StateInterval> state = ss.queryFullState(ts);
 
             /* Get the most probable base address from all the known ones */
             OptionalLong potentialBaddr = possibleBaddrQuarks.stream()

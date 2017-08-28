@@ -11,7 +11,7 @@ package com.efficios.jabberwocky.views.timegraph.model.provider.statesystem;
 
 import ca.polymtl.dorsal.libdelorean.IStateSystemReader;
 import ca.polymtl.dorsal.libdelorean.exceptions.StateSystemDisposedException;
-import ca.polymtl.dorsal.libdelorean.interval.IStateInterval;
+import ca.polymtl.dorsal.libdelorean.interval.StateInterval;
 import com.efficios.jabberwocky.analysis.statesystem.StateSystemAnalysis;
 import com.efficios.jabberwocky.project.ITraceProject;
 import com.efficios.jabberwocky.views.timegraph.model.provider.TimeGraphModelProvider;
@@ -51,7 +51,7 @@ public abstract class StateSystemModelProvider extends TimeGraphModelProvider {
         /** Filter modes */
         public final Set<FilterMode> filterModes;
         /** Full query */
-        public final List<IStateInterval> fullQueryAtRangeStart;
+        public final List<StateInterval> fullQueryAtRangeStart;
 
         /**
          * Constructor
@@ -69,7 +69,7 @@ public abstract class StateSystemModelProvider extends TimeGraphModelProvider {
                                  IStateSystemReader ss,
                                  SortingMode sortingMode,
                                  Set<FilterMode> filterModes,
-                                 List<IStateInterval> fullQueryAtRangeStart) {
+                                 List<StateInterval> fullQueryAtRangeStart) {
             this.traceName = traceName;
             this.ss = ss;
             this.sortingMode = sortingMode;
@@ -170,7 +170,7 @@ public abstract class StateSystemModelProvider extends TimeGraphModelProvider {
       }
 
         /* First generate the tree render context */
-        List<IStateInterval> fullStateAtStart;
+        List<StateInterval> fullStateAtStart;
         try {
             fullStateAtStart = ss.queryFullState(ss.getStartTime());
         } catch (StateSystemDisposedException e) {
