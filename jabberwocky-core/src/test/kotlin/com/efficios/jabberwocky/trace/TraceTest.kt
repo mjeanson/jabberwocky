@@ -16,7 +16,7 @@ import org.junit.runners.Parameterized
 import kotlin.test.assertEquals
 
 @RunWith(Parameterized::class)
-class TraceTest(private val testTrace: ITrace<TraceEvent>,
+class TraceTest(private val testTrace: Trace<TraceEvent>,
                 private val expectedStart: Long,
                 private val expectedEnd: Long) {
 

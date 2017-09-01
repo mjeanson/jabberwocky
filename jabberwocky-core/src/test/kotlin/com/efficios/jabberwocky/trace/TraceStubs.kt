@@ -19,7 +19,7 @@ internal class TraceStubs {
         const val EVENT_NAME_C = "EventC"
     }
 
-    private class TraceStubIterator(private val iterator: Iterator<TraceEvent>) : ITraceIterator<TraceEvent> {
+    private class TraceStubIterator(private val iterator: Iterator<TraceEvent>) : TraceIterator<TraceEvent> {
         override fun hasNext() = iterator.hasNext()
         override fun next() = iterator.next()
         override fun close() {}
@@ -29,7 +29,7 @@ internal class TraceStubs {
 
         protected abstract val events: List<TraceEvent>
 
-        final override fun iterator(): ITraceIterator<TraceEvent> {
+        final override fun iterator(): TraceIterator<TraceEvent> {
             return TraceStubIterator(events.iterator())
         }
     }

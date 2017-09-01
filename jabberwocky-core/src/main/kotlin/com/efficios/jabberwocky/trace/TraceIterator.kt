@@ -11,12 +11,7 @@ package com.efficios.jabberwocky.trace
 
 import com.efficios.jabberwocky.trace.event.ITraceEvent
 
-interface ITrace<out E : ITraceEvent> {
+interface TraceIterator<out E : ITraceEvent> : Iterator<E>, AutoCloseable {
 
-    val startTime: Long
-
-    val endTime: Long
-
-    fun iterator(): ITraceIterator<out E>
-
+    override fun close()
 }

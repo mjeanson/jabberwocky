@@ -12,7 +12,7 @@ package com.efficios.jabberwocky.lttng.ust.analysis.debuginfo
 import com.efficios.jabberwocky.lttng.testutils.ExtractedGenericCtfTestTrace
 import com.efficios.jabberwocky.lttng.testutils.ExtractedLttngUstTestTrace
 import com.efficios.jabberwocky.project.TraceProject
-import com.efficios.jabberwocky.trace.ITrace
+import com.efficios.jabberwocky.trace.Trace
 import com.efficios.jabberwocky.trace.event.ITraceEvent
 import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
 import org.junit.ClassRule
@@ -47,7 +47,7 @@ class UstDebugInfoAnalysisTest {
     private val analysis = UstDebugInfoAnalysis.instance()
 
 
-    private fun <E: ITraceEvent, T : ITrace<E>> createProject(trace: T): TraceProject<E, T> {
+    private fun <E: ITraceEvent, T : Trace<E>> createProject(trace: T): TraceProject<E, T> {
         val projectPath = Files.createTempDirectory(PROJECT_NAME)
         return TraceProject.ofSingleTrace(PROJECT_NAME, projectPath, trace)
     }

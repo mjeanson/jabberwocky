@@ -9,12 +9,12 @@
 
 package com.efficios.jabberwocky.trace.event
 
-import com.efficios.jabberwocky.trace.ITrace
+import com.efficios.jabberwocky.trace.Trace
 import com.google.common.base.MoreObjects
 import com.google.common.collect.ImmutableMap
 import java.util.*
 
-open class TraceEvent(@Transient override val trace: ITrace<TraceEvent>,
+open class TraceEvent(@Transient override val trace: Trace<TraceEvent>,
                       override val timestamp: Long,
                       override val cpu: Int,
                       override val eventName: String,

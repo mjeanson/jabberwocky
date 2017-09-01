@@ -17,7 +17,7 @@ import com.efficios.jabberwocky.lttng.ust.trace.LttngUstTrace;
 import com.efficios.jabberwocky.lttng.ust.trace.layout.ILttngUstEventLayout;
 import com.efficios.jabberwocky.lttng.ust.trace.layout.LttngUst28EventLayout;
 import com.efficios.jabberwocky.project.TraceProject;
-import com.efficios.jabberwocky.trace.ITrace;
+import com.efficios.jabberwocky.trace.Trace;
 import com.efficios.jabberwocky.trace.event.ITraceEvent;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
@@ -114,7 +114,7 @@ public class UstDebugInfoAnalysis extends StateSystemAnalysis {
 
     @Override
     protected void handleEvent(IStateSystemWriter ss, ITraceEvent event, Object @Nullable [] trackedState) {
-        ITrace trace = event.getTrace();
+        Trace trace = event.getTrace();
         if (!(trace instanceof LttngUstTrace)) {
             return;
         }

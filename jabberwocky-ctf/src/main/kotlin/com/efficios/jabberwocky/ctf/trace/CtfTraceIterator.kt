@@ -16,9 +16,9 @@ import org.eclipse.tracecompass.ctf.core.event.IEventDefinition
 import org.eclipse.tracecompass.ctf.core.trace.CTFTraceReader
 
 import com.efficios.jabberwocky.ctf.trace.event.CtfTraceEvent
-import com.efficios.jabberwocky.trace.ITraceIterator
+import com.efficios.jabberwocky.trace.TraceIterator
 
-open class CtfTraceIterator<out E : CtfTraceEvent>(private val originTrace: CtfTrace<E>) : ITraceIterator<E> {
+open class CtfTraceIterator<out E : CtfTraceEvent>(private val originTrace: CtfTrace<E>) : TraceIterator<E> {
 
     private val traceReader: CTFTraceReader = try {
         CTFTraceReader(originTrace.innerTrace)

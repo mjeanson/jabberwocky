@@ -11,14 +11,14 @@ package com.efficios.jabberwocky.project
 
 import com.efficios.jabberwocky.collection.TraceCollection
 import com.efficios.jabberwocky.common.TimeRange
-import com.efficios.jabberwocky.trace.ITrace
+import com.efficios.jabberwocky.trace.Trace
 import com.efficios.jabberwocky.trace.event.ITraceEvent
 import java.nio.file.Files
 import java.nio.file.Path
 
-class TraceProject<out E : ITraceEvent, out T : ITrace<E>> (val name: String,
-                                                            val directory: Path,
-                                                            val traceCollections: Collection<TraceCollection<E, T>>) {
+class TraceProject<out E : ITraceEvent, out T : Trace<E>> (val name: String,
+                                                           val directory: Path,
+                                                           val traceCollections: Collection<TraceCollection<E, T>>) {
 
     init {
         if (!Files.isReadable(directory) || !Files.isWritable(directory)) throw IllegalArgumentException("Invalid project directory")
@@ -27,7 +27,7 @@ class TraceProject<out E : ITraceEvent, out T : ITrace<E>> (val name: String,
 
     companion object {
         @JvmStatic
-        fun <X: ITraceEvent, Y: ITrace<X>> ofSingleTrace(name: String, directory: Path, trace: Y): TraceProject<X, Y> {
+        fun <X: ITraceEvent, Y: Trace<X>> ofSingleTrace(name: String, directory: Path, trace: Y): TraceProject<X, Y> {
             val collection = TraceCollection<X, Y>(setOf(trace))
             return TraceProject<X, Y>(name, directory, setOf(collection))
         }

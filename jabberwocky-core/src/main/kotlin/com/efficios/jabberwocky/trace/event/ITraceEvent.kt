@@ -9,11 +9,11 @@
 
 package com.efficios.jabberwocky.trace.event
 
-import com.efficios.jabberwocky.trace.ITrace
+import com.efficios.jabberwocky.trace.Trace
 
 interface ITraceEvent {
 
-    val trace: ITrace<ITraceEvent>
+    val trace: Trace<ITraceEvent>
 
     val timestamp: Long
 
