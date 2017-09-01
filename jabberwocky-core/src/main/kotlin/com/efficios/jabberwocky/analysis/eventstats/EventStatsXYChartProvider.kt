@@ -33,6 +33,13 @@ class EventStatsXYChartProvider: StateSystemXYChartProvider(NAME, SERIES, EventS
             return XYChartRender.EMPTY_RENDER
         }
 
+        /* Verify and clamp the query time range */
+        if (range.startTime < ss.startTime) {
+            throw IllegalArgumentException("Requested start time is earlier than state system start")
+        }
+        val queryStart = range.startTime
+        val queryEnd = minOf(range.endTime, ss.currentEndTime)
+
         when (series) {
             /* Only one available series for now */
             SERIES.single() -> {
@@ -43,7 +50,7 @@ class EventStatsXYChartProvider: StateSystemXYChartProvider(NAME, SERIES, EventS
                 }
 
                 /* Map each resolution point to the amount of events seen so far */
-                val eventCounts = (range.startTime until range.endTime step resolution).plus(range.endTime)
+                val eventCounts = (queryStart until queryEnd step resolution).plus(queryEnd)
                         .map { ts ->
                             val sv = ss.querySingleState(ts, quark).stateValue
                             val count = if (sv.isNull) 0L else (sv as IntegerStateValue).value.toLong()
@@ -61,7 +68,7 @@ class EventStatsXYChartProvider: StateSystemXYChartProvider(NAME, SERIES, EventS
                 }
 
                 val dataPoints = bucketCounts.map { XYChartRender.DataPoint(it.first, it.second) }
-                return XYChartRender(series, range, dataPoints)
+                return XYChartRender(series, TimeRange.of(queryStart, queryEnd), dataPoints)
             }
 
             else -> throw IllegalArgumentException()
