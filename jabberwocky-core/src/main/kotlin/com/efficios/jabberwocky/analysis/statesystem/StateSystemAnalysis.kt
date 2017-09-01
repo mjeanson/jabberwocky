@@ -17,7 +17,7 @@ import com.efficios.jabberwocky.analysis.IAnalysis
 import com.efficios.jabberwocky.collection.TraceCollection
 import com.efficios.jabberwocky.common.TimeRange
 import com.efficios.jabberwocky.project.TraceProject
-import com.efficios.jabberwocky.trace.event.ITraceEvent
+import com.efficios.jabberwocky.trace.event.TraceEvent
 import java.io.IOException
 import java.nio.file.Files
 
@@ -89,6 +89,6 @@ abstract class StateSystemAnalysis : IAnalysis {
      */
     protected open fun trackedState(): Array<Any>? = null
 
-    protected abstract fun handleEvent(ss: IStateSystemWriter, event: ITraceEvent, trackedState: Array<Any>?)
+    protected abstract fun handleEvent(ss: IStateSystemWriter, event: TraceEvent, trackedState: Array<Any>?)
 
 }

@@ -18,7 +18,7 @@ import com.efficios.jabberwocky.ctf.trace.ExtractedCtfTestTrace
 import com.efficios.jabberwocky.ctf.trace.event.CtfTraceEvent
 import com.efficios.jabberwocky.ctf.trace.generic.GenericCtfTrace
 import com.efficios.jabberwocky.project.TraceProject
-import com.efficios.jabberwocky.trace.event.ITraceEvent
+import com.efficios.jabberwocky.trace.event.TraceEvent
 import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -81,7 +81,7 @@ class CtfStateSystemAnalysisTest {
             return TraceCollection(project.traceCollections.flatMap { it.traces })
         }
 
-        override fun handleEvent(ss: IStateSystemWriter, event: ITraceEvent, trackedState: Array<Any>?) {
+        override fun handleEvent(ss: IStateSystemWriter, event: TraceEvent, trackedState: Array<Any>?) {
             /* Count the number of seen events in a "count" attribute */
             val quark = ss.getQuarkAbsoluteAndAdd(attribName)
             ss.incrementAttribute(event.timestamp, quark)

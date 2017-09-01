@@ -9,9 +9,9 @@
 
 package com.efficios.jabberwocky.trace
 
-import com.efficios.jabberwocky.trace.event.ITraceEvent
+import com.efficios.jabberwocky.trace.event.TraceEvent
 
-interface TraceIterator<out E : ITraceEvent> : Iterator<E>, AutoCloseable {
+interface TraceIterator<out E : TraceEvent> : Iterator<E>, AutoCloseable {
 
     override fun close()
 }

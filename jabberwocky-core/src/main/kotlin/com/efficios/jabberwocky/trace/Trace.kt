@@ -1,10 +1,9 @@
 package com.efficios.jabberwocky.trace
 
-import com.efficios.jabberwocky.trace.event.ITraceEvent
 import com.efficios.jabberwocky.trace.event.TraceEvent
 import com.google.common.collect.Iterators
 
-abstract class Trace<out E : ITraceEvent> {
+abstract class Trace<out E : TraceEvent> {
 
     /* Lazy-load the start time by reading the timestamp of the first event. */
     val startTime: Long by lazy {

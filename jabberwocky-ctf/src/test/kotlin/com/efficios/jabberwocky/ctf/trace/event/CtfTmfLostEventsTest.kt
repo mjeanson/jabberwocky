@@ -22,8 +22,7 @@ import org.junit.Test
 
 import com.efficios.jabberwocky.ctf.trace.ExtractedCtfTestTrace
 import com.efficios.jabberwocky.ctf.trace.generic.GenericCtfTrace
-import com.efficios.jabberwocky.ctf.trace.generic.GenericCtfTraceIterator
-import com.efficios.jabberwocky.trace.event.ITraceLostEvent
+import com.efficios.jabberwocky.trace.event.TraceLostEvent
 
 /**
  * Tests to verify that lost events are handled correctly.
@@ -122,7 +121,7 @@ class CtfTmfLostEventsTest {
         val event2 = getEventAtRank(trace, rank)
         assertEquals(event, event2)
 
-        assertFalse(event is ITraceLostEvent)
+        assertFalse(event is TraceLostEvent)
         assertEquals(ts, event.timestamp)
     }
 
@@ -141,7 +140,7 @@ class CtfTmfLostEventsTest {
             trace.iterator().use { iter ->
                 while (iter.hasNext()) {
                     val event = iter.next()
-                    if (event is ITraceLostEvent) {
+                    if (event is TraceLostEvent) {
                         lost++
                     } else {
                         real++
@@ -157,8 +156,8 @@ class CtfTmfLostEventsTest {
         val ev2 = getEventAtRank(trace, rank)
         assertEquals(ev, ev2)
 
-        assertTrue(ev is ITraceLostEvent)
-        val event = ev as ITraceLostEvent
+        assertTrue(ev is TraceLostEvent)
+        val event = ev as TraceLostEvent
 
         assertEquals(start, event.timestamp)
         assertEquals(start, event.timeRange.startTime)
@@ -182,7 +181,7 @@ class CtfTmfLostEventsTest {
         trace.iterator().use({ iter ->
             while (iter.hasNext()) {
                 val event = iter.next()
-                if (event.timestamp >= timestamp && event is ITraceLostEvent) {
+                if (event.timestamp >= timestamp && event is TraceLostEvent) {
                     return event
                 }
             }

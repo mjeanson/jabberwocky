@@ -20,7 +20,7 @@ import com.efficios.jabberwocky.lttng.kernel.analysis.os.StateValues;
 import com.efficios.jabberwocky.lttng.kernel.trace.layout.ILttngKernelEventLayout;
 import com.efficios.jabberwocky.trace.event.FieldValue.IntegerValue;
 import com.efficios.jabberwocky.trace.event.FieldValue.StringValue;
-import com.efficios.jabberwocky.trace.event.ITraceEvent;
+import com.efficios.jabberwocky.trace.event.TraceEvent;
 
 import static java.util.Objects.requireNonNull;
 
@@ -40,7 +40,7 @@ public class ProcessForkHandler extends KernelEventHandler {
     }
 
     @Override
-    public void handleEvent(IStateSystemWriter ss, ITraceEvent event) throws AttributeNotFoundException {
+    public void handleEvent(IStateSystemWriter ss, TraceEvent event) throws AttributeNotFoundException {
         int cpu = event.getCpu();
         String childProcessName = requireNonNull(event.getField(getLayout().fieldChildComm(), StringValue.class)).getValue();
         int parentTid = Long.valueOf(requireNonNull(event.getField(getLayout().fieldParentTid(), IntegerValue.class)).getValue()).intValue();

@@ -16,7 +16,7 @@ import com.efficios.jabberwocky.lttng.kernel.analysis.os.Attributes;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.StateValues;
 import com.efficios.jabberwocky.lttng.kernel.trace.layout.ILttngKernelEventLayout;
 import com.efficios.jabberwocky.trace.event.FieldValue.IntegerValue;
-import com.efficios.jabberwocky.trace.event.ITraceEvent;
+import com.efficios.jabberwocky.trace.event.TraceEvent;
 
 /**
  * Handler for task migration events. Normally moves a (non-running) process
@@ -37,7 +37,7 @@ public class SchedMigrateTaskHandler extends KernelEventHandler {
     }
 
     @Override
-    public void handleEvent(IStateSystemWriter ss, ITraceEvent event) throws AttributeNotFoundException {
+    public void handleEvent(IStateSystemWriter ss, TraceEvent event) throws AttributeNotFoundException {
         IntegerValue tidField = event.getField(getLayout().fieldTid(), IntegerValue.class);
         IntegerValue destCpuField = event.getField(getLayout().fieldDestCpu(), IntegerValue.class);
         if (tidField == null || destCpuField == null) {

@@ -10,61 +10,21 @@
 package com.efficios.jabberwocky.trace.event
 
 import com.efficios.jabberwocky.trace.Trace
-import com.google.common.base.MoreObjects
-import com.google.common.collect.ImmutableMap
-import java.util.*
 
-open class TraceEvent(@Transient override val trace: Trace<TraceEvent>,
-                      override val timestamp: Long,
-                      override val cpu: Int,
-                      override val eventName: String,
-                      eventFields: Map<String, FieldValue>,
-                      attributes: Map<String, String>?) : ITraceEvent {
+interface TraceEvent {
 
-    private val fEventFields: Map<String, FieldValue> = ImmutableMap.copyOf(eventFields)
+    val trace: Trace<TraceEvent>
 
-    final override val attributes: Map<String, String> = if (attributes == null) Collections.emptyMap() else ImmutableMap.copyOf(attributes)
+    val timestamp: Long
 
-    final override val fieldNames = fEventFields.keys
+    val cpu: Int
 
-    override fun <T : FieldValue> getField(fieldName: String, fieldType: Class<T>): T? {
-        val value = fEventFields[fieldName] ?: /*
-             * No field with this name found (the map doesn't accept null
-             * values)
-             */
-                return null
-        if (!fieldType.isAssignableFrom(value.javaClass)) {
-            /* Field exists but is not of the expected type */
-            return null
-        }
-        val ret = value as T
-        return ret
-    }
+    val eventName: String
 
-    override fun hashCode() = Objects.hash(timestamp, cpu, eventName, fEventFields, attributes)
+    val fieldNames: Set<String>
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other?.javaClass != javaClass) return false
+    fun <T : FieldValue> getField(fieldName: String, fieldType: Class<T>): T?
 
-        other as TraceEvent
-
-        if (timestamp != other.timestamp) return false
-        if (cpu != other.cpu) return false
-        if (eventName != other.eventName) return false
-        if (fEventFields != other.fEventFields) return false
-        if (attributes != other.attributes) return false
-
-        return true
-    }
-
-    override fun toString(): String {
-        return MoreObjects.toStringHelper(this)
-                .add("timestamp", timestamp) //$NON-NLS-1$
-                .add("event name", eventName) //$NON-NLS-1$
-                .add("cpu", cpu) //$NON-NLS-1$
-                .add("fields", fEventFields) //$NON-NLS-1$
-                .toString()
-    }
+    val attributes: Map<String, String>
 
 }

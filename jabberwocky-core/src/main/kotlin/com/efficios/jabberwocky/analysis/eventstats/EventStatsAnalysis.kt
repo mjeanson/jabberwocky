@@ -13,7 +13,7 @@ import ca.polymtl.dorsal.libdelorean.IStateSystemWriter
 import com.efficios.jabberwocky.analysis.statesystem.StateSystemAnalysis
 import com.efficios.jabberwocky.collection.TraceCollection
 import com.efficios.jabberwocky.project.TraceProject
-import com.efficios.jabberwocky.trace.event.ITraceEvent
+import com.efficios.jabberwocky.trace.event.TraceEvent
 
 object EventStatsAnalysis : StateSystemAnalysis() {
 
@@ -32,7 +32,7 @@ object EventStatsAnalysis : StateSystemAnalysis() {
         return TraceCollection(project.traceCollections.flatMap { it.traces })
     }
 
-    override fun handleEvent(ss: IStateSystemWriter, event: ITraceEvent, trackedState: Array<Any>?) {
+    override fun handleEvent(ss: IStateSystemWriter, event: TraceEvent, trackedState: Array<Any>?) {
         /* Increment the totals, then the attributes corresponding to this event's name and cpu */
         val ts = event.timestamp
 

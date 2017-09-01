@@ -9,6 +9,7 @@
 
 package com.efficios.jabberwocky.trace
 
+import com.efficios.jabberwocky.trace.event.BaseTraceEvent
 import com.efficios.jabberwocky.trace.event.TraceEvent
 
 internal class TraceStubs {
@@ -37,17 +38,17 @@ internal class TraceStubs {
     class TraceStub1 : TraceStubBase() {
 
         override val events = listOf(
-                TraceEvent(this, 2, 0, EVENT_NAME_A, emptyMap(), null),
-                TraceEvent(this, 5, 0, EVENT_NAME_B, emptyMap(), null),
-                TraceEvent(this, 10, 1, EVENT_NAME_C, emptyMap(), null))
+                BaseTraceEvent(this, 2, 0, EVENT_NAME_A, emptyMap(), null),
+                BaseTraceEvent(this, 5, 0, EVENT_NAME_B, emptyMap(), null),
+                BaseTraceEvent(this, 10, 1, EVENT_NAME_C, emptyMap(), null))
     }
 
     class TraceStub2 : TraceStubBase() {
 
         override val events = listOf(
-                TraceEvent(this, 4, 1, EVENT_NAME_B, emptyMap(), null),
-                TraceEvent(this, 6, 0, EVENT_NAME_B, emptyMap(), null),
-                TraceEvent(this, 8, 1, EVENT_NAME_A, emptyMap(), null))
+                BaseTraceEvent(this, 4, 1, EVENT_NAME_B, emptyMap(), null),
+                BaseTraceEvent(this, 6, 0, EVENT_NAME_B, emptyMap(), null),
+                BaseTraceEvent(this, 8, 1, EVENT_NAME_A, emptyMap(), null))
 
     }
 

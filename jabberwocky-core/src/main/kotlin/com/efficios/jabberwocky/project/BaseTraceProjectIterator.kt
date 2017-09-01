@@ -11,10 +11,10 @@ package com.efficios.jabberwocky.project
 
 import com.efficios.jabberwocky.collection.TraceCollectionIterator
 import com.efficios.jabberwocky.trace.Trace
-import com.efficios.jabberwocky.trace.event.ITraceEvent
+import com.efficios.jabberwocky.trace.event.TraceEvent
 import com.efficios.jabberwocky.utils.SortedCompoundIterator
 
-class BaseTraceProjectIterator<out E : ITraceEvent> (project: TraceProject<E, Trace<E>>) : SortedCompoundIterator<E, TraceCollectionIterator<E>>(
+class BaseTraceProjectIterator<out E : TraceEvent> (project: TraceProject<E, Trace<E>>) : SortedCompoundIterator<E, TraceCollectionIterator<E>>(
         project.traceCollections.map { it.iterator() },
         Comparator.comparingLong { event -> event.timestamp }), TraceProjectIterator<E> {
 

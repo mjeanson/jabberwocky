@@ -10,7 +10,7 @@
 package com.efficios.jabberwocky.lttng.kernel.views.timegraph.resources.elements;
 
 import ca.polymtl.dorsal.libdelorean.IStateSystemReader;
-import com.efficios.jabberwocky.trace.event.ITraceEvent;
+import com.efficios.jabberwocky.trace.event.TraceEvent;
 import com.efficios.jabberwocky.views.timegraph.model.provider.statesystem.StateSystemTimeGraphTreeElement;
 import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeElement;
 
@@ -59,7 +59,7 @@ public class ResourcesCpuTreeElement extends StateSystemTimeGraphTreeElement {
     }
 
     @Override
-    public Predicate<ITraceEvent> getEventMatching() {
+    public Predicate<TraceEvent> getEventMatching() {
         return (event -> fCpu == event.getCpu());
     }
 

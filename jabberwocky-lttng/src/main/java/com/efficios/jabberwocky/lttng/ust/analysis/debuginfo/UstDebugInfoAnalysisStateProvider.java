@@ -16,7 +16,7 @@ import com.efficios.jabberwocky.lttng.ust.trace.layout.LttngUst28EventLayout;
 import com.efficios.jabberwocky.trace.event.FieldValue.ArrayValue;
 import com.efficios.jabberwocky.trace.event.FieldValue.IntegerValue;
 import com.efficios.jabberwocky.trace.event.FieldValue.StringValue;
-import com.efficios.jabberwocky.trace.event.ITraceEvent;
+import com.efficios.jabberwocky.trace.event.TraceEvent;
 import com.google.common.io.BaseEncoding;
 import kotlin.Pair;
 import org.eclipse.jdt.annotation.Nullable;
@@ -142,7 +142,7 @@ class UstDebugInfoAnalysisStateProvider {
     }
 
     public void eventHandle(UstDebugInfoAnalysisDefinitions defs,
-                            IStateSystemWriter ss, ITraceEvent event) {
+                            IStateSystemWriter ss, TraceEvent event) {
 
         LttngUst28EventLayout layout = defs.getLayout();
 
@@ -287,7 +287,7 @@ class UstDebugInfoAnalysisStateProvider {
      * When a process does an exec, a new statedump is done and all previous
      * mappings are now invalid.
      */
-    private void handleStatedumpStart(ITraceEvent event, final Long vpid, final IStateSystemWriter ss) {
+    private void handleStatedumpStart(TraceEvent event, final Long vpid, final IStateSystemWriter ss) {
         long ts = event.getTimestamp();
         fLatestStatedumpStarts.put(vpid, ts);
 
@@ -310,8 +310,8 @@ class UstDebugInfoAnalysisStateProvider {
      *            Indicates if it comes from a statedump event, or a
      *            dlopen/lib:load event.
      */
-    private void handleBinInfo(LttngUst28EventLayout layout, ITraceEvent event, final Long vpid,
-            final IStateSystemWriter ss, boolean statedump) {
+    private void handleBinInfo(LttngUst28EventLayout layout, TraceEvent event, final Long vpid,
+                               final IStateSystemWriter ss, boolean statedump) {
         // "?.getValue()" would be sooo much cleaner...
         IntegerValue baddrField = event.getField(layout.fieldBaddr(), IntegerValue.class);
         IntegerValue memszField = event.getField(layout.fieldMemsz(), IntegerValue.class);
@@ -361,8 +361,8 @@ class UstDebugInfoAnalysisStateProvider {
      *            Indicates if it comes from a statedump event, or a
      *            dlopen/lib:build_id event.
      */
-    private void handleBuildId(LttngUst28EventLayout layout, ITraceEvent event, final Long vpid,
-            final IStateSystemWriter ss, boolean statedump) {
+    private void handleBuildId(LttngUst28EventLayout layout, TraceEvent event, final Long vpid,
+                               final IStateSystemWriter ss, boolean statedump) {
         ArrayValue<IntegerValue> buildIdArrayField = event.getField(layout.fieldBuildId(), ArrayValue.class);
         IntegerValue baddrField = event.getField(layout.fieldBaddr(), IntegerValue.class);
 
@@ -397,8 +397,8 @@ class UstDebugInfoAnalysisStateProvider {
         processPendingBinInfo(p, ts, ss);
     }
 
-    private void handleDebugLink(LttngUst28EventLayout layout, ITraceEvent event, final Long vpid,
-            final IStateSystemWriter ss, boolean statedump) {
+    private void handleDebugLink(LttngUst28EventLayout layout, TraceEvent event, final Long vpid,
+                                 final IStateSystemWriter ss, boolean statedump) {
         IntegerValue baddrField = event.getField(layout.fieldBaddr(), IntegerValue.class);
         StringValue debugLinkField = event.getField(layout.fieldDebugLinkFilename(), StringValue.class);
 
@@ -427,7 +427,7 @@ class UstDebugInfoAnalysisStateProvider {
      *
      * Uses fields: Long baddr
      */
-    private static void handleClose(LttngUst28EventLayout layout, ITraceEvent event, final Long vpid, final IStateSystemWriter ss) {
+    private static void handleClose(LttngUst28EventLayout layout, TraceEvent event, final Long vpid, final IStateSystemWriter ss) {
         IntegerValue baddrField = event.getField(layout.fieldBaddr(), IntegerValue.class);
 
         if (baddrField == null) {
@@ -472,7 +472,7 @@ class UstDebugInfoAnalysisStateProvider {
      *            if it is a dlopen/lib:load event.
      * @return The timestamp to use
      */
-    private long getBinInfoTimeStamp(ITraceEvent event, final Long vpid, boolean statedump) {
+    private long getBinInfoTimeStamp(TraceEvent event, final Long vpid, boolean statedump) {
         if (statedump) {
             Long statedumpStartTime = fLatestStatedumpStarts.get(vpid);
             if (statedumpStartTime != null) {

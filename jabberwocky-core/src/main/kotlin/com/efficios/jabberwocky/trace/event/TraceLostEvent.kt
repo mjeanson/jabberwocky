@@ -9,22 +9,12 @@
 
 package com.efficios.jabberwocky.trace.event
 
-import com.efficios.jabberwocky.trace.Trace
+import com.efficios.jabberwocky.common.TimeRange
 
-interface ITraceEvent {
+interface TraceLostEvent : TraceEvent {
 
-    val trace: Trace<ITraceEvent>
+    val timeRange: TimeRange
 
-    val timestamp: Long
-
-    val cpu: Int
-
-    val eventName: String
-
-    val fieldNames: Set<String>
-
-    fun <T : FieldValue> getField(fieldName: String, fieldType: Class<T>): T?
-
-    val attributes: Map<String, String>
+    val nbLostEvents: Long
 
 }

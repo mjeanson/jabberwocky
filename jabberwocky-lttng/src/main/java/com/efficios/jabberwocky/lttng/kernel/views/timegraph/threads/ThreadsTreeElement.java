@@ -3,7 +3,7 @@ package com.efficios.jabberwocky.lttng.kernel.views.timegraph.threads;
 import ca.polymtl.dorsal.libdelorean.IStateSystemReader;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.Attributes;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.KernelThreadInformationProvider;
-import com.efficios.jabberwocky.trace.event.ITraceEvent;
+import com.efficios.jabberwocky.trace.event.TraceEvent;
 import com.efficios.jabberwocky.views.timegraph.model.provider.statesystem.StateSystemTimeGraphTreeElement;
 import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeElement;
 import com.google.common.primitives.Ints;
@@ -63,7 +63,7 @@ public class ThreadsTreeElement extends StateSystemTimeGraphTreeElement {
     }
 
     @Override
-    public @Nullable Predicate<ITraceEvent> getEventMatching() {
+    public @Nullable Predicate<TraceEvent> getEventMatching() {
         /*
          * This tree element represents a thread ID. Return true for events
          * whose TID aspect is the same as the TID of this element.

@@ -14,7 +14,7 @@ package com.efficios.jabberwocky.lttng.kernel.analysis.os.handlers;
 
 import com.efficios.jabberwocky.lttng.kernel.trace.layout.ILttngKernelEventLayout;
 
-import com.efficios.jabberwocky.trace.event.ITraceEvent;
+import com.efficios.jabberwocky.trace.event.TraceEvent;
 
 import ca.polymtl.dorsal.libdelorean.IStateSystemWriter;
 import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
@@ -55,6 +55,6 @@ public abstract class KernelEventHandler {
      * @throws AttributeNotFoundException
      *             if the attribute is not yet create
      */
-    public abstract void handleEvent(IStateSystemWriter ss, ITraceEvent event) throws AttributeNotFoundException;
+    public abstract void handleEvent(IStateSystemWriter ss, TraceEvent event) throws AttributeNotFoundException;
 
 }

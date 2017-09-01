@@ -15,7 +15,7 @@ package com.efficios.jabberwocky.lttng.kernel.analysis.os.handlers;
 import ca.polymtl.dorsal.libdelorean.IStateSystemWriter;
 import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
 import com.efficios.jabberwocky.lttng.kernel.trace.layout.ILttngKernelEventLayout;
-import com.efficios.jabberwocky.trace.event.ITraceEvent;
+import com.efficios.jabberwocky.trace.event.TraceEvent;
 
 /**
  * Process Exit handler
@@ -33,7 +33,7 @@ public class ProcessExitHandler extends KernelEventHandler {
     }
 
     @Override
-    public void handleEvent(IStateSystemWriter ss, ITraceEvent event) throws AttributeNotFoundException {
+    public void handleEvent(IStateSystemWriter ss, TraceEvent event) throws AttributeNotFoundException {
         /* No state modifications tracked atm */
     }
 

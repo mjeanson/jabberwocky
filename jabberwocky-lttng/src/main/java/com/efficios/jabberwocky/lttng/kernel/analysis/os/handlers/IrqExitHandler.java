@@ -17,7 +17,7 @@ import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
 import ca.polymtl.dorsal.libdelorean.statevalue.StateValue;
 import com.efficios.jabberwocky.lttng.kernel.trace.layout.ILttngKernelEventLayout;
 import com.efficios.jabberwocky.trace.event.FieldValue.IntegerValue;
-import com.efficios.jabberwocky.trace.event.ITraceEvent;
+import com.efficios.jabberwocky.trace.event.TraceEvent;
 
 import static java.util.Objects.requireNonNull;
 
@@ -37,7 +37,7 @@ public class IrqExitHandler extends KernelEventHandler {
     }
 
     @Override
-    public void handleEvent(IStateSystemWriter ss, ITraceEvent event) throws AttributeNotFoundException {
+    public void handleEvent(IStateSystemWriter ss, TraceEvent event) throws AttributeNotFoundException {
         int cpu = event.getCpu();
         int currentThreadNode = KernelEventHandlerUtils.getCurrentThreadNode(cpu, ss);
         Long irqId = requireNonNull(event.getField(getLayout().fieldIrq(), IntegerValue.class)).getValue();

@@ -11,14 +11,14 @@ package com.efficios.jabberwocky.lttng.ust.analysis.debuginfo
 
 import com.efficios.jabberwocky.lttng.ust.trace.LttngUstTrace
 import com.efficios.jabberwocky.trace.event.FieldValue
-import com.efficios.jabberwocky.trace.event.ITraceEvent
+import com.efficios.jabberwocky.trace.event.TraceEvent
 
 /**
  * Extensions functions for UstDebugInfoAnalysisResults. To merge into that
  * class once it moves to the Kotlin package.
  */
 
-fun UstDebugInfoAnalysisResults.getCallsiteOfEvent(event: ITraceEvent): BinaryCallsite? {
+fun UstDebugInfoAnalysisResults.getCallsiteOfEvent(event: TraceEvent): BinaryCallsite? {
     /* This aspect only supports UST traces */
     val trace = event.trace as? LttngUstTrace ?: return null
     val layout = trace.ustEventLayout
