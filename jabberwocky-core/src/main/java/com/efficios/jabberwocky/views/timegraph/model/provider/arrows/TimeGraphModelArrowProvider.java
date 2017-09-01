@@ -9,15 +9,13 @@
 
 package com.efficios.jabberwocky.views.timegraph.model.provider.arrows;
 
+import com.efficios.jabberwocky.project.TraceProject;
 import com.efficios.jabberwocky.views.timegraph.model.render.arrows.TimeGraphArrowSeries;
-import org.eclipse.jdt.annotation.Nullable;
-
-import com.efficios.jabberwocky.project.ITraceProject;
-
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * Basic implementation of {@link ITimeGraphModelArrowProvider}. It takes care
@@ -28,7 +26,7 @@ import javafx.beans.property.SimpleObjectProperty;
  */
 public abstract class TimeGraphModelArrowProvider implements ITimeGraphModelArrowProvider {
 
-    private final ObjectProperty<@Nullable ITraceProject<?, ?>> fTraceProperty = new SimpleObjectProperty<>(null);
+    private final ObjectProperty<@Nullable TraceProject<?, ?>> fTraceProperty = new SimpleObjectProperty<>(null);
     private final BooleanProperty fEnabledProperty = new SimpleBooleanProperty(false);
     private final TimeGraphArrowSeries fArrowSeries;
 
@@ -44,7 +42,7 @@ public abstract class TimeGraphModelArrowProvider implements ITimeGraphModelArro
     }
 
     @Override
-    public final ObjectProperty<@Nullable ITraceProject<?, ?>> traceProjectProperty() {
+    public final ObjectProperty<@Nullable TraceProject<?, ?>> traceProjectProperty() {
         return fTraceProperty;
     }
 

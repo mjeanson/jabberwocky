@@ -11,7 +11,7 @@ package com.efficios.jabberwocky.views.xychart.control
 
 import com.efficios.jabberwocky.common.TimeRange
 import com.efficios.jabberwocky.context.ViewGroupContext
-import com.efficios.jabberwocky.project.ITraceProject
+import com.efficios.jabberwocky.project.TraceProject
 import com.efficios.jabberwocky.views.xychart.model.provider.XYChartModelProvider
 import com.efficios.jabberwocky.views.xychart.view.XYChartView
 import javafx.beans.value.ChangeListener
@@ -48,7 +48,7 @@ class XYChartControl(val viewContext: ViewGroupContext, val renderProvider: XYCh
     // ------------------------------------------------------------------------
 
     @Synchronized
-    fun initializeForProject(traceProject: ITraceProject<*, *>?) {
+    fun initializeForProject(traceProject: TraceProject<*, *>?) {
         val view = view ?: return
         view.clear()
 

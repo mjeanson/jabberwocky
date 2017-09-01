@@ -18,7 +18,6 @@ import com.efficios.jabberwocky.collection.TraceCollection
 import com.efficios.jabberwocky.ctf.trace.ExtractedCtfTestTrace
 import com.efficios.jabberwocky.ctf.trace.event.CtfTraceEvent
 import com.efficios.jabberwocky.ctf.trace.generic.GenericCtfTrace
-import com.efficios.jabberwocky.project.ITraceProject
 import com.efficios.jabberwocky.project.TraceProject
 import com.efficios.jabberwocky.trace.event.ITraceEvent
 import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
@@ -47,7 +46,7 @@ class CtfStateSystemAnalysisTest {
     }
 
     private lateinit var projectPath: Path
-    private lateinit var project: ITraceProject<CtfTraceEvent, GenericCtfTrace>
+    private lateinit var project: TraceProject<CtfTraceEvent, GenericCtfTrace>
 
     private lateinit var ss : IStateSystemReader
 
@@ -74,11 +73,11 @@ class CtfStateSystemAnalysisTest {
 
         override val providerVersion = 0
 
-        override fun appliesTo(project: ITraceProject<*, *>) = true
+        override fun appliesTo(project: TraceProject<*, *>) = true
 
-        override fun canExecute(project: ITraceProject<*, *>) = true
+        override fun canExecute(project: TraceProject<*, *>) = true
 
-        override fun filterTraces(project: ITraceProject<*, *>): ITraceCollection<*, *> {
+        override fun filterTraces(project: TraceProject<*, *>): ITraceCollection<*, *> {
             /* Just return all traces in the project */
             return TraceCollection(project.traceCollections.flatMap { it.traces })
         }

@@ -10,7 +10,7 @@
 package com.efficios.jabberwocky.views.xychart.model.provider
 
 import com.efficios.jabberwocky.common.TimeRange
-import com.efficios.jabberwocky.project.ITraceProject
+import com.efficios.jabberwocky.project.TraceProject
 import com.efficios.jabberwocky.views.xychart.model.render.XYChartRender
 import com.efficios.jabberwocky.views.xychart.model.render.XYChartSeries
 import javafx.beans.property.ObjectProperty
@@ -20,7 +20,7 @@ import java.util.concurrent.FutureTask
 abstract class XYChartModelProvider(val providerName: String,
                                     val series: List<XYChartSeries>) {
 
-    private val traceProjectProperty: ObjectProperty<ITraceProject<*, *>?> = SimpleObjectProperty()
+    private val traceProjectProperty: ObjectProperty<TraceProject<*, *>?> = SimpleObjectProperty()
     fun traceProjectProperty() = traceProjectProperty
     var traceProject
         get() = traceProjectProperty.get()

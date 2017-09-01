@@ -13,7 +13,7 @@ import ca.polymtl.dorsal.libdelorean.IStateSystemReader;
 import ca.polymtl.dorsal.libdelorean.exceptions.StateSystemDisposedException;
 import ca.polymtl.dorsal.libdelorean.interval.StateInterval;
 import com.efficios.jabberwocky.analysis.statesystem.StateSystemAnalysis;
-import com.efficios.jabberwocky.project.ITraceProject;
+import com.efficios.jabberwocky.project.TraceProject;
 import com.efficios.jabberwocky.views.timegraph.model.provider.TimeGraphModelProvider;
 import com.efficios.jabberwocky.views.timegraph.model.provider.arrows.ITimeGraphModelArrowProvider;
 import com.efficios.jabberwocky.views.timegraph.model.provider.states.ITimeGraphModelStateProvider;
@@ -177,7 +177,7 @@ public abstract class StateSystemModelProvider extends TimeGraphModelProvider {
             return TimeGraphTreeRender.EMPTY_RENDER;
         }
 
-        ITraceProject<?, ?> traceProject = getTraceProject();
+        TraceProject<?, ?> traceProject = getTraceProject();
         String traceName = (traceProject == null ? "" : traceProject.getName()); //$NON-NLS-1$
 
         TreeRenderContext treeContext = new TreeRenderContext(traceName,

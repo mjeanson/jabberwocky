@@ -9,15 +9,15 @@
 
 package com.efficios.jabberwocky.views.timegraph.model.provider;
 
-import com.efficios.jabberwocky.project.ITraceProject;
+import com.efficios.jabberwocky.project.TraceProject;
 import com.efficios.jabberwocky.views.timegraph.model.provider.arrows.ITimeGraphModelArrowProvider;
 import com.efficios.jabberwocky.views.timegraph.model.provider.states.ITimeGraphModelStateProvider;
+import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeRender;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.eclipse.jdt.annotation.Nullable;
-import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeRender;
 
 import java.util.HashSet;
 import java.util.List;
@@ -45,7 +45,7 @@ public abstract class TimeGraphModelProvider implements ITimeGraphModelProvider 
     private final Set<FilterMode> fActiveFilterModes = new HashSet<>();
     private SortingMode fCurrentSortingMode;
 
-    private final ObjectProperty<@Nullable ITraceProject<?, ?>> fTraceProjectProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<@Nullable TraceProject<?, ?>> fTraceProjectProperty = new SimpleObjectProperty<>();
 
     /**
      * Constructor
@@ -99,17 +99,17 @@ public abstract class TimeGraphModelProvider implements ITimeGraphModelProvider 
     }
 
     @Override
-    public final void setTraceProject(@Nullable ITraceProject<?, ?> trace) {
+    public final void setTraceProject(@Nullable TraceProject<?, ?> trace) {
         fTraceProjectProperty.set(trace);
     }
 
     @Override
-    public final @Nullable ITraceProject<?, ?> getTraceProject() {
+    public final @Nullable TraceProject<?, ?> getTraceProject() {
         return fTraceProjectProperty.get();
     }
 
     @Override
-    public final ObjectProperty<@Nullable ITraceProject<?, ?>> traceProjectProperty() {
+    public final ObjectProperty<@Nullable TraceProject<?, ?>> traceProjectProperty() {
         return fTraceProjectProperty;
     }
 

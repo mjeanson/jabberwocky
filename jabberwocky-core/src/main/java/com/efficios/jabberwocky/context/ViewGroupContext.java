@@ -9,14 +9,12 @@
 
 package com.efficios.jabberwocky.context;
 
-import org.eclipse.jdt.annotation.Nullable;
-
 import com.efficios.jabberwocky.common.TimeRange;
-import com.efficios.jabberwocky.project.ITraceProject;
-
+import com.efficios.jabberwocky.project.TraceProject;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * A common context for a group of views. Information is stored as properties,
@@ -31,7 +29,7 @@ public class ViewGroupContext {
 
     private static final long DEFAULT_INITIAL_OFFSET = (1L * 100 * 1000 * 1000); // 100 ms (0.1 s)
 
-    private final ObjectProperty<@Nullable ITraceProject<?, ?>> fCurrentTraceProject = new SimpleObjectProperty<>(null);
+    private final ObjectProperty<@Nullable TraceProject<?, ?>> fCurrentTraceProject = new SimpleObjectProperty<>(null);
 
     private ObjectProperty<TimeRange> fCurrentVisibleTimeRange = new SimpleObjectProperty<>(UNINITIALIZED_RANGE);
     private ObjectProperty<TimeRange> fCurrentSelectionRange = new SimpleObjectProperty<>(UNINITIALIZED_RANGE);
@@ -45,7 +43,7 @@ public class ViewGroupContext {
      * @param traceProject
      *            The trace project, can be null to indicate no trace
      */
-    public void setCurrentTraceProject(@Nullable ITraceProject<?, ?> traceProject) {
+    public void setCurrentTraceProject(@Nullable TraceProject<?, ?> traceProject) {
         /* On trace change, adjust the other properties accordingly. */
         if (traceProject == null) {
             fCurrentVisibleTimeRange = new SimpleObjectProperty<>(UNINITIALIZED_RANGE);
@@ -67,7 +65,7 @@ public class ViewGroupContext {
      *
      * @return The context's current trace. Can be null to indicate no trace.
      */
-    public @Nullable ITraceProject<?, ?> getCurrentTraceProject() {
+    public @Nullable TraceProject<?, ?> getCurrentTraceProject() {
         return fCurrentTraceProject.get();
     }
 
@@ -78,7 +76,7 @@ public class ViewGroupContext {
      *
      * @return The current trace property.
      */
-    public ReadOnlyObjectProperty<@Nullable ITraceProject<?, ?>> currentTraceProjectProperty() {
+    public ReadOnlyObjectProperty<@Nullable TraceProject<?, ?>> currentTraceProjectProperty() {
         return fCurrentTraceProject;
     }
 
@@ -148,7 +146,7 @@ public class ViewGroupContext {
      *         {@link #UNINITIALIZED_RANGE} if there is no active project.
      */
     public TimeRange getCurrentProjectFullRange() {
-        ITraceProject<?, ?> project = getCurrentTraceProject();
+        TraceProject<?, ?> project = getCurrentTraceProject();
         if (project == null) {
             return UNINITIALIZED_RANGE;
         }

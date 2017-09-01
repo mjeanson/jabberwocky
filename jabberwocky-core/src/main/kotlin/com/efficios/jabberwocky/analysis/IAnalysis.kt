@@ -10,7 +10,7 @@
 package com.efficios.jabberwocky.analysis
 
 import com.efficios.jabberwocky.common.TimeRange
-import com.efficios.jabberwocky.project.ITraceProject
+import com.efficios.jabberwocky.project.TraceProject
 
 interface IAnalysis {
 
@@ -26,7 +26,7 @@ interface IAnalysis {
      * @param project The trace project to check for
      * @return If this analysis applies to the project
      */
-    fun appliesTo(project: ITraceProject<*, *>): Boolean
+    fun appliesTo(project: TraceProject<*, *>): Boolean
 
     /**
      * Second level of checking if an analysis can run on a trace project.
@@ -41,7 +41,7 @@ interface IAnalysis {
      * @param project The trace project to check for
      * @return If this analysis can be run on this project
      */
-    fun canExecute(project: ITraceProject<*, *>): Boolean
+    fun canExecute(project: TraceProject<*, *>): Boolean
 
     /**
      * Execute the analysis on the given trace project.
@@ -56,5 +56,5 @@ interface IAnalysis {
      * @return The results of this analysis. Exact object type is analysis-dependent, a
      * *            more specific return type is encouraged.
      */
-    fun execute(project: ITraceProject<*, *>, range: TimeRange? = null, extraParams: String? = null): Any
+    fun execute(project: TraceProject<*, *>, range: TimeRange? = null, extraParams: String? = null): Any
 }

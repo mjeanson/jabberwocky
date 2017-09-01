@@ -10,14 +10,15 @@
 package com.efficios.jabberwocky.project
 
 import com.efficios.jabberwocky.collection.TraceCollection
+import com.efficios.jabberwocky.common.TimeRange
 import com.efficios.jabberwocky.trace.ITrace
 import com.efficios.jabberwocky.trace.event.ITraceEvent
 import java.nio.file.Files
 import java.nio.file.Path
 
-class TraceProject<out E : ITraceEvent, out T : ITrace<E>> (override val name: String,
-                                                            override val directory: Path,
-                                                            override val traceCollections: Collection<TraceCollection<E, T>>) : ITraceProject<E, T> {
+class TraceProject<out E : ITraceEvent, out T : ITrace<E>> (val name: String,
+                                                            val directory: Path,
+                                                            val traceCollections: Collection<TraceCollection<E, T>>) {
 
     init {
         if (!Files.isReadable(directory) || !Files.isWritable(directory)) throw IllegalArgumentException("Invalid project directory")
@@ -26,27 +27,28 @@ class TraceProject<out E : ITraceEvent, out T : ITrace<E>> (override val name: S
 
     companion object {
         @JvmStatic
-        fun <X: ITraceEvent, Y: ITrace<X>> ofSingleTrace(name: String, directory: Path, trace: Y): ITraceProject<X, Y> {
+        fun <X: ITraceEvent, Y: ITrace<X>> ofSingleTrace(name: String, directory: Path, trace: Y): TraceProject<X, Y> {
             val collection = TraceCollection<X, Y>(setOf(trace))
             return TraceProject<X, Y>(name, directory, setOf(collection))
         }
     }
 
-    override fun iterator(): ITraceProjectIterator<E> {
-        return TraceProjectIterator(this)
+    fun iterator(): TraceProjectIterator<E> {
+        return BaseTraceProjectIterator(this)
     }
 
     /* The project's start time is the earliest of all its traces's start times */
-    override val startTime: Long = traceCollections
+    val startTime: Long = traceCollections
                 .flatMap { collection -> collection.traces }
                 .map { trace -> trace.startTime }
                 .min() ?: 0L
 
 
     /* The project's end time is the latest of all its traces's end times */
-    override val endTime: Long = traceCollections
+    val endTime: Long = traceCollections
             .flatMap { collection -> collection.traces }
             .map { trace -> trace.endTime }
             .max() ?: 0L
 
+    val fullRange = TimeRange.of(startTime, endTime)
 }

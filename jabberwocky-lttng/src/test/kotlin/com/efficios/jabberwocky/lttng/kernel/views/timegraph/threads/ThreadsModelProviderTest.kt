@@ -19,10 +19,7 @@ import com.efficios.jabberwocky.project.TraceProject
 import com.efficios.jabberwocky.views.timegraph.model.render.states.MultiStateInterval
 import com.efficios.jabberwocky.views.timegraph.model.render.states.TimeGraphStateInterval
 import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
-import org.junit.After
-import org.junit.Before
-import org.junit.ClassRule
-import org.junit.Test
+import org.junit.*
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path

@@ -13,7 +13,7 @@ import ca.polymtl.dorsal.libdelorean.IStateSystemWriter
 import com.efficios.jabberwocky.analysis.statesystem.StateSystemAnalysis
 import com.efficios.jabberwocky.collection.ITraceCollection
 import com.efficios.jabberwocky.collection.TraceCollection
-import com.efficios.jabberwocky.project.ITraceProject
+import com.efficios.jabberwocky.project.TraceProject
 import com.efficios.jabberwocky.trace.event.ITraceEvent
 
 object EventStatsAnalysis : StateSystemAnalysis() {
@@ -24,11 +24,11 @@ object EventStatsAnalysis : StateSystemAnalysis() {
 
     override val providerVersion = 0
 
-    override fun appliesTo(project: ITraceProject<*, *>) = true
+    override fun appliesTo(project: TraceProject<*, *>) = true
 
-    override fun canExecute(project: ITraceProject<*, *>) = true
+    override fun canExecute(project: TraceProject<*, *>) = true
 
-    override fun filterTraces(project: ITraceProject<*, *>): ITraceCollection<*, *> {
+    override fun filterTraces(project: TraceProject<*, *>): ITraceCollection<*, *> {
         /* Applies to all traces in the project */
         return TraceCollection(project.traceCollections.flatMap { it.traces })
     }

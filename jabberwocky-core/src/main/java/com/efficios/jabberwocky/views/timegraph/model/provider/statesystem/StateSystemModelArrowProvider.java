@@ -12,7 +12,7 @@ package com.efficios.jabberwocky.views.timegraph.model.provider.statesystem;
 import ca.polymtl.dorsal.libdelorean.IStateSystemReader;
 import com.efficios.jabberwocky.analysis.statesystem.StateSystemAnalysis;
 import com.efficios.jabberwocky.common.TimeRange;
-import com.efficios.jabberwocky.project.ITraceProject;
+import com.efficios.jabberwocky.project.TraceProject;
 import com.efficios.jabberwocky.views.timegraph.model.provider.arrows.TimeGraphModelArrowProvider;
 import com.efficios.jabberwocky.views.timegraph.model.render.arrows.TimeGraphArrowRender;
 import com.efficios.jabberwocky.views.timegraph.model.render.arrows.TimeGraphArrowSeries;
@@ -49,7 +49,7 @@ public abstract class StateSystemModelArrowProvider extends TimeGraphModelArrowP
          * system up to date.
          */
         traceProjectProperty().addListener((obs, oldValue, newValue) -> {
-            ITraceProject<?, ?> project = newValue;
+            TraceProject<?, ?> project = newValue;
             if (project != null
                     && stateSystemAnalysis.appliesTo(project)
                     && stateSystemAnalysis.canExecute(project)) {

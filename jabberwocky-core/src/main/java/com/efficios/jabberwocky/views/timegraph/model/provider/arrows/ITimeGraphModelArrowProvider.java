@@ -9,19 +9,17 @@
 
 package com.efficios.jabberwocky.views.timegraph.model.provider.arrows;
 
-import java.util.concurrent.FutureTask;
-
-import com.efficios.jabberwocky.views.timegraph.model.provider.ITimeGraphModelProvider;
-import com.efficios.jabberwocky.views.timegraph.model.render.arrows.TimeGraphArrowSeries;
-import org.eclipse.jdt.annotation.Nullable;
-import com.efficios.jabberwocky.views.timegraph.model.render.arrows.TimeGraphArrowRender;
-import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeRender;
-
 import com.efficios.jabberwocky.common.TimeRange;
-import com.efficios.jabberwocky.project.ITraceProject;
-
+import com.efficios.jabberwocky.project.TraceProject;
+import com.efficios.jabberwocky.views.timegraph.model.provider.ITimeGraphModelProvider;
+import com.efficios.jabberwocky.views.timegraph.model.render.arrows.TimeGraphArrowRender;
+import com.efficios.jabberwocky.views.timegraph.model.render.arrows.TimeGraphArrowSeries;
+import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeRender;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.concurrent.FutureTask;
 
 /**
  * Provider for timegraph arrow series.
@@ -38,7 +36,7 @@ public interface ITimeGraphModelArrowProvider {
      *
      * @return The trace property
      */
-    ObjectProperty<@Nullable ITraceProject<?, ?>> traceProjectProperty();
+    ObjectProperty<@Nullable TraceProject<?, ?>> traceProjectProperty();
 
     /**
      * Property indicating if this specific arrow provider is currently enabled

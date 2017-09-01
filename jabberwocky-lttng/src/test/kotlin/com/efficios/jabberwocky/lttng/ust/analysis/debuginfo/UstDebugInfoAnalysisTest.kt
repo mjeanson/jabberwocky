@@ -11,7 +11,6 @@ package com.efficios.jabberwocky.lttng.ust.analysis.debuginfo
 
 import com.efficios.jabberwocky.lttng.testutils.ExtractedGenericCtfTestTrace
 import com.efficios.jabberwocky.lttng.testutils.ExtractedLttngUstTestTrace
-import com.efficios.jabberwocky.project.ITraceProject
 import com.efficios.jabberwocky.project.TraceProject
 import com.efficios.jabberwocky.trace.ITrace
 import com.efficios.jabberwocky.trace.event.ITraceEvent
@@ -48,12 +47,12 @@ class UstDebugInfoAnalysisTest {
     private val analysis = UstDebugInfoAnalysis.instance()
 
 
-    private fun <E: ITraceEvent, T : ITrace<E>> createProject(trace: T): ITraceProject<E, T> {
+    private fun <E: ITraceEvent, T : ITrace<E>> createProject(trace: T): TraceProject<E, T> {
         val projectPath = Files.createTempDirectory(PROJECT_NAME)
         return TraceProject.ofSingleTrace(PROJECT_NAME, projectPath, trace)
     }
 
-    private fun disposeProject(project: ITraceProject<*, *>) {
+    private fun disposeProject(project: TraceProject<*, *>) {
         project.directory.toFile().deleteRecursively()
     }
 

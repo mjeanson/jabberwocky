@@ -16,7 +16,7 @@ import ca.polymtl.dorsal.libdelorean.backend.StateHistoryBackendFactory
 import com.efficios.jabberwocky.analysis.IAnalysis
 import com.efficios.jabberwocky.collection.ITraceCollection
 import com.efficios.jabberwocky.common.TimeRange
-import com.efficios.jabberwocky.project.ITraceProject
+import com.efficios.jabberwocky.project.TraceProject
 import com.efficios.jabberwocky.trace.event.ITraceEvent
 import java.io.IOException
 import java.nio.file.Files
@@ -28,7 +28,7 @@ abstract class StateSystemAnalysis : IAnalysis {
         private const val HISTORY_FILE_EXTENSION = ".ht"
     }
 
-    final override fun execute(project: ITraceProject<*, *>, range: TimeRange?, extraParams: String?): IStateSystemReader {
+    final override fun execute(project: TraceProject<*, *>, range: TimeRange?, extraParams: String?): IStateSystemReader {
         if (range != null) throw UnsupportedOperationException("Partial ranges for state system analysis not yet implemented")
 //        if (extraParams != null) logWarning("Ignoring extra parameters: $extraParams")
 
@@ -61,7 +61,7 @@ abstract class StateSystemAnalysis : IAnalysis {
         return ss
     }
 
-    private fun buildForProject(project: ITraceProject<*, *>, stateSystem: IStateSystemWriter) {
+    private fun buildForProject(project: TraceProject<*, *>, stateSystem: IStateSystemWriter) {
         val traces = filterTraces(project)
         val trackedState = trackedState()
         // TODO This iteration could eventually move to a central location, so that the events are
@@ -80,7 +80,7 @@ abstract class StateSystemAnalysis : IAnalysis {
 
     protected abstract val providerVersion: Int
 
-    protected abstract fun filterTraces(project: ITraceProject<*, *>): ITraceCollection<*, *>
+    protected abstract fun filterTraces(project: TraceProject<*, *>): ITraceCollection<*, *>
 
     /**
      * Override this to specify tracked state objects. This exact array

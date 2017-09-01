@@ -9,15 +9,13 @@
 
 package com.efficios.jabberwocky.views.timegraph.control;
 
-import com.efficios.jabberwocky.views.timegraph.view.TimeGraphModelView;
-import org.eclipse.jdt.annotation.Nullable;
-import com.efficios.jabberwocky.context.ViewGroupContext;
-import com.efficios.jabberwocky.views.timegraph.model.provider.ITimeGraphModelProvider;
-
 import com.efficios.jabberwocky.common.TimeRange;
-import com.efficios.jabberwocky.project.ITraceProject;
-
+import com.efficios.jabberwocky.context.ViewGroupContext;
+import com.efficios.jabberwocky.project.TraceProject;
+import com.efficios.jabberwocky.views.timegraph.model.provider.ITimeGraphModelProvider;
+import com.efficios.jabberwocky.views.timegraph.view.TimeGraphModelView;
 import javafx.beans.value.ChangeListener;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * Control part of the timegraph MVC mechanism. It links a
@@ -71,7 +69,7 @@ public final class TimeGraphModelControl {
         /*
          * Initially populate the view with the context of the current trace project.
          */
-        ITraceProject<?, ?> project = getViewContext().getCurrentTraceProject();
+        TraceProject<?, ?> project = getViewContext().getCurrentTraceProject();
         initializeForProject(project);
     }
 
@@ -133,7 +131,7 @@ public final class TimeGraphModelControl {
      *            The project to initialize in the view. If it is null it indcates
      *            'no trace project'.
      */
-    public synchronized void initializeForProject(@Nullable ITraceProject<?, ?> traceProject) {
+    public synchronized void initializeForProject(@Nullable TraceProject<?, ?> traceProject) {
         TimeGraphModelView view = fView;
         if (view == null) {
             return;
@@ -160,7 +158,7 @@ public final class TimeGraphModelControl {
      * so that a repaint will show updated information.
      */
     public void repaintCurrentArea() {
-        ITraceProject<?, ?> trace = fViewContext.getCurrentTraceProject();
+        TraceProject<?, ?> trace = fViewContext.getCurrentTraceProject();
         TimeRange currentRange = fViewContext.getCurrentVisibleTimeRange();
         if (trace == null || currentRange == ViewGroupContext.UNINITIALIZED_RANGE) {
             return;

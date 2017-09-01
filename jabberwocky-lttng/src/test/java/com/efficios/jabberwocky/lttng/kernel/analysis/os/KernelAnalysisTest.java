@@ -15,7 +15,6 @@ package com.efficios.jabberwocky.lttng.kernel.analysis.os;
 import ca.polymtl.dorsal.libdelorean.IStateSystemReader;
 import com.efficios.jabberwocky.lttng.testutils.ExtractedGenericCtfTestTrace;
 import com.efficios.jabberwocky.lttng.testutils.ExtractedLttngKernelTestTrace;
-import com.efficios.jabberwocky.project.ITraceProject;
 import com.efficios.jabberwocky.project.TraceProject;
 import com.google.common.io.MoreFiles;
 import org.eclipse.jdt.annotation.NonNullByDefault;
@@ -52,8 +51,8 @@ public class KernelAnalysisTest {
 
     private Path kernelProjectPath;
     private Path nonKernelProjectPath;
-    private ITraceProject kernelProject;
-    private ITraceProject nonKernelProject;
+    private TraceProject kernelProject;
+    private TraceProject nonKernelProject;
 
 
     /**

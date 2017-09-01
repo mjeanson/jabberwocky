@@ -9,24 +9,22 @@
 
 package com.efficios.jabberwocky.views.timegraph.model.provider.states;
 
+import com.efficios.jabberwocky.common.TimeRange;
+import com.efficios.jabberwocky.project.TraceProject;
+import com.efficios.jabberwocky.views.timegraph.model.provider.ITimeGraphModelProvider;
+import com.efficios.jabberwocky.views.timegraph.model.render.StateDefinition;
+import com.efficios.jabberwocky.views.timegraph.model.render.states.TimeGraphStateRender;
+import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeElement;
+import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeRender;
+import javafx.beans.property.ObjectProperty;
+import org.eclipse.jdt.annotation.Nullable;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.FutureTask;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import com.efficios.jabberwocky.views.timegraph.model.provider.ITimeGraphModelProvider;
-import com.efficios.jabberwocky.views.timegraph.model.render.StateDefinition;
-import com.efficios.jabberwocky.views.timegraph.model.render.states.TimeGraphStateRender;
-import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeElement;
-import org.eclipse.jdt.annotation.Nullable;
-import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeRender;
-
-import com.efficios.jabberwocky.common.TimeRange;
-import com.efficios.jabberwocky.project.ITraceProject;
-
-import javafx.beans.property.ObjectProperty;
 
 /**
  * Provider for timegraph state intervals.
@@ -43,7 +41,7 @@ public interface ITimeGraphModelStateProvider {
      *
      * @return The trace property
      */
-    ObjectProperty<@Nullable ITraceProject<?, ?>> traceProjectProperty();
+    ObjectProperty<@Nullable TraceProject<?, ?>> traceProjectProperty();
 
     /**
      * Get an aggregated list of {@link StateDefinition} used in this provider.

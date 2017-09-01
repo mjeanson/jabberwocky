@@ -9,18 +9,16 @@
 
 package com.efficios.jabberwocky.views.timegraph.model.provider;
 
+import com.efficios.jabberwocky.project.TraceProject;
+import com.efficios.jabberwocky.views.timegraph.model.provider.arrows.ITimeGraphModelArrowProvider;
+import com.efficios.jabberwocky.views.timegraph.model.provider.states.ITimeGraphModelStateProvider;
+import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeRender;
+import javafx.beans.property.ObjectProperty;
+import org.eclipse.jdt.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-
-import com.efficios.jabberwocky.views.timegraph.model.provider.arrows.ITimeGraphModelArrowProvider;
-import com.efficios.jabberwocky.views.timegraph.model.provider.states.ITimeGraphModelStateProvider;
-import org.eclipse.jdt.annotation.Nullable;
-import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeRender;
-
-import com.efficios.jabberwocky.project.ITraceProject;
-
-import javafx.beans.property.ObjectProperty;
 
 /**
  * Base interface for time graph model providers.
@@ -99,7 +97,7 @@ public interface ITimeGraphModelProvider {
      * @param trace
      *            The source trace
      */
-    void setTraceProject(@Nullable ITraceProject<?, ?> trace);
+    void setTraceProject(@Nullable TraceProject<?, ?> trace);
 
 
     /**
@@ -107,14 +105,14 @@ public interface ITimeGraphModelProvider {
      *
      * @return The current trace
      */
-    @Nullable ITraceProject<?, ?> getTraceProject();
+    @Nullable TraceProject<?, ?> getTraceProject();
 
     /**
      * The property representing the target trace of this model provider.
      *
      * @return The trace property
      */
-    ObjectProperty<@Nullable ITraceProject<?, ?>> traceProjectProperty();
+    ObjectProperty<@Nullable TraceProject<?, ?>> traceProjectProperty();
 
     // ------------------------------------------------------------------------
     // Render providers

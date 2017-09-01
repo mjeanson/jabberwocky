@@ -21,7 +21,7 @@ import com.efficios.jabberwocky.collection.TraceCollection;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.handlers.KernelEventHandler;
 import com.efficios.jabberwocky.lttng.kernel.trace.LttngKernelTrace;
 import com.efficios.jabberwocky.lttng.kernel.trace.layout.ILttngKernelEventLayout;
-import com.efficios.jabberwocky.project.ITraceProject;
+import com.efficios.jabberwocky.project.TraceProject;
 import com.efficios.jabberwocky.trace.ITrace;
 import com.efficios.jabberwocky.trace.event.ITraceEvent;
 import org.eclipse.jdt.annotation.Nullable;
@@ -77,16 +77,16 @@ public class KernelAnalysis extends StateSystemAnalysis {
     // ------------------------------------------------------------------------
 
     @Override
-    public boolean appliesTo(@Nullable ITraceProject<?, ?> project) {
+    public boolean appliesTo(@Nullable TraceProject<?, ?> project) {
         return (project != null && projectContainsKernelTrace(project));
     }
 
     @Override
-    public boolean canExecute(@Nullable ITraceProject<?, ?> project) {
+    public boolean canExecute(@Nullable TraceProject<?, ?> project) {
         return (project != null && projectContainsKernelTrace(project));
     }
 
-    private static boolean projectContainsKernelTrace(ITraceProject<?, ?> project) {
+    private static boolean projectContainsKernelTrace(TraceProject<?, ?> project) {
         return project.getTraceCollections().stream()
                 .flatMap(collection -> collection.getTraces().stream())
                 .anyMatch(trace -> trace instanceof LttngKernelTrace);
@@ -102,7 +102,7 @@ public class KernelAnalysis extends StateSystemAnalysis {
     }
 
     @Override
-    public ITraceCollection<?, ?> filterTraces(@Nullable ITraceProject<?, ?> project) {
+    public ITraceCollection<?, ?> filterTraces(@Nullable TraceProject<?, ?> project) {
         requireNonNull(project);
         Collection<LttngKernelTrace> kernelTraces = project.getTraceCollections().stream()
                 .flatMap(collection -> collection.getTraces().stream())

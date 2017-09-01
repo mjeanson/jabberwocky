@@ -24,7 +24,7 @@ import kotlin.test.assertFalse
 class TraceProjectTest {
 
     private lateinit var projectPath: Path
-    private lateinit var project: ITraceProject<TraceEvent, Trace<TraceEvent>>
+    private lateinit var project: TraceProject<TraceEvent, Trace<TraceEvent>>
 
     @Before
     fun setup() {

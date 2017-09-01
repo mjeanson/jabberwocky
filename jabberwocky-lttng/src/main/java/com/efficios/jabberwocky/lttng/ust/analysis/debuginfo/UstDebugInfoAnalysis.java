@@ -17,7 +17,7 @@ import com.efficios.jabberwocky.ctf.trace.CtfTraceUtilsKt;
 import com.efficios.jabberwocky.lttng.ust.trace.LttngUstTrace;
 import com.efficios.jabberwocky.lttng.ust.trace.layout.ILttngUstEventLayout;
 import com.efficios.jabberwocky.lttng.ust.trace.layout.LttngUst28EventLayout;
-import com.efficios.jabberwocky.project.ITraceProject;
+import com.efficios.jabberwocky.project.TraceProject;
 import com.efficios.jabberwocky.trace.ITrace;
 import com.efficios.jabberwocky.trace.event.ITraceEvent;
 import org.eclipse.jdt.annotation.NonNull;
@@ -52,7 +52,7 @@ public class UstDebugInfoAnalysis extends StateSystemAnalysis {
     // ------------------------------------------------------------------------
 
     @Override
-    public boolean appliesTo(ITraceProject<?, ?> project) {
+    public boolean appliesTo(TraceProject<?, ?> project) {
         /* Project should contain at least one UST trace */
         return project.getTraceCollections().stream()
                 .flatMap(collection -> collection.getTraces().stream())
@@ -60,12 +60,12 @@ public class UstDebugInfoAnalysis extends StateSystemAnalysis {
     }
 
     @Override
-    public boolean canExecute(ITraceProject<?, ?> project) {
+    public boolean canExecute(TraceProject<?, ?> project) {
         return (getExecutableTraces(project).count() >= 1);
     }
 
     /** Return the traces from LTTng-UST >= 2.8 in the project */
-    private static final Stream<LttngUstTrace> getExecutableTraces(ITraceProject<?, ?> project) {
+    private static final Stream<LttngUstTrace> getExecutableTraces(TraceProject<?, ?> project) {
         return project.getTraceCollections().stream()
                 .flatMap(collection -> collection.getTraces().stream())
                 .filter(trace -> trace instanceof LttngUstTrace).map(trace -> (LttngUstTrace) trace)
@@ -104,7 +104,7 @@ public class UstDebugInfoAnalysis extends StateSystemAnalysis {
     }
 
     @Override
-    protected ITraceCollection<?, ?> filterTraces(ITraceProject<?, ?> project) {
+    protected ITraceCollection<?, ?> filterTraces(TraceProject<?, ?> project) {
         return new TraceCollection(getExecutableTraces(project).collect(Collectors.toList()));
     }
 

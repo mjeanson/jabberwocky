@@ -9,16 +9,14 @@
 
 package com.efficios.jabberwocky.views.timegraph.model.provider.states;
 
-import java.util.List;
-
+import com.efficios.jabberwocky.project.TraceProject;
 import com.efficios.jabberwocky.views.timegraph.model.render.StateDefinition;
-import org.eclipse.jdt.annotation.Nullable;
-
-import com.efficios.jabberwocky.project.ITraceProject;
 import com.google.common.collect.ImmutableList;
-
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.List;
 
 /**
  * Basic implementation of {@link ITimeGraphModelStateProvider}.
@@ -27,7 +25,7 @@ import javafx.beans.property.SimpleObjectProperty;
  */
 public abstract class TimeGraphModelStateProvider implements ITimeGraphModelStateProvider {
 
-    private final ObjectProperty<@Nullable ITraceProject<?, ?>> fTraceProjectProperty = new SimpleObjectProperty<>(null);
+    private final ObjectProperty<@Nullable TraceProject<?, ?>> fTraceProjectProperty = new SimpleObjectProperty<>(null);
 
     private final List<StateDefinition> fStateDefinitions;
 
@@ -42,7 +40,7 @@ public abstract class TimeGraphModelStateProvider implements ITimeGraphModelStat
     }
 
     @Override
-    public final ObjectProperty<@Nullable ITraceProject<?, ?>> traceProjectProperty() {
+    public final ObjectProperty<@Nullable TraceProject<?, ?>> traceProjectProperty() {
         return fTraceProjectProperty;
     }
 
