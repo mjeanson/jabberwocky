@@ -12,10 +12,10 @@ package com.efficios.jabberwocky.collection
 import com.efficios.jabberwocky.trace.ITrace
 import com.efficios.jabberwocky.trace.event.ITraceEvent
 
-class TraceCollection<out E : ITraceEvent, out T : ITrace<E>>(override val traces: Collection<T>) : ITraceCollection<E, T> {
+class TraceCollection<out E : ITraceEvent, out T : ITrace<E>>(val traces: Collection<T>) {
 
-    override fun iterator(): ITraceCollectionIterator<E> {
-        return TraceCollectionIterator(this)
+    fun iterator(): TraceCollectionIterator<E> {
+        return BaseTraceCollectionIterator(this)
     }
 
 }

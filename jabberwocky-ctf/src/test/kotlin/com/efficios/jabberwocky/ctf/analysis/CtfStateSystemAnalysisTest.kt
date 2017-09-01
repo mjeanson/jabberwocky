@@ -13,7 +13,6 @@ import ca.polymtl.dorsal.libdelorean.IStateSystemReader
 import ca.polymtl.dorsal.libdelorean.IStateSystemWriter
 import ca.polymtl.dorsal.libdelorean.statevalue.IntegerStateValue
 import com.efficios.jabberwocky.analysis.statesystem.StateSystemAnalysis
-import com.efficios.jabberwocky.collection.ITraceCollection
 import com.efficios.jabberwocky.collection.TraceCollection
 import com.efficios.jabberwocky.ctf.trace.ExtractedCtfTestTrace
 import com.efficios.jabberwocky.ctf.trace.event.CtfTraceEvent
@@ -77,7 +76,7 @@ class CtfStateSystemAnalysisTest {
 
         override fun canExecute(project: TraceProject<*, *>) = true
 
-        override fun filterTraces(project: TraceProject<*, *>): ITraceCollection<*, *> {
+        override fun filterTraces(project: TraceProject<*, *>): TraceCollection<*, *> {
             /* Just return all traces in the project */
             return TraceCollection(project.traceCollections.flatMap { it.traces })
         }

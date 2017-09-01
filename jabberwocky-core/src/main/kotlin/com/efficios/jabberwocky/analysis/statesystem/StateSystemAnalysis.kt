@@ -14,7 +14,7 @@ import ca.polymtl.dorsal.libdelorean.IStateSystemWriter
 import ca.polymtl.dorsal.libdelorean.StateSystemFactory
 import ca.polymtl.dorsal.libdelorean.backend.StateHistoryBackendFactory
 import com.efficios.jabberwocky.analysis.IAnalysis
-import com.efficios.jabberwocky.collection.ITraceCollection
+import com.efficios.jabberwocky.collection.TraceCollection
 import com.efficios.jabberwocky.common.TimeRange
 import com.efficios.jabberwocky.project.TraceProject
 import com.efficios.jabberwocky.trace.event.ITraceEvent
@@ -80,7 +80,7 @@ abstract class StateSystemAnalysis : IAnalysis {
 
     protected abstract val providerVersion: Int
 
-    protected abstract fun filterTraces(project: TraceProject<*, *>): ITraceCollection<*, *>
+    protected abstract fun filterTraces(project: TraceProject<*, *>): TraceCollection<*, *>
 
     /**
      * Override this to specify tracked state objects. This exact array

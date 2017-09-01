@@ -16,7 +16,6 @@ import ca.polymtl.dorsal.libdelorean.IStateSystemWriter;
 import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
 import ca.polymtl.dorsal.libdelorean.exceptions.TimeRangeException;
 import com.efficios.jabberwocky.analysis.statesystem.StateSystemAnalysis;
-import com.efficios.jabberwocky.collection.ITraceCollection;
 import com.efficios.jabberwocky.collection.TraceCollection;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.handlers.KernelEventHandler;
 import com.efficios.jabberwocky.lttng.kernel.trace.LttngKernelTrace;
@@ -102,7 +101,7 @@ public class KernelAnalysis extends StateSystemAnalysis {
     }
 
     @Override
-    public ITraceCollection<?, ?> filterTraces(@Nullable TraceProject<?, ?> project) {
+    public TraceCollection<?, ?> filterTraces(@Nullable TraceProject<?, ?> project) {
         requireNonNull(project);
         Collection<LttngKernelTrace> kernelTraces = project.getTraceCollections().stream()
                 .flatMap(collection -> collection.getTraces().stream())

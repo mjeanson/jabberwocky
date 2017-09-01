@@ -9,7 +9,6 @@
 
 package com.efficios.jabberwocky.ctf.collection
 
-import com.efficios.jabberwocky.collection.ITraceCollection
 import com.efficios.jabberwocky.collection.TraceCollection
 import com.efficios.jabberwocky.ctf.trace.ExtractedCtfTestTrace
 import com.efficios.jabberwocky.ctf.trace.event.CtfTraceEvent
@@ -33,7 +32,7 @@ class CtfTraceCollectionTest {
         val ETT3 = ExtractedCtfTestTrace(CtfTestTrace.KERNEL_VM)
     }
 
-    private lateinit var fixture: ITraceCollection<CtfTraceEvent, GenericCtfTrace>
+    private lateinit var fixture: TraceCollection<CtfTraceEvent, GenericCtfTrace>
 
     @Before
     fun setup() {

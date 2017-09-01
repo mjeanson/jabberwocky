@@ -9,18 +9,10 @@
 
 package com.efficios.jabberwocky.collection
 
-import com.efficios.jabberwocky.trace.ITrace
-import com.efficios.jabberwocky.trace.ITraceIterator
 import com.efficios.jabberwocky.trace.event.ITraceEvent
-import com.efficios.jabberwocky.utils.SortedCompoundIterator
-import java.util.*
 
-class TraceCollectionIterator<E : ITraceEvent> (traceCollection: ITraceCollection<E, ITrace<E>>) : SortedCompoundIterator<E, ITraceIterator<E>>(
-        traceCollection.traces.map { it.iterator() },
-        Comparator.comparingLong { event -> event.timestamp }), ITraceCollectionIterator<E> {
+interface TraceCollectionIterator<out E : ITraceEvent> : Iterator<E>, AutoCloseable {
 
-    override fun close() {
-        iterators.forEach { it.close() }
-    }
+    override fun close()
 
 }

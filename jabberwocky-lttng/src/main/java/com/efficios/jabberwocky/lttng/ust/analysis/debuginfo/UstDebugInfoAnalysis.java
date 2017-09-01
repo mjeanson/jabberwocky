@@ -11,7 +11,6 @@ package com.efficios.jabberwocky.lttng.ust.analysis.debuginfo;
 
 import ca.polymtl.dorsal.libdelorean.IStateSystemWriter;
 import com.efficios.jabberwocky.analysis.statesystem.StateSystemAnalysis;
-import com.efficios.jabberwocky.collection.ITraceCollection;
 import com.efficios.jabberwocky.collection.TraceCollection;
 import com.efficios.jabberwocky.ctf.trace.CtfTraceUtilsKt;
 import com.efficios.jabberwocky.lttng.ust.trace.LttngUstTrace;
@@ -104,7 +103,7 @@ public class UstDebugInfoAnalysis extends StateSystemAnalysis {
     }
 
     @Override
-    protected ITraceCollection<?, ?> filterTraces(TraceProject<?, ?> project) {
+    protected TraceCollection<?, ?> filterTraces(TraceProject<?, ?> project) {
         return new TraceCollection(getExecutableTraces(project).collect(Collectors.toList()));
     }
 
