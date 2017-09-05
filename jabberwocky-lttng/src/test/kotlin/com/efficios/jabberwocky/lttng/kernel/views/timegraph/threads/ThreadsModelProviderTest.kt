@@ -19,7 +19,10 @@ import com.efficios.jabberwocky.project.TraceProject
 import com.efficios.jabberwocky.views.timegraph.model.render.states.MultiStateInterval
 import com.efficios.jabberwocky.views.timegraph.model.render.states.TimeGraphStateInterval
 import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
-import org.junit.*
+import org.junit.After
+import org.junit.Before
+import org.junit.ClassRule
+import org.junit.Test
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
@@ -93,7 +96,7 @@ class ThreadsModelProviderTest {
         val ss = provider.stateSystem!!
 
         /* Check that the list of attributes (tree render) are the same */
-        val treeRender = provider.treeRender
+        val treeRender = provider.getTreeRender()
         val treeElems = treeRender.allTreeElements
 
         val tidsFromRender = treeElems
@@ -185,7 +188,7 @@ class ThreadsModelProviderTest {
             }
 
             /* Compare with the intervals obtained from the render provider */
-            val elem = provider.treeRender.allTreeElements
+            val elem = provider.getTreeRender().allTreeElements
                     .filter { it is ThreadsTreeElement }.map { it as ThreadsTreeElement }
                     .filter { it.sourceQuark == threadQuark }
                     .single()
@@ -212,7 +215,7 @@ class ThreadsModelProviderTest {
         val viewWidth: Long = 1000
         val resolution = range.duration / viewWidth
 
-        val treeElem = provider.treeRender.allTreeElements
+        val treeElem = provider.getTreeRender().allTreeElements
                 .filter { it.name == treeElemName }
                 .single()
         val stateRender = provider.stateProvider.getStateRender(treeElem, range, resolution, null)
@@ -251,7 +254,7 @@ class ThreadsModelProviderTest {
         val resolution = range.duration / viewWidth
 
         /* Get the intervals from the model */
-        val treeElem = provider.treeRender.allTreeElements
+        val treeElem = provider.getTreeRender().allTreeElements
                 .filter { it.name == treeElemName }
                 .single()
         val stateRender = provider.stateProvider.getStateRender(treeElem, range, resolution, null)

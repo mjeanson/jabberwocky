@@ -52,7 +52,7 @@ fun main(args: Array<String>) {
 
     val range = TimeRange.of(renderStart, renderEnd)
 
-    val treeRender = modelProvider.treeRender
+    val treeRender = modelProvider.getTreeRender()
     val renders = stateModelProvider.getAllStateRenders(treeRender, range, resolution, null)
     RenderToJson.printRenderToStdout(renders)
 

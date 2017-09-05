@@ -19,8 +19,8 @@ import com.efficios.jabberwocky.lttng.ust.trace.layout.LttngUst28EventLayout;
 import com.efficios.jabberwocky.project.TraceProject;
 import com.efficios.jabberwocky.trace.Trace;
 import com.efficios.jabberwocky.trace.event.TraceEvent;
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -51,7 +51,7 @@ public class UstDebugInfoAnalysis extends StateSystemAnalysis {
     // ------------------------------------------------------------------------
 
     @Override
-    public boolean appliesTo(TraceProject<?, ?> project) {
+    public boolean appliesTo(@NotNull TraceProject<?, ?> project) {
         /* Project should contain at least one UST trace */
         return project.getTraceCollections().stream()
                 .flatMap(collection -> collection.getTraces().stream())
@@ -59,7 +59,7 @@ public class UstDebugInfoAnalysis extends StateSystemAnalysis {
     }
 
     @Override
-    public boolean canExecute(TraceProject<?, ?> project) {
+    public boolean canExecute(@NotNull TraceProject<?, ?> project) {
         return (getExecutableTraces(project).count() >= 1);
     }
 
@@ -108,12 +108,12 @@ public class UstDebugInfoAnalysis extends StateSystemAnalysis {
     }
 
     @Override
-    protected Object @NonNull [] trackedState() {
+    protected Object[] trackedState() {
         return new Object[] { new UstDebugInfoAnalysisStateProvider() };
     }
 
     @Override
-    protected void handleEvent(IStateSystemWriter ss, TraceEvent event, Object @Nullable [] trackedState) {
+    protected void handleEvent(@NotNull IStateSystemWriter ss, @NotNull TraceEvent event, @Nullable Object[] trackedState) {
         Trace trace = event.getTrace();
         if (!(trace instanceof LttngUstTrace)) {
             return;

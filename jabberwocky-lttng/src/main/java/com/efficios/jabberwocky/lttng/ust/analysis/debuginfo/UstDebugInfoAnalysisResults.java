@@ -21,8 +21,7 @@ import ca.polymtl.dorsal.libdelorean.statevalue.StateValue;
 import ca.polymtl.dorsal.libdelorean.statevalue.StringStateValue;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -45,7 +44,7 @@ public class UstDebugInfoAnalysisResults {
     public Collection<UstDebugInfoBinaryFile> getAllBinaries() {
         final IStateSystemReader ss = stateSystem;
 
-        final @NonNull Set<UstDebugInfoBinaryFile> files = new TreeSet<>();
+        final Set<UstDebugInfoBinaryFile> files = new TreeSet<>();
         ImmutableList.Builder<Integer> builder = ImmutableList.builder();
         List<Integer> vpidQuarks = ss.getSubAttributes(IStateSystemReader.ROOT_ATTRIBUTE, false);
         for (Integer vpidQuark : vpidQuarks) {

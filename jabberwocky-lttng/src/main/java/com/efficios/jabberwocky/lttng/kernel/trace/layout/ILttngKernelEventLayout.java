@@ -12,10 +12,10 @@
 
 package com.efficios.jabberwocky.lttng.kernel.trace.layout;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Collection;
 import java.util.Collections;
-
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * Interface to define "concepts" present in the Linux kernel (represented by

@@ -14,7 +14,7 @@ package com.efficios.jabberwocky.lttng.kernel.views.timegraph.threads
 import com.efficios.jabberwocky.common.TimeRange
 import com.efficios.jabberwocky.lttng.kernel.trace.LttngKernelTrace
 import com.efficios.jabberwocky.project.TraceProject
-import com.efficios.jabberwocky.views.timegraph.model.provider.states.ITimeGraphModelStateProvider
+import com.efficios.jabberwocky.views.timegraph.model.provider.states.TimeGraphModelStateProvider
 import com.efficios.jabberwocky.views.timegraph.model.render.states.TimeGraphStateRender
 import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeRender
 import java.nio.file.Files
@@ -44,7 +44,7 @@ fun main(args: Array<String>) {
     }
 
     /** Function to query the given time range */
-    fun query(stateProvider: ITimeGraphModelStateProvider,
+    fun query(stateProvider: TimeGraphModelStateProvider,
               treeRender: TimeGraphTreeRender,
               timeRange: TimeRange,
               resolution: Long): List<TimeGraphStateRender> {
@@ -83,7 +83,7 @@ fun main(args: Array<String>) {
     val modelProvider = ThreadsModelProvider()
     modelProvider.traceProject = traceProject
 
-    val treeRender = modelProvider.treeRender
+    val treeRender = modelProvider.getTreeRender()
     if (treeRender == TimeGraphTreeRender.EMPTY_RENDER) {
         printErr("Analysis produced an empty tree model. Exiting.")
         return

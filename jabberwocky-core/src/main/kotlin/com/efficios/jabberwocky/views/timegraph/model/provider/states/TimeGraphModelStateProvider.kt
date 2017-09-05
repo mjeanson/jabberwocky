@@ -17,11 +17,8 @@ import com.efficios.jabberwocky.views.timegraph.model.render.states.TimeGraphSta
 import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeElement;
 import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeRender;
 import javafx.beans.property.ObjectProperty;
-import org.eclipse.jdt.annotation.Nullable;
+import javafx.beans.property.SimpleObjectProperty
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.FutureTask;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -34,21 +31,16 @@ import java.util.stream.Collectors;
  *
  * @author Alexandre Montplaisir
  */
-public interface ITimeGraphModelStateProvider {
+abstract class TimeGraphModelStateProvider(val stateDefinitions: List<StateDefinition>) {
 
     /**
      * Property representing the trace this arrow provider fetches its data for.
-     *
-     * @return The trace property
      */
-    ObjectProperty<@Nullable TraceProject<?, ?>> traceProjectProperty();
-
-    /**
-     * Get an aggregated list of {@link StateDefinition} used in this provider.
-     *
-     * @return The state definitions used in this provider
-     */
-    List<StateDefinition> getStateDefinitions();
+    private val traceProjectProperty: ObjectProperty<TraceProject<*, *>?> = SimpleObjectProperty(null)
+    fun traceProjectProperty() = traceProjectProperty
+    var traceProject
+        get() = traceProjectProperty.get()
+        set(value) = traceProjectProperty.set(value)
 
     /**
      * Get a state render for a single tree element
@@ -66,13 +58,16 @@ public interface ITimeGraphModelStateProvider {
      *            cancellation to stop processing at any point and return.
      * @return The corresponding state render for this tree element and settings
      */
-    TimeGraphStateRender getStateRender(TimeGraphTreeElement treeElement,
-                                        TimeRange timeRange, long resolution, @Nullable FutureTask<?> task);
+    abstract fun getStateRender(treeElement: TimeGraphTreeElement,
+                                timeRange: TimeRange,
+                                resolution: Long,
+                                task: FutureTask<*>?): TimeGraphStateRender
 
-    default Map<TimeGraphTreeElement, TimeGraphStateRender> getStateRenders(Set<TimeGraphTreeElement> treeElements,
-                                                                            TimeRange timeRange, long resolution, @Nullable FutureTask<?> task) {
-        return treeElements.stream()
-                .collect(Collectors.toMap(Function.identity(), treeElem -> getStateRender(treeElem, timeRange, resolution, task)));
+    open fun getStateRenders(treeElements: Set<TimeGraphTreeElement>,
+                        timeRange: TimeRange,
+                        resolution: Long,
+                        task: FutureTask<*>?): Map<TimeGraphTreeElement, TimeGraphStateRender> {
+        return treeElements.associate { Pair(it, getStateRender(it, timeRange, resolution, task)) }
     }
 
     /**
@@ -94,10 +89,11 @@ public interface ITimeGraphModelStateProvider {
      *            cancellation.
      * @return The corresponding state renders
      */
-    default List<TimeGraphStateRender> getAllStateRenders(TimeGraphTreeRender treeRender, TimeRange timeRange, long resolution, @Nullable FutureTask<?> task) {
-        return treeRender.getAllTreeElements().stream()
-                .map(treeElem -> getStateRender(treeElem, timeRange, resolution, task))
-                .collect(Collectors.toList());
+    open fun getAllStateRenders(treeRender: TimeGraphTreeRender,
+                           timeRange: TimeRange,
+                           resolution: Long,
+                           task: FutureTask<*>?): List<TimeGraphStateRender> {
+        return treeRender.allTreeElements.map { getStateRender(it, timeRange, resolution, task) }
     }
 
 }

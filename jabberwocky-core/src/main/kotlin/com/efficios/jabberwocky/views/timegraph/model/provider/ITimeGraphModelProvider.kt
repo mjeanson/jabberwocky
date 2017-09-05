@@ -1,24 +1,19 @@
-/*******************************************************************************
- * Copyright (c) 2016 EfficiOS Inc., Alexandre Montplaisir
+/*
+ * Copyright (C) 2016-2017 EfficiOS Inc., Alexandre Montplaisir <alexmonthy@efficios.com>
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
  * accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ */
 
-package com.efficios.jabberwocky.views.timegraph.model.provider;
+package com.efficios.jabberwocky.views.timegraph.model.provider
 
-import com.efficios.jabberwocky.project.TraceProject;
-import com.efficios.jabberwocky.views.timegraph.model.provider.arrows.ITimeGraphModelArrowProvider;
-import com.efficios.jabberwocky.views.timegraph.model.provider.states.ITimeGraphModelStateProvider;
-import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeRender;
-import javafx.beans.property.ObjectProperty;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import com.efficios.jabberwocky.project.TraceProject
+import com.efficios.jabberwocky.views.timegraph.model.provider.arrows.TimeGraphModelArrowProvider
+import com.efficios.jabberwocky.views.timegraph.model.provider.states.TimeGraphModelStateProvider
+import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeRender
+import javafx.beans.property.ObjectProperty
 
 /**
  * Base interface for time graph model providers.
@@ -30,10 +25,8 @@ import java.util.Set;
  * responsible of providing state intervals), and zero or more
  * {@link ITimeGraphModelArrowProvider} (which provide model-defined arrow
  * series).
- *
- * @author Alexandre Montplaisir
  */
-public interface ITimeGraphModelProvider {
+interface ITimeGraphModelProvider {
 
     // ------------------------------------------------------------------------
     // Configuration option classes
@@ -46,18 +39,7 @@ public interface ITimeGraphModelProvider {
      * The exact behavior of the sorting mode is defined by the model provider
      * itself.
      */
-    class SortingMode {
-
-        private final String fName;
-
-        public SortingMode(String name) {
-            fName = name;
-        }
-
-        public String getName() {
-            return fName;
-        }
-    }
+    class SortingMode(val name: String)
 
     /**
      * Class representing a filter mode. A filter mode is like a filter applied
@@ -66,53 +48,23 @@ public interface ITimeGraphModelProvider {
      * The exact behavior of the filter mode is defined by the model provider
      * itself.
      */
-    class FilterMode {
-
-        private final String fName;
-
-        public FilterMode(String name) {
-            fName = name;
-        }
-
-        public String getName() {
-            return fName;
-        }
-    }
+    class FilterMode(val name: String)
 
     // ------------------------------------------------------------------------
     // General methods
     // ------------------------------------------------------------------------
 
     /**
-     * Get the name of this model provider. This can be used for example to name
+     * The name of this model provider. This can be used for example to name
      * a corresponding view in the UI.
-     *
-     * @return The model provider's name
      */
-    String getName();
+    val name: String
 
     /**
-     * Set the trace for which this model provider fetches its information.
-     *
-     * @param trace
-     *            The source trace
+     * The trace for which this model provider fetches its information.
      */
-    void setTraceProject(@Nullable TraceProject<?, ?> trace);
-
-
-    /**
-     * Get the trace for which this model provider fetches its information.
-     *
-     * @return The current trace
-     */
-    @Nullable TraceProject<?, ?> getTraceProject();
-
-    /**
-     * The property representing the target trace of this model provider.
-     *
-     * @return The trace property
-     */
-    ObjectProperty<@Nullable TraceProject<?, ?>> traceProjectProperty();
+    fun traceProjectProperty(): ObjectProperty<TraceProject<*, *>?>
+    var traceProject: TraceProject<*, *>?
 
     // ------------------------------------------------------------------------
     // Render providers
@@ -123,21 +75,17 @@ public interface ITimeGraphModelProvider {
      *
      * @return A tree render
      */
-    TimeGraphTreeRender getTreeRender();
+    fun getTreeRender(): TimeGraphTreeRender
 
     /**
-     * Get the state provider supplied by this model provider.
-     *
-     * @return The state provider
+     * The state provider supplied by this model provider.
      */
-    ITimeGraphModelStateProvider getStateProvider();
+    val stateProvider: TimeGraphModelStateProvider
 
     /**
      * Get the arrow providers supplied by this model provider.
-     *
-     * @return The arrow providers. May be empty but should not be null.
      */
-    Collection<ITimeGraphModelArrowProvider> getArrowProviders();
+    val arrowProviders: Collection<TimeGraphModelArrowProvider>
 
     // ------------------------------------------------------------------------
     // Sorting modes
@@ -145,17 +93,15 @@ public interface ITimeGraphModelProvider {
 
     /**
      * Get a list of all the available sorting modes for this provider.
-     *
-     * @return The sorting modes
      */
-    List<SortingMode> getSortingModes();
+    val sortingModes: List<SortingMode>
 
     /**
      * Get the current sorting mode. There should always be one and only one.
      *
      * @return The current sorting mode
      */
-    SortingMode getCurrentSortingMode();
+    fun getCurrentSortingMode(): SortingMode
 
     /**
      * Change the configured sorting mode to another one.
@@ -164,19 +110,16 @@ public interface ITimeGraphModelProvider {
      *            The index of the corresponding mode in the list returned by
      *            {@link #getSortingModes()}.
      */
-    void setCurrentSortingMode(int index);
+    fun setCurrentSortingMode(index: Int)
 
     // ------------------------------------------------------------------------
     // Filter modes
     // ------------------------------------------------------------------------
 
     /**
-     * Get a list of all the available filter modes for this provider.
-     *
-     * @return The list of available filter modes. It may be empty but should
-     *         not be null.
+     * List of all the available filter modes for this provider.
      */
-    List<FilterMode> getFilterModes();
+    val filterModes: List<FilterMode>
 
     /**
      * Enable the specified filter mode.
@@ -185,7 +128,7 @@ public interface ITimeGraphModelProvider {
      *            The index of the filter mode in the list returned by
      *            {@link #getFilterModes()}.
      */
-    void enableFilterMode(int index);
+    fun enableFilterMode(index: Int)
 
     /**
      * Disable the specified filter mode.
@@ -194,13 +137,13 @@ public interface ITimeGraphModelProvider {
      *            The index of the filter mode in the list returned by
      *            {@link #getFilterModes()}.
      */
-    void disableFilterMode(int index);
+    fun disableFilterMode(index: Int)
 
     /**
      * Get the currently active filter modes.
      *
      * @return The active filter modes. There might be 0 or more.
      */
-    Set<FilterMode> getActiveFilterModes();
+    fun getActiveFilterModes(): Set<FilterMode>
 
 }

@@ -29,7 +29,7 @@ import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeE
 import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeRender;
 import com.google.common.collect.Iterables;
 import com.google.common.primitives.Ints;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;

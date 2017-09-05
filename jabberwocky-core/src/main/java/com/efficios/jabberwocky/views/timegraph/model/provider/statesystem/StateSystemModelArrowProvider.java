@@ -17,7 +17,7 @@ import com.efficios.jabberwocky.views.timegraph.model.provider.arrows.TimeGraphM
 import com.efficios.jabberwocky.views.timegraph.model.render.arrows.TimeGraphArrowRender;
 import com.efficios.jabberwocky.views.timegraph.model.render.arrows.TimeGraphArrowSeries;
 import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeRender;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.FutureTask;
 
@@ -29,7 +29,8 @@ import java.util.concurrent.FutureTask;
  */
 public abstract class StateSystemModelArrowProvider extends TimeGraphModelArrowProvider {
 
-    private transient @Nullable IStateSystemReader fStateSystem = null;
+    private transient @Nullable
+    IStateSystemReader fStateSystem = null;
 
     /**
      * Constructor

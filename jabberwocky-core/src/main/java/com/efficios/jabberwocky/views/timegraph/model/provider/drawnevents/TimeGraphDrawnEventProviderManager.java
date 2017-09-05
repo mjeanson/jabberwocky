@@ -17,18 +17,18 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 
 /**
- * Manager of {@link ITimeGraphDrawnEventProvider}s.
+ * Manager of {@link TimeGraphDrawnEventProvider}s.
  *
  * @author Alexandre Montplaisir
  */
 public final class TimeGraphDrawnEventProviderManager {
 
-    private static final Comparator<ITimeGraphDrawnEventProvider> COMPARATOR =
-            Comparator.comparing(provider -> provider.getEventSeries().getSeriesName());
+    private static final Comparator<TimeGraphDrawnEventProvider> COMPARATOR =
+            Comparator.comparing(provider -> provider.getDrawnEventSeries().getSeriesName());
 
     private static final TimeGraphDrawnEventProviderManager INSTANCE = new TimeGraphDrawnEventProviderManager();
 
-    private final ObservableSet<ITimeGraphDrawnEventProvider> fRegisteredProviders =
+    private final ObservableSet<TimeGraphDrawnEventProvider> fRegisteredProviders =
             FXCollections.observableSet(new TreeSet<>(COMPARATOR));
 
     private TimeGraphDrawnEventProviderManager() {}
@@ -51,7 +51,7 @@ public final class TimeGraphDrawnEventProviderManager {
      *
      * @return The registered providers
      */
-    public ObservableSet<ITimeGraphDrawnEventProvider> getRegisteredProviders() {
+    public ObservableSet<TimeGraphDrawnEventProvider> getRegisteredProviders() {
         return fRegisteredProviders;
     }
 

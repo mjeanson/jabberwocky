@@ -9,10 +9,9 @@
 
 package com.efficios.jabberwocky.views.timegraph.model.render;
 
-import java.util.Objects;
-
 import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeElement;
-import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.Objects;
 
 /**
  * A time graph event is a virtual representation of a location on the time
@@ -65,7 +64,7 @@ public class TimeGraphEvent {
     }
 
     @Override
-    public boolean equals(@Nullable Object obj) {
+    public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }

@@ -15,7 +15,7 @@ import com.efficios.jabberwocky.project.TraceProject;
 import com.efficios.jabberwocky.views.timegraph.model.provider.ITimeGraphModelProvider;
 import com.efficios.jabberwocky.views.timegraph.view.TimeGraphModelView;
 import javafx.beans.value.ChangeListener;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Control part of the timegraph MVC mechanism. It links a

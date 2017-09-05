@@ -9,18 +9,17 @@
 
 package com.efficios.jabberwocky.views.timegraph.model.render.states;
 
+import com.efficios.jabberwocky.common.ConfigOption;
+import com.efficios.jabberwocky.views.common.ColorDefinition;
+import com.efficios.jabberwocky.views.timegraph.model.render.LineThickness;
+import com.efficios.jabberwocky.views.timegraph.model.render.StateDefinition;
+import com.efficios.jabberwocky.views.timegraph.model.render.TimeGraphEvent;
+import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeElement;
+import com.google.common.base.MoreObjects;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Map;
 import java.util.Objects;
-
-import com.efficios.jabberwocky.common.ConfigOption;
-import com.efficios.jabberwocky.views.timegraph.model.render.LineThickness;
-import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeElement;
-import com.efficios.jabberwocky.views.common.ColorDefinition;
-import com.efficios.jabberwocky.views.timegraph.model.render.StateDefinition;
-import org.eclipse.jdt.annotation.Nullable;
-import com.efficios.jabberwocky.views.timegraph.model.render.TimeGraphEvent;
-
-import com.google.common.base.MoreObjects;
 
 /**
  * Basic implementation of {@link TimeGraphStateInterval}.

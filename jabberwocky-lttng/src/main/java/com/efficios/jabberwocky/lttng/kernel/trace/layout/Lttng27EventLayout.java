@@ -12,12 +12,10 @@
 
 package com.efficios.jabberwocky.lttng.kernel.trace.layout;
 
+import com.google.common.collect.ImmutableSet;
+
 import java.util.Collection;
 import java.util.Collections;
-
-import org.eclipse.jdt.annotation.NonNull;
-
-import com.google.common.collect.ImmutableSet;
 
 /**
  * This file defines all the known event and field names for LTTng kernel
@@ -231,22 +229,22 @@ public class Lttng27EventLayout extends Lttng26EventLayout {
     }
 
     @Override
-    public @NonNull Collection<@NonNull String> eventsKVMEntry() {
+    public Collection<String> eventsKVMEntry() {
         return KVM_ENTRY_EVENTS;
     }
 
     @Override
-    public @NonNull Collection<@NonNull String> eventsKVMExit() {
+    public Collection<String> eventsKVMExit() {
         return KVM_EXIT_EVENTS;
     }
 
     @Override
-    public @NonNull Collection<@NonNull String> getIPIIrqVectorsEntries() {
+    public Collection<String> getIPIIrqVectorsEntries() {
         return IPI_ENTRY_SET;
     }
 
     @Override
-    public @NonNull Collection<@NonNull String> getIPIIrqVectorsExits() {
+    public Collection<String> getIPIIrqVectorsExits() {
         return IPI_EXIT_SET;
     }
 

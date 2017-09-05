@@ -16,7 +16,8 @@ import com.efficios.jabberwocky.views.timegraph.model.render.drawnevents.TimeGra
 import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeRender;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
-import org.eclipse.jdt.annotation.Nullable;
+import javafx.beans.property.SimpleBooleanProperty
+import javafx.beans.property.SimpleObjectProperty
 
 import java.util.concurrent.FutureTask;
 
@@ -30,16 +31,18 @@ import java.util.concurrent.FutureTask;
  * @author Alexandre Montplaisir
  * @see TimeGraphDrawnEventProviderManager
  */
-public interface ITimeGraphDrawnEventProvider {
+abstract class TimeGraphDrawnEventProvider(val drawnEventSeries: TimeGraphDrawnEventSeries) {
 
     /**
      * The trace from which the provider will fetch its events. The Property
      * mechanisms can be used to sync with trace changes elsewhere in the
      * framework.
-     *
-     * @return The target trace
      */
-    ObjectProperty<@Nullable TraceProject<?, ?>> traceProjectProperty();
+    private val traceProjectProperty: ObjectProperty<TraceProject<*, *>?> = SimpleObjectProperty(null)
+    fun traceProjectProperty() = traceProjectProperty
+    var traceProject
+        get() = traceProjectProperty.get()
+        set(value) = traceProjectProperty.set(value)
 
     /**
      * The 'enabled' property of this provider. A provider can be created and
@@ -49,19 +52,12 @@ public interface ITimeGraphDrawnEventProvider {
      * For example, if the user can uncheck elements in a list showing all
      * existing event providers, this could disable said providers without
      * completely destroying them.
-     *
-     * @return The enabled property
      */
-    BooleanProperty enabledProperty();
-
-    /**
-     * Return the {@link TimeGraphDrawnEventSeries} provided by this provider. A
-     * single provider should manage a single event series; different providers
-     * should be implemented for different series.
-     *
-     * @return The event series of this provider
-     */
-    TimeGraphDrawnEventSeries getEventSeries();
+    private val enabledProperty: BooleanProperty = SimpleBooleanProperty(false)
+    fun enabledProperty() = enabledProperty
+    var enabled
+        get() = enabledProperty.get()
+        set(value) = enabledProperty.set(value)
 
     /**
      * Query for a render of drawn events on this provider.
@@ -79,6 +75,8 @@ public interface ITimeGraphDrawnEventProvider {
      * @return The corresponding event render that contains the result of the
      *         query
      */
-    TimeGraphDrawnEventRender getEventRender(TimeGraphTreeRender treeRender,
-                                             TimeRange timeRange, @Nullable FutureTask<?> task);
+    abstract fun getEventRender(treeRender: TimeGraphTreeRender,
+                                timeRange: TimeRange,
+                                task: FutureTask<*>?): TimeGraphDrawnEventRender
+
 }

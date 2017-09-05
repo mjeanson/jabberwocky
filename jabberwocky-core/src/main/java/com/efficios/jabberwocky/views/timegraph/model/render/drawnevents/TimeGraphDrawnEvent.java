@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import com.efficios.jabberwocky.views.timegraph.model.render.TimeGraphEvent;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Model representation of a drawn event.

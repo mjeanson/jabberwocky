@@ -23,7 +23,7 @@ import com.efficios.jabberwocky.lttng.kernel.trace.layout.ILttngKernelEventLayou
 import com.efficios.jabberwocky.project.TraceProject;
 import com.efficios.jabberwocky.trace.Trace;
 import com.efficios.jabberwocky.trace.event.TraceEvent;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -112,7 +112,7 @@ public class KernelAnalysis extends StateSystemAnalysis {
     }
 
     @Override
-    public void handleEvent(IStateSystemWriter ss, TraceEvent event, Object @Nullable [] trackedState) {
+    public void handleEvent(IStateSystemWriter ss, TraceEvent event, @Nullable Object[] trackedState) {
         Trace trace = event.getTrace();
         if (!(trace instanceof LttngKernelTrace)) {
             /* We shouldn't have received this event... */

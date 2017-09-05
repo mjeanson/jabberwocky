@@ -16,8 +16,8 @@ import ca.polymtl.dorsal.libdelorean.interval.StateInterval;
 import ca.polymtl.dorsal.libdelorean.statevalue.StringStateValue;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.Attributes;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.KernelAnalysis;
-import com.efficios.jabberwocky.views.timegraph.model.provider.arrows.ITimeGraphModelArrowProvider;
-import com.efficios.jabberwocky.views.timegraph.model.provider.states.ITimeGraphModelStateProvider;
+import com.efficios.jabberwocky.views.timegraph.model.provider.arrows.TimeGraphModelArrowProvider;
+import com.efficios.jabberwocky.views.timegraph.model.provider.states.TimeGraphModelStateProvider;
 import com.efficios.jabberwocky.views.timegraph.model.provider.statesystem.StateSystemModelProvider;
 import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeElement;
 import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeRender;
@@ -36,11 +36,11 @@ import static java.util.Objects.requireNonNull;
 
 public class ThreadsModelProvider extends StateSystemModelProvider {
 
-    private static final Supplier<ITimeGraphModelStateProvider> STATE_PROVIDER = () -> {
+    private static final Supplier<TimeGraphModelStateProvider> STATE_PROVIDER = () -> {
         return new ThreadsModelStateProvider();
     };
 
-    private static final Supplier<List<ITimeGraphModelArrowProvider>> ARROW_PROVIDERS = () -> {
+    private static final Supplier<List<TimeGraphModelArrowProvider>> ARROW_PROVIDERS = () -> {
         return ImmutableList.of(
                 new ThreadsModelArrowProviderCpus()
                 );

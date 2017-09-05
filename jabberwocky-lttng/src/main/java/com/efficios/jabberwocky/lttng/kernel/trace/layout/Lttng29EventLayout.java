@@ -9,8 +9,6 @@
 
 package com.efficios.jabberwocky.lttng.kernel.trace.layout;
 
-import org.eclipse.jdt.annotation.NonNull;
-
 /**
  * This file defines all the known event and field names for LTTng kernel
  * traces, for versions of lttng-modules 2.9 and above.
@@ -38,17 +36,17 @@ public class Lttng29EventLayout extends Lttng28EventLayout {
     }
 
     @Override
-    public String @NonNull [] fieldPathTcpSeq() {
+    public String[] fieldPathTcpSeq() {
         return TCP_SEQ_FIELD;
     }
 
     @Override
-    public String @NonNull [] fieldPathTcpAckSeq() {
+    public String[] fieldPathTcpAckSeq() {
         return TCP_ACK_FIELD;
     }
 
     @Override
-    public String @NonNull [] fieldPathTcpFlags() {
+    public String[] fieldPathTcpFlags() {
         return TCP_FLAGS_FIELD;
     }
 

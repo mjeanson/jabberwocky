@@ -9,7 +9,7 @@
 
 package com.efficios.jabberwocky.lttng.ust.analysis.debuginfo;
 
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Compound object representing a binary location inside a function/symbol

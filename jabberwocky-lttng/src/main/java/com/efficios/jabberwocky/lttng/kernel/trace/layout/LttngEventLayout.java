@@ -12,12 +12,10 @@
 
 package com.efficios.jabberwocky.lttng.kernel.trace.layout;
 
+import com.google.common.collect.ImmutableList;
+
 import java.util.Collection;
 import java.util.Collections;
-
-import org.eclipse.jdt.annotation.NonNull;
-
-import com.google.common.collect.ImmutableList;
 
 /**
  * This file defines all the known event and field names for LTTng kernel
@@ -195,7 +193,7 @@ public class LttngEventLayout implements ILttngKernelEventLayout {
     }
 
     @Override
-    public @NonNull String eventStatedumpProcessState() {
+    public String eventStatedumpProcessState() {
         return STATEDUMP_PROCESS_STATE;
     }
 
@@ -444,7 +442,7 @@ public class LttngEventLayout implements ILttngKernelEventLayout {
     }
 
     @Override
-    public @NonNull String eventStatedumpBlockDevice() {
+    public String eventStatedumpBlockDevice() {
         return LTTNG_STATEDUMP_BLOCK_DEVICE;
     }
 
@@ -494,22 +492,22 @@ public class LttngEventLayout implements ILttngKernelEventLayout {
     }
 
     @Override
-    public String @NonNull [] fieldPathTcpSeq() {
+    public String[] fieldPathTcpSeq() {
         return TCP_SEQ_FIELD;
     }
 
     @Override
-    public String @NonNull [] fieldPathTcpAckSeq() {
+    public String[] fieldPathTcpAckSeq() {
         return TCP_ACK_FIELD;
     }
 
     @Override
-    public String @NonNull [] fieldPathTcpFlags() {
+    public String[] fieldPathTcpFlags() {
         return TCP_FLAGS_FIELD;
     }
 
     @Override
-    public @NonNull String fieldOrder() {
+    public String fieldOrder() {
         return ORDER;
     }
 
@@ -518,12 +516,12 @@ public class LttngEventLayout implements ILttngKernelEventLayout {
     // ------------------------------------------------------------------------
 
     @Override
-    public @NonNull Collection<@NonNull String> eventsKVMEntry() {
+    public Collection<String> eventsKVMEntry() {
         return KVM_ENTRY_EVENTS;
     }
 
     @Override
-    public @NonNull Collection<@NonNull String> eventsKVMExit() {
+    public Collection<String> eventsKVMExit() {
         return KVM_EXIT_EVENTS;
     }
 }

@@ -12,8 +12,6 @@
 
 package com.efficios.jabberwocky.lttng.kernel.analysis.os;
 
-import org.eclipse.jdt.annotation.NonNullByDefault;
-
 /**
  * Externalized message strings from the LTTng Kernel Analysis
  *

@@ -19,7 +19,7 @@ import com.efficios.jabberwocky.trace.event.FieldValue.StringValue;
 import com.efficios.jabberwocky.trace.event.TraceEvent;
 import com.google.common.io.BaseEncoding;
 import kotlin.Pair;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -9,7 +9,7 @@
 
 package com.efficios.jabberwocky.lttng.kernel.analysis.os;
 
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * This file defines all the attribute names used in the handler. Both the

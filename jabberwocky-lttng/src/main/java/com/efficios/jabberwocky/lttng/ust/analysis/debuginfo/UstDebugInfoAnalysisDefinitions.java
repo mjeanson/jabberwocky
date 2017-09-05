@@ -12,10 +12,9 @@ package com.efficios.jabberwocky.lttng.ust.analysis.debuginfo;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.jdt.annotation.Nullable;
-
 import com.efficios.jabberwocky.lttng.ust.trace.layout.LttngUst28EventLayout;
 import com.google.common.collect.ImmutableMap;
+import org.jetbrains.annotations.Nullable;
 
 class UstDebugInfoAnalysisDefinitions {
 

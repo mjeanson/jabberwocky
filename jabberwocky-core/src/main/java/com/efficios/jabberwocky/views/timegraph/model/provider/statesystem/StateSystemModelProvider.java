@@ -15,11 +15,11 @@ import ca.polymtl.dorsal.libdelorean.interval.StateInterval;
 import com.efficios.jabberwocky.analysis.statesystem.StateSystemAnalysis;
 import com.efficios.jabberwocky.project.TraceProject;
 import com.efficios.jabberwocky.views.timegraph.model.provider.TimeGraphModelProvider;
-import com.efficios.jabberwocky.views.timegraph.model.provider.arrows.ITimeGraphModelArrowProvider;
-import com.efficios.jabberwocky.views.timegraph.model.provider.states.ITimeGraphModelStateProvider;
+import com.efficios.jabberwocky.views.timegraph.model.provider.arrows.TimeGraphModelArrowProvider;
+import com.efficios.jabberwocky.views.timegraph.model.provider.states.TimeGraphModelStateProvider;
 import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeRender;
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -122,8 +122,8 @@ public abstract class StateSystemModelProvider extends TimeGraphModelProvider {
     public StateSystemModelProvider(String name,
             @Nullable List<SortingMode> sortingModes,
             @Nullable List<FilterMode> filterModes,
-            ITimeGraphModelStateProvider stateProvider,
-            @Nullable List<ITimeGraphModelArrowProvider> arrowProviders,
+            TimeGraphModelStateProvider stateProvider,
+            @Nullable List<TimeGraphModelArrowProvider> arrowProviders,
             StateSystemAnalysis stateSystemAnalysis,
             Function<TreeRenderContext, TimeGraphTreeRender> treeRenderFunction) {
 
@@ -156,7 +156,7 @@ public abstract class StateSystemModelProvider extends TimeGraphModelProvider {
     // ------------------------------------------------------------------------
 
     @Override
-    public @NonNull TimeGraphTreeRender getTreeRender() {
+    public @NotNull TimeGraphTreeRender getTreeRender() {
         IStateSystemReader ss = fStateSystem;
         if (ss == null) {
             /* This trace does not provide the expected state system */

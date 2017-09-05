@@ -9,7 +9,7 @@
 
 package com.efficios.jabberwocky.lttng.ust.analysis.debuginfo;
 
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Object carrying the information about the "binary callsite" corresponding to

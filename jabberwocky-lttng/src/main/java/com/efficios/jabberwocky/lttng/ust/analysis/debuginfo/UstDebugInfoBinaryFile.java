@@ -11,9 +11,8 @@ package com.efficios.jabberwocky.lttng.ust.analysis.debuginfo;
 
 import java.util.Objects;
 
-import org.eclipse.jdt.annotation.Nullable;
-
 import com.google.common.base.MoreObjects;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Wrapper class to reference to a particular binary, which can be an

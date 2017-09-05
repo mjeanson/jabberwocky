@@ -9,13 +9,11 @@
 
 package com.efficios.jabberwocky.views.timegraph.model.render;
 
-import java.util.Objects;
-
 import com.efficios.jabberwocky.common.ConfigOption;
 import com.efficios.jabberwocky.views.common.ColorDefinition;
-import org.eclipse.jdt.annotation.Nullable;
-
 import com.google.common.base.MoreObjects;
+
+import java.util.Objects;
 
 /**
  * Class defining the UI reprsentation of a state, as well as default values for
@@ -79,7 +77,7 @@ public class StateDefinition {
     }
 
     @Override
-    public boolean equals(@Nullable Object obj) {
+    public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }

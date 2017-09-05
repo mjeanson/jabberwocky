@@ -9,17 +9,16 @@
 
 package com.efficios.jabberwocky.lttng.kernel.views.timegraph.resources;
 
-import java.util.Comparator;
-import java.util.function.Function;
-import java.util.function.Supplier;
-
-import com.efficios.jabberwocky.lttng.kernel.views.timegraph.resources.elements.ResourcesIrqTreeElement;
-
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.KernelAnalysis;
-import com.efficios.jabberwocky.views.timegraph.model.provider.states.ITimeGraphModelStateProvider;
+import com.efficios.jabberwocky.lttng.kernel.views.timegraph.resources.elements.ResourcesIrqTreeElement;
+import com.efficios.jabberwocky.views.timegraph.model.provider.states.TimeGraphModelStateProvider;
 import com.efficios.jabberwocky.views.timegraph.model.provider.statesystem.StateSystemModelProvider;
 import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeElement;
 import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeRender;
+
+import java.util.Comparator;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Base class for Resources (for now, CPUs and IRQs) model providers.
@@ -31,7 +30,7 @@ import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeR
  */
 public abstract class ResourcesBaseModelProvider extends StateSystemModelProvider {
 
-    private static final Supplier<ITimeGraphModelStateProvider> STATE_PROVIDER = () -> {
+    private static final Supplier<TimeGraphModelStateProvider> STATE_PROVIDER = () -> {
         return new ResourcesModelStateProvider();
     };
 

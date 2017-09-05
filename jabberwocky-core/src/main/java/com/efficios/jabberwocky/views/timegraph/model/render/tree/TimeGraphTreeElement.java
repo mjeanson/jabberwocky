@@ -14,11 +14,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-import org.eclipse.jdt.annotation.Nullable;
-
 import com.efficios.jabberwocky.trace.event.TraceEvent;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * The "tree element" is the unit of a timegraph represented by a single line.
@@ -96,7 +95,7 @@ public class TimeGraphTreeElement {
     }
 
     @Override
-    public boolean equals(@Nullable Object obj) {
+    public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }

@@ -9,17 +9,16 @@
 
 package com.efficios.jabberwocky.views.timegraph.model.provider.arrows;
 
-import com.efficios.jabberwocky.common.TimeRange;
-import com.efficios.jabberwocky.project.TraceProject;
-import com.efficios.jabberwocky.views.timegraph.model.provider.ITimeGraphModelProvider;
-import com.efficios.jabberwocky.views.timegraph.model.render.arrows.TimeGraphArrowRender;
-import com.efficios.jabberwocky.views.timegraph.model.render.arrows.TimeGraphArrowSeries;
-import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeRender;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.concurrent.FutureTask;
+import com.efficios.jabberwocky.common.TimeRange
+import com.efficios.jabberwocky.project.TraceProject
+import com.efficios.jabberwocky.views.timegraph.model.render.arrows.TimeGraphArrowRender
+import com.efficios.jabberwocky.views.timegraph.model.render.arrows.TimeGraphArrowSeries
+import com.efficios.jabberwocky.views.timegraph.model.render.tree.TimeGraphTreeRender
+import javafx.beans.property.BooleanProperty
+import javafx.beans.property.ObjectProperty
+import javafx.beans.property.SimpleBooleanProperty
+import javafx.beans.property.SimpleObjectProperty
+import java.util.concurrent.FutureTask
 
 /**
  * Provider for timegraph arrow series.
@@ -29,14 +28,16 @@ import java.util.concurrent.FutureTask;
  *
  * @author Alexandre Montplaisir
  */
-public interface ITimeGraphModelArrowProvider {
+abstract class TimeGraphModelArrowProvider(val arrowSeries: TimeGraphArrowSeries) {
 
     /**
      * Property representing the trace this arrow provider fetches its data for.
-     *
-     * @return The trace property
      */
-    ObjectProperty<@Nullable TraceProject<?, ?>> traceProjectProperty();
+    private val traceProjectProperty: ObjectProperty<TraceProject<*, *>?> = SimpleObjectProperty(null)
+    fun traceProjectProperty() = traceProjectProperty
+    var traceProject
+        get() = traceProjectProperty.get()
+        set(value) = traceProjectProperty.set(value)
 
     /**
      * Property indicating if this specific arrow provider is currently enabled
@@ -45,18 +46,12 @@ public interface ITimeGraphModelArrowProvider {
      * Normally the controls should not send queries to this provider if it is
      * disabled (they would only query this state), but the arrow provider is
      * free to make use of this property for other reasons.
-     *
-     * @return The enabled property
      */
-    BooleanProperty enabledProperty();
-
-    /**
-     * Get the arrow series supplied by this arrow provider. A single provider
-     * supplies one and only one arrow series.
-     *
-     * @return The arrow series
-     */
-    TimeGraphArrowSeries getArrowSeries();
+    private val enabledProperty: BooleanProperty = SimpleBooleanProperty(false)
+    fun enabledProperty() = enabledProperty
+    var enabled
+        get() = enabledProperty.get()
+        set(value) = enabledProperty.set(value)
 
     /**
      * Get a render of arrows from this arrow provider.
@@ -71,6 +66,8 @@ public interface ITimeGraphModelArrowProvider {
      *            cancellation to stop processing at any point and return.
      * @return The corresponding arrow render
      */
-    TimeGraphArrowRender getArrowRender(TimeGraphTreeRender treeRender, TimeRange timeRange, @Nullable FutureTask<?> task);
+    abstract fun getArrowRender(treeRender: TimeGraphTreeRender,
+                                timeRange: TimeRange,
+                                task: FutureTask<*>?): TimeGraphArrowRender
 
 }

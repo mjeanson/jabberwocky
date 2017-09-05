@@ -17,7 +17,6 @@ import com.efficios.jabberwocky.lttng.testutils.ExtractedGenericCtfTestTrace;
 import com.efficios.jabberwocky.lttng.testutils.ExtractedLttngKernelTestTrace;
 import com.efficios.jabberwocky.project.TraceProject;
 import com.google.common.io.MoreFiles;
-import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace;
 import org.junit.After;
 import org.junit.Before;
@@ -37,7 +36,6 @@ import static org.junit.Assert.*;
  *
  * @author Geneviève Bastien
  */
-@NonNullByDefault({})
 @SuppressWarnings("rawtypes")
 public class KernelAnalysisTest {
 

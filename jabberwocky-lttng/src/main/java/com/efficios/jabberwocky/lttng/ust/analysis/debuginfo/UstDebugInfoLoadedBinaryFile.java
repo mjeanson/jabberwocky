@@ -9,16 +9,15 @@
 
 package com.efficios.jabberwocky.lttng.ust.analysis.debuginfo;
 
-import java.util.Objects;
+import org.jetbrains.annotations.Nullable;
 
-import org.eclipse.jdt.annotation.Nullable;
+import java.util.Objects;
 
 /**
  * Simple extension to {@link UstDebugInfoBinaryFile} that adds the base address at
  * which the given binary or library is loaded.
  *
  * @author Alexandre Montplaisir
- * @noreference Meant to be used internally by the analysis only
  */
 public class UstDebugInfoLoadedBinaryFile extends UstDebugInfoBinaryFile {
 
@@ -60,7 +59,7 @@ public class UstDebugInfoLoadedBinaryFile extends UstDebugInfoBinaryFile {
     }
 
     @Override
-    public boolean equals(@Nullable Object obj) {
+    public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }

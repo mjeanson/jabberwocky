@@ -22,7 +22,7 @@ import com.efficios.jabberwocky.lttng.kernel.trace.layout.ILttngKernelEventLayou
 import com.efficios.jabberwocky.trace.event.FieldValue.IntegerValue;
 import com.efficios.jabberwocky.trace.event.FieldValue.StringValue;
 import com.efficios.jabberwocky.trace.event.TraceEvent;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import static java.util.Objects.requireNonNull;
 

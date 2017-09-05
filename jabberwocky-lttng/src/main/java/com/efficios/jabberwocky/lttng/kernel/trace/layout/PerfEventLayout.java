@@ -12,12 +12,10 @@
 
 package com.efficios.jabberwocky.lttng.kernel.trace.layout;
 
-import java.util.Collection;
-
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
-
 import com.google.common.collect.ImmutableList;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Collection;
 
 /**
  * Event and field definitions for perf traces in CTF format.
@@ -307,7 +305,7 @@ public final class PerfEventLayout implements ILttngKernelEventLayout {
     }
 
     @Override
-    public @NonNull String fieldOrder() {
+    public String fieldOrder() {
         return "order"; //$NON-NLS-1$
     }
 
