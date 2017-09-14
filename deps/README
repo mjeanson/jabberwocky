@@ -1,6 +1,0 @@
-Maven artifact containing some dependencies of the Jabberwocky project,
-made using maven-shade-plugin.
-
-The main goal is to expose these dependencies so that p2 packages can include
-them. If you use usual Maven <dependency> blocks in your project, you should
-continue to use those and should not need this "deps" package at all.
