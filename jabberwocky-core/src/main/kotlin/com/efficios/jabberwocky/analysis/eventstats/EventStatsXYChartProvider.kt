@@ -33,11 +33,8 @@ class EventStatsXYChartProvider: StateSystemXYChartProvider(NAME, SERIES, EventS
             return XYChartRender.EMPTY_RENDER
         }
 
-        /* Verify and clamp the query time range */
-        if (range.startTime < ss.startTime) {
-            throw IllegalArgumentException("Requested start time is earlier than state system start")
-        }
-        val queryStart = range.startTime
+        /* Clamp the query time range */
+        val queryStart = maxOf(range.startTime, ss.startTime)
         val queryEnd = minOf(range.endTime, ss.currentEndTime)
 
         when (series) {
