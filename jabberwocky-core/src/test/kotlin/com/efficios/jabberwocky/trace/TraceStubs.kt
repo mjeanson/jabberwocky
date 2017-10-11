@@ -52,5 +52,8 @@ internal class TraceStubs {
 
     }
 
-
+    /** Trace with identical events going from ts 100 to 200, every 2 units */
+    class TraceStub3 : TraceStubBase() {
+        override val events = (100L..200L step 2).map { BaseTraceEvent(this, it, 0, EVENT_NAME_A, emptyMap(), null) }
+    }
 }

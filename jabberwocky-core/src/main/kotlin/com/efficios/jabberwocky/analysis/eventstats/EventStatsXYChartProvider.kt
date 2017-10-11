@@ -34,8 +34,8 @@ class EventStatsXYChartProvider: StateSystemXYChartProvider(NAME, SERIES, EventS
         }
 
         /* Clamp the query time range */
-        val queryStart = maxOf(range.startTime, ss.startTime)
-        val queryEnd = minOf(range.endTime, ss.currentEndTime)
+        val queryStart = range.startTime.clamp(ss.startTime, ss.currentEndTime)
+        val queryEnd = range.endTime.clamp(ss.startTime, ss.currentEndTime)
 
         when (series) {
             /* Only one available series for now */
@@ -72,3 +72,5 @@ class EventStatsXYChartProvider: StateSystemXYChartProvider(NAME, SERIES, EventS
         }
     }
 }
+
+private fun Long.clamp(min: Long, max: Long): Long = maxOf(min, minOf(this, max))
