@@ -19,7 +19,7 @@ open class BaseTraceEvent(@Transient override val trace: Trace<TraceEvent>,
                       override val cpu: Int,
                       override val eventName: String,
                       eventFields: Map<String, FieldValue>,
-                      attributes: Map<String, String>?) : TraceEvent {
+                      attributes: Map<String, String>? = null) : TraceEvent {
 
     private val fEventFields: Map<String, FieldValue> = ImmutableMap.copyOf(eventFields)
 

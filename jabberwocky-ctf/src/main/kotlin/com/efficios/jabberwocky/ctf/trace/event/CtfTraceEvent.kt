@@ -19,4 +19,4 @@ open class CtfTraceEvent(trace: CtfTrace<CtfTraceEvent>,
                          cpu: Int,
                          eventName: String,
                          eventFields: Map<String, FieldValue>,
-                         attributes: Map<String, String>?) : BaseTraceEvent(trace, timestamp, cpu, eventName, eventFields, attributes)
+                         attributes: Map<String, String>? = null) : BaseTraceEvent(trace, timestamp, cpu, eventName, eventFields, attributes)
