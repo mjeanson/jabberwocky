@@ -13,5 +13,6 @@ import com.efficios.jabberwocky.trace.event.TraceEvent
 
 interface TraceIterator<out E : TraceEvent> : Iterator<E>, AutoCloseable {
 
-    override fun close()
+    /** Return a new iterator at the exact same position as this one. */
+    fun copy(): TraceIterator<E>
 }

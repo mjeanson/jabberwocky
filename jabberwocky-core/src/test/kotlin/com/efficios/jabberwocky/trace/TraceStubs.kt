@@ -20,18 +20,36 @@ internal class TraceStubs {
         const val EVENT_NAME_C = "EventC"
     }
 
-    private class TraceStubIterator(private val iterator: Iterator<TraceEvent>) : TraceIterator<TraceEvent> {
+    private class TraceStubIterator(private val trace: TraceStubBase) : TraceIterator<TraceEvent> {
+
+        private val iterator: Iterator<TraceEvent> = trace.events.iterator()
+
+        private var nbRead = 0
+
         override fun hasNext() = iterator.hasNext()
-        override fun next() = iterator.next()
+
+        override fun next(): TraceEvent {
+            nbRead++
+            return iterator.next()
+        }
+
         override fun close() {}
+
+        override fun copy(): TraceIterator<TraceEvent> {
+            /* Start from the beginning and read the same amount of events that were read. */
+            val newIter = TraceStubIterator(trace)
+            repeat(nbRead, { newIter.next() })
+            return newIter
+        }
     }
+
 
     abstract class TraceStubBase() : Trace<TraceEvent>() {
 
-        protected abstract val events: List<TraceEvent>
+        internal abstract val events: List<TraceEvent>
 
         final override fun iterator(): TraceIterator<TraceEvent> {
-            return TraceStubIterator(events.iterator())
+            return TraceStubIterator(this)
         }
     }
 

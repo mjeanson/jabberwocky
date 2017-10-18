@@ -43,7 +43,7 @@ open class CtfTraceIterator<out E : CtfTraceEvent>(private val originTrace: CtfT
         /* Prepare the "next next" event */
         try {
             traceReader.advance()
-            this.currentEventDef = traceReader.getCurrentEventDef()
+            this.currentEventDef = traceReader.currentEventDef
         } catch (e: CTFException) {
             /* Shouldn't happen if we did the other checks correctly */
             throw IllegalStateException(e)
@@ -56,4 +56,15 @@ open class CtfTraceIterator<out E : CtfTraceEvent>(private val originTrace: CtfT
         traceReader.close()
     }
 
+    override fun copy(): CtfTraceIterator<E> {
+        val eventDef = currentEventDef
+        with (CtfTraceIterator(originTrace)) {
+            // TODO Support/test with multiple events at the same timestamp
+            // Current library doesn't give guarantees regarding which events are returned first.
+            this.traceReader.seek(eventDef?.timestamp ?: Long.MAX_VALUE)
+            this.currentEventDef = this.traceReader.topStream?.currentEvent
+            return this
+        }
+
+    }
 }
