@@ -56,6 +56,13 @@ class CtfTraceIteratorTest {
             )
     )
 
+    private val lastEvent = CtfTraceEvent(trace, 1331668259054285979, 0, "sys_ioctl",
+            mapOf("fd" to FieldValue.IntegerValue(20),
+                    "cmd" to FieldValue.IntegerValue(63059),
+                    "arg" to FieldValue.IntegerValue(0)
+            )
+    )
+
     private lateinit var iterator: CtfTraceIterator<CtfTraceEvent>
 
     @Before
@@ -77,6 +84,64 @@ class CtfTraceIteratorTest {
             assertEquals(events[2], next())
         }
     }
+
+    // ------------------------------------------------------------------------
+    // seek() tests
+    // ------------------------------------------------------------------------
+
+    @Test
+    fun testSeekBeforeBegin() {
+        with(iterator) {
+            repeat(2, { next() })
+            seek(0)
+            assertEquals(events[0], next())
+        }
+    }
+
+    @Test
+    fun testSeekAtBegin() {
+        with(iterator) {
+            repeat(2, { next() })
+            seek(events[0].timestamp)
+            assertEquals(events[0], next())
+        }
+    }
+
+    @Test
+    fun testSeekBetweenEvents() {
+        with(iterator) {
+            seek(events[0].timestamp + 100)
+            assertEquals(events[1], next())
+        }
+    }
+
+    @Test
+    fun testSeekAtEvent() {
+        with(iterator) {
+            seek(events[1].timestamp)
+            assertEquals(events[1], next())
+        }
+    }
+
+    @Test
+    fun testSeekAtEnd() {
+        with(iterator) {
+            seek(lastEvent.timestamp)
+            assertEquals(lastEvent, next())
+        }
+    }
+
+    @Test
+    fun testSeekAfterEnd() {
+        with(iterator) {
+            seek(lastEvent.timestamp + 100)
+            assertFalse(hasNext())
+        }
+    }
+
+    // ------------------------------------------------------------------------
+    // copy() tests
+    // ------------------------------------------------------------------------
 
     @Test
     fun testCopyStart() {
@@ -104,4 +169,15 @@ class CtfTraceIteratorTest {
         assertFalse(iterator.copy().hasNext())
     }
 
+    @Test
+    fun testSeekAndCopy() {
+        val iter1 = iterator
+        iter1.seek(events[2].timestamp)
+        val iter2 = iter1.copy()
+        iter1.seek(lastEvent.timestamp)
+        iter2.seek(events[1].timestamp)
+
+        assertEquals(lastEvent, iter1.next())
+        assertEquals(events[1], iter2.next())
+    }
 }

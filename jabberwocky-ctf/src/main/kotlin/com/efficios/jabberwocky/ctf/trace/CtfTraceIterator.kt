@@ -56,14 +56,21 @@ open class CtfTraceIterator<out E : CtfTraceEvent>(private val originTrace: CtfT
         traceReader.close()
     }
 
+    override fun seek(timestamp: Long) {
+        // TODO Support/test with multiple events at the same timestamp
+        // Current library doesn't give guarantees regarding which events are returned first.
+
+        /* traceReader.seek() works off cycle counts, not timestamps !?! */
+        traceReader.seek(originTrace.innerTrace.timestampNanoToCycles(timestamp))
+        currentEventDef = traceReader.topStream?.currentEvent
+    }
+
     override fun copy(): CtfTraceIterator<E> {
         val eventDef = currentEventDef
-        with (CtfTraceIterator(originTrace)) {
-            // TODO Support/test with multiple events at the same timestamp
-            // Current library doesn't give guarantees regarding which events are returned first.
-            this.traceReader.seek(eventDef?.timestamp ?: Long.MAX_VALUE)
-            this.currentEventDef = this.traceReader.topStream?.currentEvent
-            return this
+        return CtfTraceIterator(originTrace).apply {
+            /* Here we seek using the *cycle count* directly */
+            traceReader.seek(eventDef?.timestamp ?: Long.MAX_VALUE)
+            currentEventDef = traceReader.topStream?.currentEvent
         }
 
     }

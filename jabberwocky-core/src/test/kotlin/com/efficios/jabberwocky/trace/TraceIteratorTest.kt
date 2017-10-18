@@ -44,6 +44,65 @@ class TraceIteratorTest {
         }
     }
 
+    // ------------------------------------------------------------------------
+    // seek() tests
+    // ------------------------------------------------------------------------
+
+    @Test
+    fun testSeekBeforeBegin() {
+        with(iterator) {
+            /* Read some events, then seek back to the beginning */
+            repeat(2, { next() })
+            seek(0)
+            assertEquals(trace.events[0], next())
+        }
+    }
+
+    @Test
+    fun testSeekAtBegin() {
+        with(iterator) {
+            repeat(2, { next() })
+            seek(trace.events[0].timestamp)
+            assertEquals(trace.events[0], next())
+        }
+    }
+
+    @Test
+    fun testSeekBetweenEvents() {
+        with(iterator) {
+            seek(3)
+            assertEquals(trace.events[1], next())
+        }
+    }
+
+    @Test
+    fun testSeekAtEvent() {
+        with(iterator) {
+            seek(trace.events[1].timestamp)
+            assertEquals(trace.events[1], next())
+        }
+    }
+
+    @Test
+    fun testSeekAtEnd() {
+        with(iterator) {
+            seek(trace.events[2].timestamp)
+            assertEquals(trace.events[2], next())
+        }
+    }
+
+    @Test
+    fun testSeekAfterEnd() {
+        with(iterator) {
+            seek(12)
+            assertFalse(hasNext())
+        }
+    }
+
+    // ------------------------------------------------------------------------
+    // copy() tests
+    // ------------------------------------------------------------------------
+
     @Test
     fun testCopyStart() {
         with(iterator.copy()) {
@@ -71,6 +130,20 @@ class TraceIteratorTest {
         repeat(3, { iterator.next() })
         with(iterator.copy()) {
             assertFalse(hasNext())
+        }
+    }
+
+    @Test
+    fun testSeekAndCopy() {
+        with(trace.events) {
+            val iter1 = iterator
+            iter1.seek(get(2).timestamp)
+            val iter2 = iter1.copy()
+            iter1.seek(last().timestamp)
+            iter2.seek(get(1).timestamp)
+
+            assertEquals(last(), iter1.next())
+            assertEquals(get(1), iter2.next())
         }
     }
 }

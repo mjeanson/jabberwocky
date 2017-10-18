@@ -11,6 +11,7 @@ package com.efficios.jabberwocky.trace
 
 import com.efficios.jabberwocky.trace.event.BaseTraceEvent
 import com.efficios.jabberwocky.trace.event.TraceEvent
+import com.google.common.collect.Iterators
 
 internal class TraceStubs {
 
@@ -22,7 +23,7 @@ internal class TraceStubs {
 
     private class TraceStubIterator(private val trace: TraceStubBase) : TraceIterator<TraceEvent> {
 
-        private val iterator: Iterator<TraceEvent> = trace.events.iterator()
+        private var iterator = Iterators.peekingIterator(trace.events.iterator())
 
         private var nbRead = 0
 
@@ -35,11 +36,20 @@ internal class TraceStubs {
 
         override fun close() {}
 
+        override fun seek(timestamp: Long) {
+            /* Just dumbly re-read everything, this is just a test stub... */
+            iterator = Iterators.peekingIterator(trace.events.iterator()).apply {
+                while (hasNext() && peek().timestamp < timestamp) {
+                    next()
+                }
+            }
+        }
+
         override fun copy(): TraceIterator<TraceEvent> {
             /* Start from the beginning and read the same amount of events that were read. */
-            val newIter = TraceStubIterator(trace)
-            repeat(nbRead, { newIter.next() })
-            return newIter
+            return TraceStubIterator(trace).apply {
+                repeat(this@TraceStubIterator.nbRead, { next() })
+            }
         }
     }
 

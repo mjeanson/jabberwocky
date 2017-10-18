@@ -13,6 +13,12 @@ import com.efficios.jabberwocky.trace.event.TraceEvent
 
 interface TraceIterator<out E : TraceEvent> : Iterator<E>, AutoCloseable {
 
+    /**
+     * Bring this iterator to the first event with the given timestamp.
+     * Note there might be more than one event at this timestamp!
+     */
+    fun seek(timestamp: Long)
+
     /** Return a new iterator at the exact same position as this one. */
     fun copy(): TraceIterator<E>
 }
