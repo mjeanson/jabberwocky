@@ -14,7 +14,7 @@ import java.util.*
 sealed class FieldValue(open val attributes: Map<String, String>?) {
 
     data class ArrayValue<T : FieldValue>(val elements: Array<T>,
-                                          override val attributes: Map<String, String>?) : FieldValue(attributes) {
+                                          override val attributes: Map<String, String>? = null) : FieldValue(attributes) {
         val size: Int = elements.size
 
         fun getElement(index: Int): T {
@@ -39,20 +39,20 @@ sealed class FieldValue(open val attributes: Map<String, String>?) {
 
     data class EnumValue(val stringValue: String,
                          val longValue: Long,
-                         override val attributes: Map<String, String>?) : FieldValue(attributes) {
+                         override val attributes: Map<String, String>? = null) : FieldValue(attributes) {
 
         override fun toString() = stringValue + '(' + longValue.toString() + ')'
     }
 
     data class FloatValue(val value: Double,
-                          override val attributes: Map<String, String>?) : FieldValue(attributes) {
+                          override val attributes: Map<String, String>? = null) : FieldValue(attributes) {
 
         override fun toString() = value.toString()
     }
 
     data class IntegerValue(val value: Long,
                             val base: Int = 10,
-                            override val attributes: Map<String, String>?) : FieldValue(attributes) {
+                            override val attributes: Map<String, String>? = null) : FieldValue(attributes) {
 
         override fun toString() = if (base == 16) {
             "0x" + java.lang.Long.toHexString(value)
@@ -62,13 +62,13 @@ sealed class FieldValue(open val attributes: Map<String, String>?) {
     }
 
     data class StringValue(val value: String,
-                           override val attributes: Map<String, String>?) : FieldValue(attributes) {
+                           override val attributes: Map<String, String>? = null) : FieldValue(attributes) {
 
         override fun toString() = value
     }
 
     data class StructValue(val elements: Map<String, FieldValue>,
-                           override val attributes: Map<String, String>?) : FieldValue(attributes) {
+                           override val attributes: Map<String, String>? = null) : FieldValue(attributes) {
 
         val fieldNames = elements.keys
 

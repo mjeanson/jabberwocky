@@ -17,9 +17,9 @@ object CtfTraceEventFieldParser {
 
     fun parseField(fieldDef: IDefinition): FieldValue = when (fieldDef) {
 
-        is IntegerDefinition -> IntegerValue(fieldDef.value, fieldDef.declaration.base, null)
-        is FloatDefinition -> FloatValue(fieldDef.value, null)
-        is StringDefinition -> StringValue(fieldDef.value, null)
+        is IntegerDefinition -> IntegerValue(fieldDef.value, fieldDef.declaration.base)
+        is FloatDefinition -> FloatValue(fieldDef.value)
+        is StringDefinition -> StringValue(fieldDef.value)
 
         is AbstractArrayDefinition -> {
             val decl = fieldDef.declaration as? CompoundDeclaration ?: throw IllegalArgumentException("Array definitions should only come from sequence or array declarations") //$NON-NLS-1$
@@ -30,41 +30,40 @@ object CtfTraceEventFieldParser {
                  * string.
                  */
                 /* Are the integers characters and encoded? */
-                if (elemType.isCharacter) {
-                    /* it's a banal string */
-                    StringValue(fieldDef.toString(), null)
+                when {
+                    elemType.isCharacter -> StringValue(fieldDef.toString()) /* it's a banal string */
+                    fieldDef is ByteArrayDefinition -> {
+                        /*
+                         * Unsigned byte array, consider this field an array of integers
+                         */
+                        val elements = (0 until fieldDef.length)
+                                .map { idx -> java.lang.Byte.toUnsignedLong(fieldDef.getByte(idx)) }
+                                .map { longVal -> IntegerValue(longVal, elemType.base) }
+                                .toTypedArray()
+                        ArrayValue(elements)
 
-                } else if (fieldDef is ByteArrayDefinition) {
-                    /*
-                     * Unsigned byte array, consider this field an array of integers
-                     */
-                    val elements = (0 until fieldDef.length)
-                            .map { idx -> java.lang.Byte.toUnsignedLong(fieldDef.getByte(idx)) }
-                            .map { longVal -> IntegerValue(longVal, elemType.base, null) }
-                            .toTypedArray()
-                    ArrayValue(elements, null)
-
-                } else {
-                    /* Consider this a straight array of integers */
-                    val elements = fieldDef.definitions
-                            .filterNotNull()
-                            .map { elem ->
-                                val integerDef = elem as IntegerDefinition
-                                val value = integerDef.getValue()
-                                val base = integerDef.getDeclaration().getBase()
-                                IntegerValue(value, base, null)
-                            }
-                            .toTypedArray()
-                    ArrayValue(elements, null)
+                    }
+                    else -> {
+                        /* Consider this a straight array of integers */
+                        val elements = fieldDef.definitions
+                                .filterNotNull()
+                                .map { elem ->
+                                    val integerDef = elem as IntegerDefinition
+                                    val value = integerDef.value
+                                    val base = integerDef.declaration.base
+                                    IntegerValue(value, base)
+                                }
+                                .toTypedArray()
+                        ArrayValue(elements)
+                    }
                 }
 
             } else {
                 /* Arrays of elements of any other type */
                 val elements = fieldDef.definitions
                         .map { parseField(it) }
-                        .filterNotNull()
                         .toTypedArray()
-                ArrayValue(elements, null)
+                ArrayValue(elements)
             }
         }
 
@@ -73,10 +72,10 @@ object CtfTraceEventFieldParser {
              * Recursively parse the fields, and save the results in a struct value.
              */
             val structElements = fieldDef.fieldNames.associateBy({ it }, { parseField(fieldDef.getDefinition(it)) })
-            StructValue(structElements, null)
+            StructValue(structElements)
         }
 
-        is EnumDefinition -> EnumValue(fieldDef.value, fieldDef.integerValue, null)
+        is EnumDefinition -> EnumValue(fieldDef.value, fieldDef.integerValue)
         is VariantDefinition -> parseField(fieldDef.currentField)
 
         else -> throw IllegalArgumentException("Field type: " + fieldDef.javaClass.toString()
