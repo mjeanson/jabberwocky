@@ -155,8 +155,17 @@ class CtfTraceIteratorTest {
     }
 
     @Test
-    fun testCopyMiddle() {
+    fun testCopyMiddleNext() {
         repeat(2, { iterator.next() })
+        using { with(iterator.copy().autoClose()) {
+            assertTrue(hasNext())
+            assertEquals(events[2], next())
+        }}
+    }
+
+    @Test
+    fun testCopyMiddleSeek() {
+        iterator.seek(events[2].timestamp)
         using { with(iterator.copy().autoClose()) {
             assertTrue(hasNext())
             assertEquals(events[2], next())
@@ -172,6 +181,40 @@ class CtfTraceIteratorTest {
             assertFalse(iter2.hasNext())
         }
 
+    }
+
+    @Test
+    fun testCopyOfCopy() {
+        using {
+            val copy1 = iterator.copy().autoClose()
+            val copy2 = copy1.copy().autoClose()
+
+            listOf(copy1, copy2).forEach {
+                with(it) {
+                    assertEquals(events[0], next())
+                    assertEquals(events[1], next())
+                    assertEquals(events[2], next())
+                    assertTrue(hasNext())
+                }
+            }
+        }
+    }
+
+    @Test
+    fun testUsedCopyOfCopy() {
+        iterator.seek(events[1].timestamp)
+        using {
+            val copy1 = iterator.copy().autoClose()
+            val copy2 = copy1.copy().autoClose()
+
+            listOf(copy1, copy2).forEach {
+                with(it) {
+                    assertEquals(events[1], next())
+                    assertEquals(events[2], next())
+                    assertTrue(hasNext())
+                }
+            }
+        }
     }
 
     @Test

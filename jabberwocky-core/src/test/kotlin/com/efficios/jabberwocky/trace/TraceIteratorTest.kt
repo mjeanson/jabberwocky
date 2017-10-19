@@ -118,8 +118,19 @@ class TraceIteratorTest {
     }
 
     @Test
-    fun testCopyMiddle() {
+    fun testCopyMiddleNext() {
         iterator.next()
+        using { with(iterator.copy().autoClose()) {
+            assertTrue(hasNext())
+            assertEquals(trace.events[1], next())
+            assertEquals(trace.events[2], next())
+            assertFalse(hasNext())
+        }}
+    }
+
+    @Test
+    fun testCopyMiddleSeek() {
+        iterator.seek(trace.events[1].timestamp)
         using { with(iterator.copy().autoClose()) {
             assertTrue(hasNext())
             assertEquals(trace.events[1], next())
@@ -134,6 +145,41 @@ class TraceIteratorTest {
         using { with(iterator.copy().autoClose()) {
             assertFalse(hasNext())
         }}
+    }
+
+    @Test
+    fun testCopyOfCopy() {
+        using {
+            val copy1 = iterator.copy().autoClose()
+            val copy2 = copy1.copy().autoClose()
+
+            listOf(copy1, copy2).forEach {
+                // deal
+                with(it) {
+                    assertEquals(trace.events[0], next())
+                    assertEquals(trace.events[1], next())
+                    assertEquals(trace.events[2], next())
+                    assertFalse(hasNext())
+                }
+            }
+        }
+    }
+
+    @Test
+    fun testUsedCopyOfCopy() {
+        iterator.seek(trace.events[1].timestamp)
+        using {
+            val copy1 = iterator.copy().autoClose()
+            val copy2 = copy1.copy().autoClose()
+
+            listOf(copy1, copy2).forEach {
+                with(it) {
+                    assertEquals(trace.events[1], next())
+                    assertEquals(trace.events[2], next())
+                    assertFalse(hasNext())
+                }
+            }
+        }
     }
 
     @Test

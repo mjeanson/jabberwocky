@@ -40,6 +40,7 @@ internal class TraceStubs {
             /* Just dumbly re-read everything, this is just a test stub... */
             iterator = Iterators.peekingIterator(trace.events.iterator()).apply {
                 while (hasNext() && peek().timestamp < timestamp) {
+                    nbRead++
                     next()
                 }
             }
