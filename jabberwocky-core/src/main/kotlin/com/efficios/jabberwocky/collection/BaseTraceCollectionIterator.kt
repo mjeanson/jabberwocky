@@ -15,9 +15,9 @@ import com.efficios.jabberwocky.trace.event.TraceEvent
 import com.efficios.jabberwocky.utils.SortedCompoundIterator
 import java.util.*
 
-class BaseTraceCollectionIterator<E : TraceEvent> (traceCollection: TraceCollection<E, Trace<E>>) : SortedCompoundIterator<E, TraceIterator<E>>(
-        traceCollection.traces.map { it.iterator() },
-        Comparator.comparingLong { event -> event.timestamp }), TraceCollectionIterator<E> {
+class BaseTraceCollectionIterator<out E : TraceEvent> (traceCollection: TraceCollection<E, Trace<E>>) :
+        SortedCompoundIterator<E, TraceIterator<E>>(traceCollection.traces.map { it.iterator() }, compareBy { event -> event.timestamp }),
+        TraceCollectionIterator<E> {
 
     override fun close() {
         iterators.forEach { it.close() }

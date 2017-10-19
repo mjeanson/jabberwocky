@@ -15,7 +15,8 @@ import java.util.*
 import java.util.function.Supplier
 import java.util.stream.Collectors
 
-open class SortedCompoundIterator<out T, out I : Iterator<T>>(protected val iterators: Collection<I>, comparator: Comparator<T>) : Iterator<T> {
+open class SortedCompoundIterator<out T, out I : Iterator<T>>(protected val iterators: Collection<I>,
+                                                              comparator: Comparator<T>) : Iterator<T> {
 
     private val iteratorQueue: Queue<PeekingIterator<T>>
 
@@ -29,19 +30,15 @@ open class SortedCompoundIterator<out T, out I : Iterator<T>>(protected val iter
             if (!o1.hasNext() && !o2.hasNext()) 0
             else if (!o1.hasNext()) 1
             else if (!o2.hasNext()) -1
-
-            else Comparator.comparing(java.util.function.Function<PeekingIterator<T>, T> { it.peek() }, comparator ).compare(o1, o2)
+            else compareValuesBy(o1, o2, comparator, { it.peek() })
         }
 
-        val supplier = Supplier<Queue<PeekingIterator<T>>> { PriorityQueue<PeekingIterator<T>>(iterators.size, iteratorComparator) }
-        iteratorQueue = iterators.stream()
-                .map<PeekingIterator<T>>({ Iterators.peekingIterator(it) })
-                .collect(Collectors.toCollection<PeekingIterator<T>, Queue<PeekingIterator<T>>>(supplier))
+        iteratorQueue = iterators
+                .map { Iterators.peekingIterator(it) }
+                .toCollection(PriorityQueue(iterators.size, iteratorComparator))
     }
 
-    override fun hasNext(): Boolean {
-        return iteratorQueue.peek().hasNext()
-    }
+    override fun hasNext() = iteratorQueue.peek().hasNext()
 
     override fun next(): T {
         /* Extract the element we will return */

@@ -21,17 +21,17 @@ class SortedCompoundIteratorTest {
 
     companion object {
 
-        private val list1 = Arrays.asList(1, 3, 5)
-        private val list2 = Arrays.asList(2, 4, 6)
-        private val list3 = Arrays.asList(4, 5, 6)
-        private val list4 = Arrays.asList(2, 2, 2)
+        private val list1 = listOf(1, 3, 5)
+        private val list2 = listOf(2, 4, 6)
+        private val list3 = listOf(4, 5, 6)
+        private val list4 = listOf(2, 2, 2)
 
-        private val customList1 = Arrays.asList(
+        private val customList1 = listOf(
                 MyObject("A"),
                 MyObject("B"),
                 MyObject("C"))
 
-        private val customList2 = Arrays.asList(
+        private val customList2 = listOf(
                 MyObject("a"),
                 MyObject("b"),
                 MyObject("c"))
@@ -43,7 +43,7 @@ class SortedCompoundIteratorTest {
      */
     @Test(expected = IllegalArgumentException::class)
     fun testNoIter() {
-        SortedCompoundIterator(emptyList<Iterator<String>>(), Comparator.naturalOrder())
+        SortedCompoundIterator(emptyList<Iterator<String>>(), naturalOrder())
     }
 
     /**
@@ -51,8 +51,8 @@ class SortedCompoundIteratorTest {
      */
     @Test
     fun test1Iter() {
-        val iters = Arrays.asList<Iterator<Int>>(list1.iterator())
-        val sci = SortedCompoundIterator(iters, Comparator.naturalOrder())
+        val iters = listOf(list1.iterator())
+        val sci = SortedCompoundIterator(iters, naturalOrder())
         testIteratorContents(sci, 1, 3, 5)
     }
 
@@ -61,8 +61,8 @@ class SortedCompoundIteratorTest {
      */
     @Test
     fun test2Iters() {
-        val iters = Arrays.asList<Iterator<Int>>(list1.iterator(), list2.iterator())
-        val sci = SortedCompoundIterator(iters, Comparator.naturalOrder())
+        val iters = listOf(list1, list2).map { it.iterator() }
+        val sci = SortedCompoundIterator(iters, naturalOrder())
         testIteratorContents(sci, 1, 2, 3, 4, 5, 6)
     }
 
@@ -72,8 +72,8 @@ class SortedCompoundIteratorTest {
      */
     @Test
     fun testIdenticalValues1Iter() {
-        val iters = Arrays.asList<Iterator<Int>>(list1.iterator(), list4.iterator())
-        val sci = SortedCompoundIterator(iters, Comparator.naturalOrder())
+        val iters = listOf(list1, list4).map { it.iterator() }
+        val sci = SortedCompoundIterator(iters, naturalOrder())
         testIteratorContents(sci, 1, 2, 2, 2, 3, 5)
     }
 
@@ -84,8 +84,8 @@ class SortedCompoundIteratorTest {
      */
     @Test
     fun testIdenticalValues2Iters() {
-        val iters = Arrays.asList<Iterator<Int>>(list2.iterator(), list3.iterator())
-        val sci = SortedCompoundIterator(iters, Comparator.naturalOrder())
+        val iters = listOf(list2, list3).map { it.iterator() }
+        val sci = SortedCompoundIterator(iters, naturalOrder())
         testIteratorContents(sci, 2, 4, 4, 5, 6, 6)
     }
 
@@ -96,8 +96,8 @@ class SortedCompoundIteratorTest {
     @Test(expected = NoSuchElementException::class)
     fun testExhaustion() {
         val iter1 = list1.iterator()
-        val iters = Arrays.asList(iter1)
-        val sci = SortedCompoundIterator(iters, Comparator.naturalOrder())
+        val iters = listOf(iter1)
+        val sci = SortedCompoundIterator(iters, naturalOrder())
 
         sci.next()
         sci.next()
@@ -109,16 +109,15 @@ class SortedCompoundIteratorTest {
     // Tests with custom objects and comparators
     // ------------------------------------------------------------------------
 
-    private data class MyObject(val value: String) {}
+    private data class MyObject(val value: String)
 
     /**
      * Test a compound iterator of custom objects
      */
     @Test
     fun testCustomObjects1() {
-        val iters = Arrays.asList<Iterator<MyObject>>(customList1.iterator(), customList2.iterator())
-        val sci = SortedCompoundIterator(iters,
-                Comparator.comparing<MyObject, String>({ it.value }))
+        val iters = listOf(customList1, customList2).map { it.iterator() }
+        val sci = SortedCompoundIterator(iters, compareBy { it.value })
 
         /* Default string comparator places capitals first */
         testIteratorContents(sci,
@@ -136,7 +135,7 @@ class SortedCompoundIteratorTest {
      */
     @Test
     fun testCustomObjects2() {
-        val iters = Arrays.asList<Iterator<MyObject>>(customList2.iterator(), customList1.iterator())
+        val iters = listOf(customList2, customList1).map { it.iterator() }
         val comparator = Comparator<MyObject> { o1, o2 -> o1.value.compareTo(o2.value, ignoreCase = true) }
         val sci = SortedCompoundIterator(iters, comparator)
 
@@ -154,7 +153,7 @@ class SortedCompoundIteratorTest {
     }
 
     @SafeVarargs
-    private fun <T> testIteratorContents(iter: SortedCompoundIterator<T, out Iterator<T>>, vararg values: T) {
+    private fun <T> testIteratorContents(iter: SortedCompoundIterator<T, Iterator<T>>, vararg values: T) {
         for (value in values) {
             assertEquals(value, iter.next())
         }
