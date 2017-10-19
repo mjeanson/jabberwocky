@@ -10,6 +10,7 @@
 package com.efficios.jabberwocky.trace
 
 import com.efficios.jabberwocky.trace.event.TraceEvent
+import com.efficios.jabberwocky.utils.using
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -105,45 +106,47 @@ class TraceIteratorTest {
 
     @Test
     fun testCopyStart() {
-        with(iterator.copy()) {
-            assertTrue(hasNext())
-            assertEquals(trace.events[0], next())
-            assertEquals(trace.events[1], next())
-            assertEquals(trace.events[2], next())
-            assertFalse(hasNext())
+        using {
+            with(iterator.copy().autoClose()) {
+                assertTrue(hasNext())
+                assertEquals(trace.events[0], next())
+                assertEquals(trace.events[1], next())
+                assertEquals(trace.events[2], next())
+                assertFalse(hasNext())
+            }
         }
     }
 
     @Test
     fun testCopyMiddle() {
         iterator.next()
-        with(iterator.copy()) {
+        using { with(iterator.copy().autoClose()) {
             assertTrue(hasNext())
             assertEquals(trace.events[1], next())
             assertEquals(trace.events[2], next())
             assertFalse(hasNext())
-        }
+        }}
     }
 
     @Test
     fun testCopyEnd() {
         repeat(3, { iterator.next() })
-        with(iterator.copy()) {
+        using { with(iterator.copy().autoClose()) {
             assertFalse(hasNext())
-        }
+        }}
     }
 
     @Test
     fun testSeekAndCopy() {
-        with(trace.events) {
+        with(trace.events) { using {
             val iter1 = iterator
             iter1.seek(get(2).timestamp)
-            val iter2 = iter1.copy()
+            val iter2 = iter1.copy().autoClose()
             iter1.seek(last().timestamp)
             iter2.seek(get(1).timestamp)
 
             assertEquals(last(), iter1.next())
             assertEquals(get(1), iter2.next())
-        }
+        }}
     }
 }

@@ -11,6 +11,7 @@ package com.efficios.jabberwocky.ctf.trace
 
 import com.efficios.jabberwocky.ctf.trace.event.CtfTraceEvent
 import com.efficios.jabberwocky.trace.event.FieldValue
+import com.efficios.jabberwocky.utils.using
 import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
 import org.junit.*
 import org.junit.Assert.assertEquals
@@ -145,39 +146,45 @@ class CtfTraceIteratorTest {
 
     @Test
     fun testCopyStart() {
-        with(iterator.copy()) {
+        using { with(iterator.copy().autoClose()) {
             assertTrue(hasNext())
             assertEquals(events[0], next())
             assertEquals(events[1], next())
             assertEquals(events[2], next())
-        }
+        }}
     }
 
     @Test
     fun testCopyMiddle() {
         repeat(2, { iterator.next() })
-        with(iterator.copy()) {
+        using { with(iterator.copy().autoClose()) {
             assertTrue(hasNext())
             assertEquals(events[2], next())
-        }
+        }}
     }
 
     @Test
     fun testCopyEnd() {
         repeat(TRACE_NB_EVENTS, { iterator.next() })
         assertFalse(iterator.hasNext())
-        assertFalse(iterator.copy().hasNext())
+        using {
+            val iter2 = iterator.copy().autoClose()
+            assertFalse(iter2.hasNext())
+        }
+
     }
 
     @Test
     fun testSeekAndCopy() {
-        val iter1 = iterator
-        iter1.seek(events[2].timestamp)
-        val iter2 = iter1.copy()
-        iter1.seek(lastEvent.timestamp)
-        iter2.seek(events[1].timestamp)
+        using {
+            val iter1 = iterator
+            iter1.seek(events[2].timestamp)
+            val iter2 = iter1.copy().autoClose()
+            iter1.seek(lastEvent.timestamp)
+            iter2.seek(events[1].timestamp)
 
-        assertEquals(lastEvent, iter1.next())
-        assertEquals(events[1], iter2.next())
+            assertEquals(lastEvent, iter1.next())
+            assertEquals(events[1], iter2.next())
+        }
     }
 }
