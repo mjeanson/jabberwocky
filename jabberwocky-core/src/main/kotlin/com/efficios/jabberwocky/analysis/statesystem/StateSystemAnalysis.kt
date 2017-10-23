@@ -14,6 +14,7 @@ import ca.polymtl.dorsal.libdelorean.IStateSystemWriter
 import ca.polymtl.dorsal.libdelorean.StateSystemFactory
 import ca.polymtl.dorsal.libdelorean.backend.StateHistoryBackendFactory
 import com.efficios.jabberwocky.analysis.IAnalysis
+import com.efficios.jabberwocky.analysis.IAnalysis.Companion.ANALYSES_DIRECTORY
 import com.efficios.jabberwocky.collection.TraceCollection
 import com.efficios.jabberwocky.common.TimeRange
 import com.efficios.jabberwocky.project.TraceProject
@@ -24,7 +25,6 @@ import java.nio.file.Files
 abstract class StateSystemAnalysis : IAnalysis {
 
     companion object {
-        private const val ANALYSES_DIRECTORY = "analyses"
         private const val HISTORY_FILE_EXTENSION = ".ht"
     }
 

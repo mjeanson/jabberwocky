@@ -14,6 +14,10 @@ import com.efficios.jabberwocky.project.TraceProject
 
 interface IAnalysis {
 
+    companion object {
+        internal const val ANALYSES_DIRECTORY = "analyses"
+    }
+
     /**
      * Determine if the current analysis can run on the given trace project.
 
