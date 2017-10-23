@@ -23,33 +23,30 @@ internal class TraceStubs {
 
     private class TraceStubIterator(private val trace: TraceStubBase) : TraceIterator<TraceEvent> {
 
-        private var iterator = Iterators.peekingIterator(trace.events.iterator())
-
-        private var nbRead = 0
+        private var iterator = trace.events.listIterator()
 
         override fun hasNext() = iterator.hasNext()
-
-        override fun next(): TraceEvent {
-            nbRead++
-            return iterator.next()
-        }
+        override fun next() = iterator.next()
 
         override fun close() {}
 
         override fun seek(timestamp: Long) {
             /* Just dumbly re-read everything, this is just a test stub... */
-            iterator = Iterators.peekingIterator(trace.events.iterator()).apply {
-                while (hasNext() && peek().timestamp < timestamp) {
-                    nbRead++
-                    next()
+            iterator = trace.events.listIterator().apply {
+                while (hasNext()) {
+                    if (next().timestamp >= timestamp) {
+                        previous()
+                        break
+                    }
                 }
             }
         }
 
         override fun copy(): TraceIterator<TraceEvent> {
+            val nbRead = iterator.nextIndex()
             /* Start from the beginning and read the same amount of events that were read. */
             return TraceStubIterator(trace).apply {
-                repeat(this@TraceStubIterator.nbRead, { next() })
+                repeat(nbRead, { next() })
             }
         }
     }
