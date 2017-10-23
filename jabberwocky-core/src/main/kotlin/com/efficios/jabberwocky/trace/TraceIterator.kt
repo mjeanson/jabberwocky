@@ -13,6 +13,10 @@ import com.efficios.jabberwocky.trace.event.TraceEvent
 
 interface TraceIterator<out E : TraceEvent> : Iterator<E>, AutoCloseable {
 
+    fun hasPrevious(): Boolean
+
+    fun previous(): E
+
     /**
      * Bring this iterator to the first event with the given timestamp.
      * Note there might be more than one event at this timestamp!

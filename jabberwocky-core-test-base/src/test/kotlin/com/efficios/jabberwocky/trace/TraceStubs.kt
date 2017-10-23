@@ -27,6 +27,8 @@ class TraceStubs {
 
         override fun hasNext() = iterator.hasNext()
         override fun next() = iterator.next()
+        override fun hasPrevious() = iterator.hasPrevious()
+        override fun previous() = iterator.previous()
 
         override fun close() {}
 

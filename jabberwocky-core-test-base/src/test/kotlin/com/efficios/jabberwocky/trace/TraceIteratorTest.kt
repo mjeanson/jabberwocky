@@ -9,16 +9,21 @@
 
 package com.efficios.jabberwocky.trace
 
+import com.efficios.jabberwocky.trace.event.TraceEvent
+
 class TraceIteratorTest : TraceIteratorTestBase() {
 
-    override val trace = TraceStubs.TraceStub1()
+    override val trace = TraceStubs.TraceStub3()
 
     override val event1 = trace.events[0]
     override val event2 = trace.events[1]
     override val event3 = trace.events[2]
-    override val lastEvent = trace.events.last()
+    override val timestampBetween1and2 = 101L
 
-    override val timestampBetween1and2 = 3L
-    override val timestampAfterEnd = 12L
+    override val lastEvent = trace.events.last()
+    override val timestampAfterEnd = 210L
+
+    override val middleEvent = trace.events[25]
+    override val middleEventPosition = 25
 
 }

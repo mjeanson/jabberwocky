@@ -24,12 +24,16 @@ abstract class TraceIteratorTestBase {
     protected abstract val event1: TraceEvent
     protected abstract val event2: TraceEvent
     protected abstract val event3: TraceEvent
-    protected abstract val lastEvent: TraceEvent
-
     protected abstract val timestampBetween1and2: Long
+
+    protected abstract val middleEvent: TraceEvent
+    protected abstract val middleEventPosition: Int
+
+    protected abstract val lastEvent: TraceEvent
     protected abstract val timestampAfterEnd: Long
 
-    private lateinit var iterator: TraceIterator<TraceEvent>
+    protected lateinit var iterator: TraceIterator<TraceEvent>
+        private set
 
     @Before
     fun setup() {
@@ -103,6 +107,71 @@ abstract class TraceIteratorTestBase {
         with(iterator) {
             seek(timestampAfterEnd)
             assertFalse(hasNext())
+        }
+    }
+
+    // ------------------------------------------------------------------------
+    // previous()/hasPrevious() tests
+    // ------------------------------------------------------------------------
+
+    @Test
+    fun testPreviousInitial() {
+        assertFalse(iterator.hasPrevious())
+    }
+
+    @Test
+    fun testPreviousAfterEnd() {
+        with(iterator) {
+            seek(timestampAfterEnd)
+            assertFalse(hasNext())
+            assertTrue(hasPrevious())
+            assertEquals(lastEvent, previous())
+        }
+    }
+
+    @Test
+    fun testPreviousToBeginning() {
+        with(iterator) {
+            seek(event3.timestamp)
+            assertTrue(hasPrevious())
+            previous()
+            assertTrue(hasPrevious())
+            val event = previous()
+            assertEquals(event1, event)
+            assertFalse(hasPrevious())
+
+        }
+    }
+
+    @Test
+    fun testBackAndForth() {
+        with(iterator) {
+            seek(middleEvent.timestamp)
+            repeat(2, { previous() })
+            repeat(2, { next() })
+            assertEquals(middleEvent, next())
+
+            repeat(2, { next() })
+            repeat(2, { previous() })
+            assertEquals(middleEvent, previous())
+        }
+    }
+
+    @Test
+    fun testPreviousToBeginningFromMiddle() {
+        with(iterator) {
+            seek(middleEvent.timestamp)
+            var lastReadEvent: TraceEvent? = null
+            try {
+                repeat(middleEventPosition, {
+                    lastReadEvent = previous()
+                })
+            } catch (e: NoSuchElementException) {
+                System.err.println("Last read event: $lastReadEvent")
+                throw e
+            }
+            assertFalse("Last read event: $lastReadEvent", hasPrevious())
+            assertEquals(event1, lastReadEvent)
         }
     }
 

@@ -12,13 +12,11 @@ package com.efficios.jabberwocky.ctf.trace
 import com.efficios.jabberwocky.ctf.trace.event.CtfTraceEvent
 import com.efficios.jabberwocky.trace.TraceIteratorTestBase
 import com.efficios.jabberwocky.trace.event.FieldValue
-import com.efficios.jabberwocky.trace.event.TraceEvent
-import com.efficios.jabberwocky.utils.using
 import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
-import org.junit.*
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
-import kotlin.test.assertFalse
+import org.hamcrest.Matchers.lessThan
+import org.junit.Assert.*
+import org.junit.ClassRule
+import org.junit.Test
 
 class CtfTraceIteratorTest : TraceIteratorTestBase() {
 
@@ -58,6 +56,17 @@ class CtfTraceIteratorTest : TraceIteratorTestBase() {
             )
     )
 
+    override val timestampBetween1and2 = event1.timestamp + 100
+
+    override val middleEvent = CtfTraceEvent(trace, 1331668249_621547507, 1, "sys_gettimeofday",
+            mapOf("tv" to FieldValue.IntegerValue(0x7F394B3CDD60, 16),
+                    "tz" to FieldValue.IntegerValue(0x0, 16)
+            )
+    )
+
+    /** Remember, first event -> position = 0 */
+    override val middleEventPosition = 50_000 - 2
+
     override val lastEvent = CtfTraceEvent(trace, 1331668259054285979, 0, "sys_ioctl",
             mapOf("fd" to FieldValue.IntegerValue(20),
                     "cmd" to FieldValue.IntegerValue(63059),
@@ -65,7 +74,35 @@ class CtfTraceIteratorTest : TraceIteratorTestBase() {
             )
     )
 
-    override val timestampBetween1and2 = event1.timestamp + 100
     override val timestampAfterEnd = lastEvent.timestamp + 100
 
+    @Test
+    fun testGoToLastEvent() {
+        with(iterator as CtfTraceIterator) {
+            goToLastEvent()
+            assertTrue(hasNext())
+            assertEquals(lastEvent, next())
+        }
+    }
+
+    @Test
+    fun testBackwardsCache() {
+        with(iterator as CtfTraceIterator) {
+            seek(middleEvent.timestamp)
+            assertNull(cacheIterator)
+
+            previous()
+            val iter = cacheIterator!!
+            assertNotNull(iter)
+
+            /* Exhaust the iterator and see how many events we had in cache */
+            var i = 0
+            while (iter.hasPrevious()) {
+                previous()
+                i++
+            }
+            // TODO Check the actual packet start times and test against the exact value.
+            assertThat("Number of events in cache", i, lessThan(5000))
+        }
+    }
 }

@@ -9,68 +9,216 @@
 
 package com.efficios.jabberwocky.ctf.trace
 
-import java.util.NoSuchElementException
-
+import com.efficios.jabberwocky.ctf.trace.event.CtfTraceEvent
+import com.efficios.jabberwocky.trace.TraceIterator
+import com.google.common.annotations.VisibleForTesting
+import com.google.common.collect.EvictingQueue
+import com.google.common.collect.Iterables
 import org.eclipse.tracecompass.ctf.core.CTFException
 import org.eclipse.tracecompass.ctf.core.event.IEventDefinition
 import org.eclipse.tracecompass.ctf.core.trace.CTFTraceReader
+import java.util.*
 
-import com.efficios.jabberwocky.ctf.trace.event.CtfTraceEvent
-import com.efficios.jabberwocky.trace.TraceIterator
+private const val MAX_CACHE_SIZE = 50_000
 
-open class CtfTraceIterator<out E : CtfTraceEvent>(private val originTrace: CtfTrace<E>) : TraceIterator<E> {
+open class CtfTraceIterator<E : CtfTraceEvent> private constructor(private val originTrace: CtfTrace<E>,
+                                                                   private val forwardIterator: ForwardIterator<E>) : TraceIterator<E> {
 
-    private val traceReader: CTFTraceReader = try {
-        CTFTraceReader(originTrace.innerTrace)
-    } catch (e: CTFException) {
-        /*
-         * If the CtfTrace was initialized successfully, creating an
-         * iterator should not fail.
-         */
-        throw IllegalStateException(e)
+    constructor(originTrace: CtfTrace<E>) : this(originTrace, ForwardIterator(originTrace))
+
+    @VisibleForTesting
+    @Transient
+    internal var cacheIterator: ListIterator<E>? = null
+        private set
+
+    override fun hasNext(): Boolean {
+        val cacheIter = cacheIterator
+        if (cacheIter == null || !cacheIter.hasNext()) return forwardIterator.hasNext()
+        return true
     }
-
-    private var currentEventDef: IEventDefinition? = traceReader.currentEventDef
-
-    override fun hasNext(): Boolean = (currentEventDef != null)
 
     override fun next(): E {
-        val currentEventDef = currentEventDef ?: throw NoSuchElementException()
+        val cacheIter = cacheIterator
+        return if (cacheIter == null) {
+            forwardIterator.next()
 
-        /* Wrap the current event into a JW event */
-        val event = originTrace.eventFactory.createEvent(currentEventDef)
+        } else if (!cacheIter.hasNext()) {
+            /* Drop the cache, switch back to the forward iterator. */
+            cacheIterator = null
+            forwardIterator.next()
 
-        /* Prepare the "next next" event */
-        try {
-            traceReader.advance()
-            this.currentEventDef = traceReader.currentEventDef
-        } catch (e: CTFException) {
-            /* Shouldn't happen if we did the other checks correctly */
-            throw IllegalStateException(e)
+        } else {
+            /* Read from the cache. */
+            cacheIter.next()
         }
-
-        return event
     }
 
-    override fun close() {
-        traceReader.close()
+    override fun hasPrevious(): Boolean {
+        val cacheIter = cacheIterator
+        return when {
+            cacheIter == null -> {
+                val newCacheIterator = newCacheIterator() ?: return false
+                cacheIterator = newCacheIterator
+                newCacheIterator.hasPrevious()
+            }
+            cacheIter.hasPrevious() -> /* Continue reading from the cache */
+                true
+            else -> {
+                /* Check if we can load a new cache before this position. */
+                val newPivotEvent = cacheIter.next()
+                forwardIterator.seek(newPivotEvent.timestamp)
+
+                /* Check in case there are several events at this timestamp */
+                while (forwardIterator.peek() != newPivotEvent) {
+                    forwardIterator.next()
+                }
+
+                val newCacheIterator = newCacheIterator() ?: return false
+                cacheIterator = newCacheIterator
+                newCacheIterator.hasPrevious()
+            }
+        }
+    }
+
+    override fun previous(): E {
+        if (!hasPrevious()) throw NoSuchElementException()
+        /* Previous call to hasPrevious() should have populated 'cacheIterator' */
+        return cacheIterator!!.previous()
     }
 
     override fun seek(timestamp: Long) {
-        // TODO Support/test with multiple events at the same timestamp
-        // Current library doesn't give guarantees regarding which events are returned first.
-
-        /* traceReader.seek() works off cycle counts, not timestamps !?! */
-        traceReader.seek(originTrace.innerTrace.timestampNanoToCycles(timestamp))
-        currentEventDef = traceReader.topStream?.currentEvent
+        cacheIterator = null
+        forwardIterator.seek(timestamp)
     }
 
-    override fun copy(): CtfTraceIterator<E> {
-        val eventDef = currentEventDef
-        return CtfTraceIterator(originTrace).apply {
-            /* Here we seek using the *cycle count* directly */
-            traceReader.seek(eventDef?.timestamp ?: Long.MAX_VALUE)
+    override fun copy(): CtfTraceIterator<E> = CtfTraceIterator(originTrace, forwardIterator.copy())
+
+    override fun close() {
+        cacheIterator = null
+        forwardIterator.close()
+    }
+
+    @VisibleForTesting
+    internal fun goToLastEvent() {
+        cacheIterator = null
+        forwardIterator.goToLastEvent()
+    }
+
+    private fun newCacheIterator(): ListIterator<E>? {
+        var startedFromAfterEnd = false
+        /*
+         * We will jump back to an earlier timestamp, and start reading from there to populate
+         * a cache of events the list-iterator will be able to navigate through.
+         *
+         * The target timestamp is defined as the highest among all the current packets' start times.
+         *
+         * // TODO Test/benchmark with min()?
+         */
+        var currentPackets = forwardIterator.traceReader.currentPacketDescriptors
+        if (currentPackets == null || Iterables.isEmpty(currentPackets)) {
+            forwardIterator.goToLastEvent()
+            /* Should not be empty/null on next access */
+            currentPackets = forwardIterator.traceReader.currentPacketDescriptors
+            startedFromAfterEnd = true
+        }
+
+        val limitEvent = forwardIterator.next() /* Should be present */
+        val ts = currentPackets
+                .map { it.timestampBegin }
+                /* Convert cycles -> real timestamp. */
+                .map { originTrace.innerTrace.timestampCyclesToNanos(it) }
+                .filter { it < limitEvent.timestamp }
+                /*
+                 * Doesn't seem there is a way to query the "previous packet". Handle all edge cases
+                 * (like a last packet containing a single event) by re-reading from the beginning...
+                 */
+                .max() ?: originTrace.startTime
+
+        forwardIterator.seek(ts)
+        if (!forwardIterator.hasNext()) return null
+
+        val list = EvictingQueue.create<E>(MAX_CACHE_SIZE)
+        while (forwardIterator.hasNext()) {
+            val event = forwardIterator.peek()!!
+            if (event == limitEvent) break
+            list.add(event)
+            forwardIterator.next()
+        }
+
+        if (startedFromAfterEnd) list.add(limitEvent)
+
+        /* The 'list.size' argument ensures the iterators starts at the last event of the list. */
+        return list.toList().listIterator(list.size)
+    }
+
+    private class ForwardIterator<out E : CtfTraceEvent>(private val originTrace: CtfTrace<E>) : Iterator<E> {
+
+        val traceReader: CTFTraceReader = try {
+            CTFTraceReader(originTrace.innerTrace)
+        } catch (e: CTFException) {
+            /*
+         * If the CtfTrace was initialized successfully, creating an
+         * iterator should not fail.
+         */
+            throw IllegalStateException(e)
+        }
+
+        private var currentEventDef: IEventDefinition? = traceReader.currentEventDef
+
+        override fun hasNext(): Boolean = (currentEventDef != null)
+
+        override fun next(): E {
+            val currentEventDef = currentEventDef ?: throw NoSuchElementException()
+
+            /* Wrap the current event into a JW event */
+            val event = originTrace.eventFactory.createEvent(currentEventDef)
+
+            /* Prepare the "next next" event */
+            try {
+                traceReader.advance()
+                this.currentEventDef = traceReader.currentEventDef
+            } catch (e: CTFException) {
+                /* Shouldn't happen if we did the other checks correctly */
+                throw IllegalStateException(e)
+            }
+
+            return event
+        }
+
+        fun close() {
+            traceReader.close()
+        }
+
+        fun peek(): E? {
+            return originTrace.eventFactory.createEvent(currentEventDef ?: return null)
+        }
+
+        fun seek(timestamp: Long) {
+            // TODO Support/test with multiple events at the same timestamp
+            // Current library doesn't give guarantees regarding which events are returned first.
+
+            /* traceReader.seek() works off cycle counts, not timestamps !?! */
+            traceReader.seek(originTrace.innerTrace.timestampNanoToCycles(timestamp))
             currentEventDef = traceReader.topStream?.currentEvent
+        }
+
+        fun goToLastEvent() {
+            traceReader.goToLastEvent() // Despite the name, this only goes to "last packet"...
+            while (traceReader.currentEventDef != null) {
+                currentEventDef = traceReader.currentEventDef!!
+                traceReader.advance()
+
+            }
+        }
+
+        fun copy(): ForwardIterator<E> {
+            val eventDef = currentEventDef
+            return ForwardIterator(originTrace).apply {
+                /* Here we seek using the *cycle count* directly */
+                traceReader.seek(eventDef?.timestamp ?: Long.MAX_VALUE)
+                currentEventDef = traceReader.topStream?.currentEvent
+            }
+
         }
 
     }
