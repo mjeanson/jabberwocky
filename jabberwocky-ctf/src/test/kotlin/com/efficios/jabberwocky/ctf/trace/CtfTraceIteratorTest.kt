@@ -10,7 +10,9 @@
 package com.efficios.jabberwocky.ctf.trace
 
 import com.efficios.jabberwocky.ctf.trace.event.CtfTraceEvent
+import com.efficios.jabberwocky.trace.TraceIteratorTestBase
 import com.efficios.jabberwocky.trace.event.FieldValue
+import com.efficios.jabberwocky.trace.event.TraceEvent
 import com.efficios.jabberwocky.utils.using
 import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
 import org.junit.*
@@ -18,7 +20,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import kotlin.test.assertFalse
 
-class CtfTraceIteratorTest {
+class CtfTraceIteratorTest : TraceIteratorTestBase() {
 
     companion object {
         @JvmField
@@ -28,206 +30,42 @@ class CtfTraceIteratorTest {
         private const val TRACE_NB_EVENTS = 595641
     }
 
-    private val trace = ETT.trace
+    override val trace = ETT.trace
 
-    /* Fist few events of the trace */
-    private val events = listOf(
-            CtfTraceEvent(trace, 1331668247314038062, 0, "sched_stat_runtime",
-                    mapOf("comm" to FieldValue.StringValue("lttng-sessiond"),
-                            "tid" to FieldValue.IntegerValue(2175),
-                            "runtime" to FieldValue.IntegerValue(297955),
-                            "vruntime" to FieldValue.IntegerValue(525083943)
-                    )
-            ),
-            CtfTraceEvent(trace, 1331668247314044708, 0, "sched_stat_wait",
-                    mapOf("comm" to FieldValue.StringValue("lttng-consumerd"),
-                            "tid" to FieldValue.IntegerValue(2193),
-                            "delay" to FieldValue.IntegerValue(297955)
-                    )
-            ),
-            CtfTraceEvent(trace, 1331668247314046266, 0, "sched_switch",
-                    mapOf("prev_comm" to FieldValue.StringValue("lttng-sessiond"),
-                            "prev_tid" to FieldValue.IntegerValue(2175),
-                            "prev_prio" to FieldValue.IntegerValue(20),
-                            "prev_state" to FieldValue.IntegerValue(1),
-                            "next_comm" to FieldValue.StringValue("lttng-consumerd"),
-                            "next_tid" to FieldValue.IntegerValue(2193),
-                            "next_prio" to FieldValue.IntegerValue(20)
-                    )
+    override val event1 = CtfTraceEvent(trace, 1331668247314038062, 0, "sched_stat_runtime",
+            mapOf("comm" to FieldValue.StringValue("lttng-sessiond"),
+                    "tid" to FieldValue.IntegerValue(2175),
+                    "runtime" to FieldValue.IntegerValue(297955),
+                    "vruntime" to FieldValue.IntegerValue(525083943)
             )
     )
 
-    private val lastEvent = CtfTraceEvent(trace, 1331668259054285979, 0, "sys_ioctl",
+    override val event2 = CtfTraceEvent(trace, 1331668247314044708, 0, "sched_stat_wait",
+            mapOf("comm" to FieldValue.StringValue("lttng-consumerd"),
+                    "tid" to FieldValue.IntegerValue(2193),
+                    "delay" to FieldValue.IntegerValue(297955)
+            )
+    )
+
+    override val event3 = CtfTraceEvent(trace, 1331668247314046266, 0, "sched_switch",
+            mapOf("prev_comm" to FieldValue.StringValue("lttng-sessiond"),
+                    "prev_tid" to FieldValue.IntegerValue(2175),
+                    "prev_prio" to FieldValue.IntegerValue(20),
+                    "prev_state" to FieldValue.IntegerValue(1),
+                    "next_comm" to FieldValue.StringValue("lttng-consumerd"),
+                    "next_tid" to FieldValue.IntegerValue(2193),
+                    "next_prio" to FieldValue.IntegerValue(20)
+            )
+    )
+
+    override val lastEvent = CtfTraceEvent(trace, 1331668259054285979, 0, "sys_ioctl",
             mapOf("fd" to FieldValue.IntegerValue(20),
                     "cmd" to FieldValue.IntegerValue(63059),
                     "arg" to FieldValue.IntegerValue(0)
             )
     )
 
-    private lateinit var iterator: CtfTraceIterator<CtfTraceEvent>
+    override val timestampBetween1and2 = event1.timestamp + 100
+    override val timestampAfterEnd = lastEvent.timestamp + 100
 
-    @Before
-    fun setup() {
-        iterator = trace.iterator()
-    }
-
-    @After
-    fun cleanup() {
-        iterator.close()
-    }
-
-    @Test
-    fun testInitial() {
-        with(iterator) {
-            assertTrue(hasNext())
-            assertEquals(events[0], next())
-            assertEquals(events[1], next())
-            assertEquals(events[2], next())
-        }
-    }
-
-    // ------------------------------------------------------------------------
-    // seek() tests
-    // ------------------------------------------------------------------------
-
-    @Test
-    fun testSeekBeforeBegin() {
-        with(iterator) {
-            repeat(2, { next() })
-            seek(0)
-            assertEquals(events[0], next())
-        }
-    }
-
-    @Test
-    fun testSeekAtBegin() {
-        with(iterator) {
-            repeat(2, { next() })
-            seek(events[0].timestamp)
-            assertEquals(events[0], next())
-        }
-    }
-
-    @Test
-    fun testSeekBetweenEvents() {
-        with(iterator) {
-            seek(events[0].timestamp + 100)
-            assertEquals(events[1], next())
-        }
-    }
-
-    @Test
-    fun testSeekAtEvent() {
-        with(iterator) {
-            seek(events[1].timestamp)
-            assertEquals(events[1], next())
-        }
-    }
-
-    @Test
-    fun testSeekAtEnd() {
-        with(iterator) {
-            seek(lastEvent.timestamp)
-            assertEquals(lastEvent, next())
-        }
-    }
-
-    @Test
-    fun testSeekAfterEnd() {
-        with(iterator) {
-            seek(lastEvent.timestamp + 100)
-            assertFalse(hasNext())
-        }
-    }
-
-    // ------------------------------------------------------------------------
-    // copy() tests
-    // ------------------------------------------------------------------------
-
-    @Test
-    fun testCopyStart() {
-        using { with(iterator.copy().autoClose()) {
-            assertTrue(hasNext())
-            assertEquals(events[0], next())
-            assertEquals(events[1], next())
-            assertEquals(events[2], next())
-        }}
-    }
-
-    @Test
-    fun testCopyMiddleNext() {
-        repeat(2, { iterator.next() })
-        using { with(iterator.copy().autoClose()) {
-            assertTrue(hasNext())
-            assertEquals(events[2], next())
-        }}
-    }
-
-    @Test
-    fun testCopyMiddleSeek() {
-        iterator.seek(events[2].timestamp)
-        using { with(iterator.copy().autoClose()) {
-            assertTrue(hasNext())
-            assertEquals(events[2], next())
-        }}
-    }
-
-    @Test
-    fun testCopyEnd() {
-        repeat(TRACE_NB_EVENTS, { iterator.next() })
-        assertFalse(iterator.hasNext())
-        using {
-            val iter2 = iterator.copy().autoClose()
-            assertFalse(iter2.hasNext())
-        }
-
-    }
-
-    @Test
-    fun testCopyOfCopy() {
-        using {
-            val copy1 = iterator.copy().autoClose()
-            val copy2 = copy1.copy().autoClose()
-
-            listOf(copy1, copy2).forEach {
-                with(it) {
-                    assertEquals(events[0], next())
-                    assertEquals(events[1], next())
-                    assertEquals(events[2], next())
-                    assertTrue(hasNext())
-                }
-            }
-        }
-    }
-
-    @Test
-    fun testUsedCopyOfCopy() {
-        iterator.seek(events[1].timestamp)
-        using {
-            val copy1 = iterator.copy().autoClose()
-            val copy2 = copy1.copy().autoClose()
-
-            listOf(copy1, copy2).forEach {
-                with(it) {
-                    assertEquals(events[1], next())
-                    assertEquals(events[2], next())
-                    assertTrue(hasNext())
-                }
-            }
-        }
-    }
-
-    @Test
-    fun testSeekAndCopy() {
-        using {
-            val iter1 = iterator
-            iter1.seek(events[2].timestamp)
-            val iter2 = iter1.copy().autoClose()
-            iter1.seek(lastEvent.timestamp)
-            iter2.seek(events[1].timestamp)
-
-            assertEquals(lastEvent, iter1.next())
-            assertEquals(events[1], iter2.next())
-        }
-    }
 }

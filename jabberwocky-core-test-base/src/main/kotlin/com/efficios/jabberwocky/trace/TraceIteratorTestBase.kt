@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) 2017 EfficiOS Inc., Alexandre Montplaisir <alexmonthy@efficios.com>
  *
@@ -12,15 +13,21 @@ package com.efficios.jabberwocky.trace
 import com.efficios.jabberwocky.trace.event.TraceEvent
 import com.efficios.jabberwocky.utils.using
 import org.junit.After
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
-import kotlin.test.assertFalse
 
-class TraceIteratorTest {
+abstract class TraceIteratorTestBase {
 
-    private val trace = TraceStubs.TraceStub1()
+    protected abstract val trace: Trace<TraceEvent>
+
+    protected abstract val event1: TraceEvent
+    protected abstract val event2: TraceEvent
+    protected abstract val event3: TraceEvent
+    protected abstract val lastEvent: TraceEvent
+
+    protected abstract val timestampBetween1and2: Long
+    protected abstract val timestampAfterEnd: Long
 
     private lateinit var iterator: TraceIterator<TraceEvent>
 
@@ -38,10 +45,9 @@ class TraceIteratorTest {
     fun testInitial() {
         with(iterator) {
             assertTrue(hasNext())
-            assertEquals(trace.events[0], next())
-            assertEquals(trace.events[1], next())
-            assertEquals(trace.events[2], next())
-            assertFalse(hasNext())
+            assertEquals(event1, next())
+            assertEquals(event2, next())
+            assertEquals(event3, next())
         }
     }
 
@@ -55,7 +61,7 @@ class TraceIteratorTest {
             /* Read some events, then seek back to the beginning */
             repeat(2, { next() })
             seek(0)
-            assertEquals(trace.events[0], next())
+            assertEquals(event1, next())
         }
     }
 
@@ -63,39 +69,39 @@ class TraceIteratorTest {
     fun testSeekAtBegin() {
         with(iterator) {
             repeat(2, { next() })
-            seek(trace.events[0].timestamp)
-            assertEquals(trace.events[0], next())
+            seek(event1.timestamp)
+            assertEquals(event1, next())
         }
     }
 
     @Test
     fun testSeekBetweenEvents() {
         with(iterator) {
-            seek(3)
-            assertEquals(trace.events[1], next())
+            seek(timestampBetween1and2)
+            assertEquals(event2, next())
         }
     }
 
     @Test
     fun testSeekAtEvent() {
         with(iterator) {
-            seek(trace.events[1].timestamp)
-            assertEquals(trace.events[1], next())
+            seek(event2.timestamp)
+            assertEquals(event2, next())
         }
     }
 
     @Test
     fun testSeekAtEnd() {
         with(iterator) {
-            seek(trace.events[2].timestamp)
-            assertEquals(trace.events[2], next())
+            seek(event3.timestamp)
+            assertEquals(event3, next())
         }
     }
 
     @Test
     fun testSeekAfterEnd() {
         with(iterator) {
-            seek(12)
+            seek(timestampAfterEnd)
             assertFalse(hasNext())
         }
     }
@@ -109,10 +115,9 @@ class TraceIteratorTest {
         using {
             with(iterator.copy().autoClose()) {
                 assertTrue(hasNext())
-                assertEquals(trace.events[0], next())
-                assertEquals(trace.events[1], next())
-                assertEquals(trace.events[2], next())
-                assertFalse(hasNext())
+                assertEquals(event1, next())
+                assertEquals(event2, next())
+                assertEquals(event3, next())
             }
         }
     }
@@ -122,26 +127,24 @@ class TraceIteratorTest {
         iterator.next()
         using { with(iterator.copy().autoClose()) {
             assertTrue(hasNext())
-            assertEquals(trace.events[1], next())
-            assertEquals(trace.events[2], next())
-            assertFalse(hasNext())
+            assertEquals(event2, next())
+            assertEquals(event3, next())
         }}
     }
 
     @Test
     fun testCopyMiddleSeek() {
-        iterator.seek(trace.events[1].timestamp)
+        iterator.seek(event2.timestamp)
         using { with(iterator.copy().autoClose()) {
             assertTrue(hasNext())
-            assertEquals(trace.events[1], next())
-            assertEquals(trace.events[2], next())
-            assertFalse(hasNext())
+            assertEquals(event2, next())
+            assertEquals(event3, next())
         }}
     }
 
     @Test
     fun testCopyEnd() {
-        repeat(3, { iterator.next() })
+        iterator.seek(timestampAfterEnd)
         using { with(iterator.copy().autoClose()) {
             assertFalse(hasNext())
         }}
@@ -156,10 +159,9 @@ class TraceIteratorTest {
             listOf(copy1, copy2).forEach {
                 // deal
                 with(it) {
-                    assertEquals(trace.events[0], next())
-                    assertEquals(trace.events[1], next())
-                    assertEquals(trace.events[2], next())
-                    assertFalse(hasNext())
+                    assertEquals(event1, next())
+                    assertEquals(event2, next())
+                    assertEquals(event3, next())
                 }
             }
         }
@@ -167,16 +169,15 @@ class TraceIteratorTest {
 
     @Test
     fun testUsedCopyOfCopy() {
-        iterator.seek(trace.events[1].timestamp)
+        iterator.seek(event2.timestamp)
         using {
             val copy1 = iterator.copy().autoClose()
             val copy2 = copy1.copy().autoClose()
 
             listOf(copy1, copy2).forEach {
                 with(it) {
-                    assertEquals(trace.events[1], next())
-                    assertEquals(trace.events[2], next())
-                    assertFalse(hasNext())
+                    assertEquals(event2, next())
+                    assertEquals(event3, next())
                 }
             }
         }
@@ -184,15 +185,16 @@ class TraceIteratorTest {
 
     @Test
     fun testSeekAndCopy() {
-        with(trace.events) { using {
+        using {
             val iter1 = iterator
-            iter1.seek(get(2).timestamp)
+            iter1.seek(event3.timestamp)
             val iter2 = iter1.copy().autoClose()
-            iter1.seek(last().timestamp)
-            iter2.seek(get(1).timestamp)
+            iter1.seek(lastEvent.timestamp)
+            iter2.seek(event2.timestamp)
 
-            assertEquals(last(), iter1.next())
-            assertEquals(get(1), iter2.next())
-        }}
+            assertEquals(lastEvent, iter1.next())
+            assertEquals(event2, iter2.next())
+        }
     }
+
 }

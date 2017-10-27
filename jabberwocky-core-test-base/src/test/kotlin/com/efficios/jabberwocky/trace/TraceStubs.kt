@@ -13,7 +13,7 @@ import com.efficios.jabberwocky.trace.event.BaseTraceEvent
 import com.efficios.jabberwocky.trace.event.TraceEvent
 import com.google.common.collect.Iterators
 
-internal class TraceStubs {
+class TraceStubs {
 
     companion object {
         const val EVENT_NAME_A = "EventA"
@@ -54,7 +54,7 @@ internal class TraceStubs {
 
     abstract class TraceStubBase() : Trace<TraceEvent>() {
 
-        internal abstract val events: List<TraceEvent>
+        abstract val events: List<TraceEvent>
 
         final override fun iterator(): TraceIterator<TraceEvent> {
             return TraceStubIterator(this)
