@@ -19,10 +19,10 @@
     <version>0.2.31-SNAPSHOT</version>
   </parent>
 
-  <artifactId>jabberwocky-ctf</artifactId>
+  <artifactId>jabberwocky-core-test-base</artifactId>
   <packaging>jar</packaging>
 
-  <name>Common Trace Format (CTF) Support for Jabberwocky</name>
+  <name>Jabberwocky Trace Analysis Library Common Tests Package</name>
 
   <dependencies>
     <dependency>
@@ -36,22 +36,12 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.tracecompass.testtraces</groupId>
-      <artifactId>tracecompass-test-traces-ctf</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.tracecompass</groupId>
-      <artifactId>ctfreader</artifactId>
+      <!-- Override the scope here since we have test classes in src/main/* -->
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.efficios.jabberwocky</groupId>
       <artifactId>jabberwocky-core</artifactId>
-    </dependency>
-        <dependency>
-      <groupId>com.efficios.jabberwocky</groupId>
-      <artifactId>jabberwocky-core-test-base</artifactId>
     </dependency>
   </dependencies>
 

@@ -38,6 +38,7 @@
 
   <modules>
     <module>jabberwocky-core</module>
+    <module>jabberwocky-core-test-base</module>
     <module>jabberwocky-ctf</module>
     <module>jabberwocky-lttng</module>
 
@@ -70,6 +71,13 @@
         <groupId>com.efficios.jabberwocky</groupId>
         <artifactId>jabberwocky-ctf</artifactId>
         <version>0.2.31-SNAPSHOT</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.efficios.jabberwocky</groupId>
+        <artifactId>jabberwocky-core-test-base</artifactId>
+        <version>0.2.31-SNAPSHOT</version>
+        <scope>test</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
