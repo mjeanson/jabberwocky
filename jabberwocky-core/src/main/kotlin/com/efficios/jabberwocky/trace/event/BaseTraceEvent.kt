@@ -12,6 +12,7 @@ package com.efficios.jabberwocky.trace.event
 import com.efficios.jabberwocky.trace.Trace
 import com.google.common.base.MoreObjects
 import com.google.common.collect.ImmutableMap
+import java.text.NumberFormat
 import java.util.*
 
 open class BaseTraceEvent(@Transient override val trace: Trace<TraceEvent>,
@@ -60,7 +61,7 @@ open class BaseTraceEvent(@Transient override val trace: Trace<TraceEvent>,
 
     override fun toString(): String {
         return MoreObjects.toStringHelper(this)
-                .add("timestamp", timestamp) //$NON-NLS-1$
+                .add("timestamp", NumberFormat.getInstance().format(timestamp)) //$NON-NLS-1$
                 .add("event name", eventName) //$NON-NLS-1$
                 .add("cpu", cpu) //$NON-NLS-1$
                 .add("fields", fEventFields) //$NON-NLS-1$
