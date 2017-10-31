@@ -10,12 +10,9 @@
 package com.efficios.jabberwocky.trace
 
 import com.efficios.jabberwocky.trace.event.TraceEvent
+import com.efficios.jabberwocky.utils.RewindingIterator
 
-interface TraceIterator<out E : TraceEvent> : Iterator<E>, AutoCloseable {
-
-    fun hasPrevious(): Boolean
-
-    fun previous(): E
+interface TraceIterator<out E : TraceEvent> : RewindingIterator<E>, AutoCloseable {
 
     /**
      * Bring this iterator to the first event with the given timestamp.
