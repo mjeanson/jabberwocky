@@ -21,7 +21,7 @@
 
   <groupId>com.efficios.jabberwocky</groupId>
   <artifactId>jabberwocky-parent</artifactId>
-  <version>0.2.31-SNAPSHOT</version>
+  <version>0.2.32-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <repositories>
@@ -64,19 +64,19 @@
       <dependency>
         <groupId>com.efficios.jabberwocky</groupId>
         <artifactId>jabberwocky-core</artifactId>
-        <version>0.2.31-SNAPSHOT</version>
+        <version>0.2.32-SNAPSHOT</version>
       </dependency>
 
       <dependency>
         <groupId>com.efficios.jabberwocky</groupId>
         <artifactId>jabberwocky-ctf</artifactId>
-        <version>0.2.31-SNAPSHOT</version>
+        <version>0.2.32-SNAPSHOT</version>
       </dependency>
 
       <dependency>
         <groupId>com.efficios.jabberwocky</groupId>
         <artifactId>jabberwocky-core-test-base</artifactId>
-        <version>0.2.31-SNAPSHOT</version>
+        <version>0.2.32-SNAPSHOT</version>
         <scope>test</scope>
       </dependency>
     </dependencies>
