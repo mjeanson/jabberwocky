@@ -15,4 +15,7 @@ import com.efficios.jabberwocky.utils.RewindingIterator
 interface TraceProjectIterator<out E : TraceEvent> : RewindingIterator<E>, AutoCloseable {
 
     fun seek(timestamp: Long)
+
+    /** Overridden to explicitly not throw any exception. */
+    override fun close()
 }

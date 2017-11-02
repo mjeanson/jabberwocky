@@ -17,4 +17,6 @@ interface TraceCollectionIterator<out E : TraceEvent> : RewindingIterator<E>, Au
     /** Seek this iterator to the given timestamp for all traces. */
     fun seek(timestamp: Long)
 
+    /** Overridden to explicitly not throw any exception. */
+    override fun close()
 }
