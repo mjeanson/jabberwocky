@@ -10,8 +10,9 @@
 package com.efficios.jabberwocky.collection
 
 import com.efficios.jabberwocky.trace.event.TraceEvent
+import com.efficios.jabberwocky.utils.RewindingIterator
 
-interface TraceCollectionIterator<out E : TraceEvent> : Iterator<E>, AutoCloseable {
+interface TraceCollectionIterator<out E : TraceEvent> : RewindingIterator<E>, AutoCloseable {
 
     override fun close()
 

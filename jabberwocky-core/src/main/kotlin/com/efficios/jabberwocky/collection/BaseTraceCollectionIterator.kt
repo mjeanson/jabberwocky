@@ -12,11 +12,12 @@ package com.efficios.jabberwocky.collection
 import com.efficios.jabberwocky.trace.Trace
 import com.efficios.jabberwocky.trace.TraceIterator
 import com.efficios.jabberwocky.trace.event.TraceEvent
+import com.efficios.jabberwocky.utils.RewindingSortedCompoundIterator
 import com.efficios.jabberwocky.utils.SortedCompoundIterator
 import java.util.*
 
 class BaseTraceCollectionIterator<out E : TraceEvent> (traceCollection: TraceCollection<E, Trace<E>>) :
-        SortedCompoundIterator<E, TraceIterator<E>>(traceCollection.traces.map { it.iterator() }, compareBy { event -> event.timestamp }),
+        RewindingSortedCompoundIterator<E, TraceIterator<E>>(traceCollection.traces.map { it.iterator() }, compareBy { event -> event.timestamp }),
         TraceCollectionIterator<E> {
 
     override fun close() {
