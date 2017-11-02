@@ -19,6 +19,11 @@ class BaseTraceProjectIterator<out E : TraceEvent>(project: TraceProject<E, Trac
         RewindingSortedCompoundIterator<E, TraceCollectionIterator<E>>(project.traceCollections.map { it.iterator() }, compareBy { event -> event.timestamp }),
         TraceProjectIterator<E> {
 
+    override fun seek(timestamp: Long) {
+        iterators.forEach { it.seek(timestamp) }
+        clearCaches()
+    }
+
     override fun close() {
         iterators.forEach { it.close() }
     }

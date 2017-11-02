@@ -20,6 +20,11 @@ class BaseTraceCollectionIterator<out E : TraceEvent> (traceCollection: TraceCol
         RewindingSortedCompoundIterator<E, TraceIterator<E>>(traceCollection.traces.map { it.iterator() }, compareBy { event -> event.timestamp }),
         TraceCollectionIterator<E> {
 
+    override fun seek(timestamp: Long) {
+        iterators.forEach { it.seek(timestamp) }
+        clearCaches()
+    }
+
     override fun close() {
         iterators.forEach { it.close() }
     }

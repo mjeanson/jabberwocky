@@ -14,6 +14,7 @@ import com.efficios.jabberwocky.utils.RewindingIterator
 
 interface TraceCollectionIterator<out E : TraceEvent> : RewindingIterator<E>, AutoCloseable {
 
-    override fun close()
+    /** Seek this iterator to the given timestamp for all traces. */
+    fun seek(timestamp: Long)
 
 }
