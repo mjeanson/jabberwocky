@@ -22,4 +22,10 @@ interface TraceIterator<out E : TraceEvent> : RewindingIterator<E>, AutoCloseabl
 
     /** Return a new iterator at the exact same position as this one. */
     fun copy(): TraceIterator<E>
+
+    /**
+     * Close this iterator.
+     * Overridden to not throw any exception.
+     */
+    override fun close()
 }
