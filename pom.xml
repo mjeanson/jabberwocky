@@ -42,6 +42,7 @@
     <module>jabberwocky-ctf</module>
     <module>jabberwocky-lttng</module>
 
+    <module>jabberwockd</module>
     <module>javeltrace</module>
   </modules>
 
