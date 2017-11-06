@@ -64,7 +64,7 @@ class TraceStubs {
     }
 
     class TraceStub1 : TraceStubBase() {
-
+        override val name = "TraceStub1"
         override val events = listOf(
                 BaseTraceEvent(this, 2, 0, EVENT_NAME_A, emptyMap(), null),
                 BaseTraceEvent(this, 5, 0, EVENT_NAME_B, emptyMap(), null),
@@ -72,7 +72,7 @@ class TraceStubs {
     }
 
     class TraceStub2 : TraceStubBase() {
-
+        override val name = "TraceStub2"
         override val events = listOf(
                 BaseTraceEvent(this, 4, 1, EVENT_NAME_B, emptyMap(), null),
                 BaseTraceEvent(this, 6, 0, EVENT_NAME_B, emptyMap(), null),
@@ -82,6 +82,7 @@ class TraceStubs {
 
     /** Trace with identical events going from ts 100 to 200, every 2 units */
     class TraceStub3 : TraceStubBase() {
+        override val name = "TraceStub3"
         override val events = (100L..200L step 2).map { BaseTraceEvent(this, it, 0, EVENT_NAME_A, emptyMap(), null) }
     }
 }

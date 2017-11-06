@@ -25,6 +25,8 @@ class CtfTrace(val tracePath: Path) : Trace<CtfTraceEvent>() {
         throw TraceInitializationException(e)
     }
 
+    override val name = tracePath.fileName.toString()
+
     override fun iterator(): CtfTraceIterator {
         return CtfTraceIterator(this)
     }

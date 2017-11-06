@@ -5,6 +5,8 @@ import com.google.common.collect.Iterators
 
 abstract class Trace<out E : TraceEvent> {
 
+    abstract val name: String
+
     /* Lazy-load the start time by reading the timestamp of the first event. */
     val startTime: Long by lazy {
         var startTime: Long = 0L
