@@ -13,8 +13,7 @@
 package com.efficios.jabberwocky.lttng.kernel.analysis.os;
 
 import ca.polymtl.dorsal.libdelorean.IStateSystemReader;
-import com.efficios.jabberwocky.lttng.testutils.ExtractedGenericCtfTestTrace;
-import com.efficios.jabberwocky.lttng.testutils.ExtractedLttngKernelTestTrace;
+import com.efficios.jabberwocky.lttng.testutils.ExtractedCtfTestTrace;
 import com.efficios.jabberwocky.project.TraceProject;
 import com.google.common.io.MoreFiles;
 import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace;
@@ -40,9 +39,9 @@ import static org.junit.Assert.*;
 public class KernelAnalysisTest {
 
     @ClassRule
-    public static final ExtractedLttngKernelTestTrace KERNEL_TRACE = new ExtractedLttngKernelTestTrace(CtfTestTrace.KERNEL);
+    public static final ExtractedCtfTestTrace KERNEL_TRACE = new ExtractedCtfTestTrace(CtfTestTrace.KERNEL);
     @ClassRule
-    public static final ExtractedGenericCtfTestTrace NON_KERNEL_TRACE = new ExtractedGenericCtfTestTrace(CtfTestTrace.CYG_PROFILE);
+    public static final ExtractedCtfTestTrace NON_KERNEL_TRACE = new ExtractedCtfTestTrace(CtfTestTrace.CYG_PROFILE);
 
     private static final String PROJECT_NAME = "test-proj";
     private static final KernelAnalysis ANALYSIS = KernelAnalysis.instance();
@@ -66,7 +65,7 @@ public class KernelAnalysisTest {
             fail(e.getMessage());
         }
 
-        kernelProject = TraceProject.ofSingleTrace(PROJECT_NAME, kernelProjectPath,  KERNEL_TRACE.getTrace());
+        kernelProject = TraceProject.ofSingleTrace(PROJECT_NAME, kernelProjectPath, KERNEL_TRACE.getTrace());
         nonKernelProject = TraceProject.ofSingleTrace(PROJECT_NAME, nonKernelProjectPath, NON_KERNEL_TRACE.getTrace());
     }
 

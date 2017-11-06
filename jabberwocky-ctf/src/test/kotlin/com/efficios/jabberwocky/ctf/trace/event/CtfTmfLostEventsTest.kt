@@ -12,17 +12,13 @@
 
 package com.efficios.jabberwocky.ctf.trace.event
 
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
-
+import com.efficios.jabberwocky.ctf.trace.CtfTrace
+import com.efficios.jabberwocky.ctf.trace.ExtractedCtfTestTrace
+import com.efficios.jabberwocky.trace.event.TraceLostEvent
 import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
+import org.junit.Assert.*
 import org.junit.ClassRule
 import org.junit.Test
-
-import com.efficios.jabberwocky.ctf.trace.ExtractedCtfTestTrace
-import com.efficios.jabberwocky.ctf.trace.generic.GenericCtfTrace
-import com.efficios.jabberwocky.trace.event.TraceLostEvent
 
 /**
  * Tests to verify that lost events are handled correctly.
@@ -40,10 +36,12 @@ class CtfTmfLostEventsTest {
 
     companion object {
 
-        @JvmField @ClassRule
+        @JvmField
+        @ClassRule
         val HELLO_LOST_TT = ExtractedCtfTestTrace(CtfTestTrace.HELLO_LOST)
 
-        @JvmField @ClassRule
+        @JvmField
+        @ClassRule
         val DYNSCOPE_TT = ExtractedCtfTestTrace(CtfTestTrace.DYNSCOPE)
     }
 
@@ -129,7 +127,7 @@ class CtfTmfLostEventsTest {
     // Event requests
     // ------------------------------------------------------------------------
 
-    private class EventCountRequest(trace: GenericCtfTrace) {
+    private class EventCountRequest(trace: CtfTrace) {
 
         var real: Long = 0
             private set
@@ -150,7 +148,7 @@ class CtfTmfLostEventsTest {
         }
     }
 
-    private fun validateLostEvent(trace: GenericCtfTrace, rank: Long, start: Long, end: Long, nbLost: Long) {
+    private fun validateLostEvent(trace: CtfTrace, rank: Long, start: Long, end: Long, nbLost: Long) {
         val ev = getLostEventAtTimestamp(trace, start)
         /* Make sure seeking by rank yields the same event */
         val ev2 = getEventAtRank(trace, rank)
@@ -165,7 +163,7 @@ class CtfTmfLostEventsTest {
         assertEquals(nbLost, event.nbLostEvents)
     }
 
-    private fun getEventAtTimestamp(trace: GenericCtfTrace, timestamp: Long): CtfTraceEvent {
+    private fun getEventAtTimestamp(trace: CtfTrace, timestamp: Long): CtfTraceEvent {
         trace.iterator().use({ iter ->
             while (iter.hasNext()) {
                 val event = iter.next()
@@ -177,7 +175,7 @@ class CtfTmfLostEventsTest {
         throw IllegalArgumentException("No event with timestamp $timestamp found.")
     }
 
-    private fun getLostEventAtTimestamp(trace: GenericCtfTrace, timestamp: Long): CtfTraceEvent {
+    private fun getLostEventAtTimestamp(trace: CtfTrace, timestamp: Long): CtfTraceEvent {
         trace.iterator().use({ iter ->
             while (iter.hasNext()) {
                 val event = iter.next()
@@ -189,7 +187,7 @@ class CtfTmfLostEventsTest {
         throw IllegalArgumentException("No event with timestamp $timestamp found.")
     }
 
-    private fun getEventAtRank(trace: GenericCtfTrace, rank: Long): CtfTraceEvent {
+    private fun getEventAtRank(trace: CtfTrace, rank: Long): CtfTraceEvent {
         trace.iterator().use({ iter ->
             for (remaining in rank downTo 1) {
                 iter.next()

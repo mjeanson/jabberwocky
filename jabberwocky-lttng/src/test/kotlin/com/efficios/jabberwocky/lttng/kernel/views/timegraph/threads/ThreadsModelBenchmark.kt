@@ -12,7 +12,7 @@
 package com.efficios.jabberwocky.lttng.kernel.views.timegraph.threads
 
 import com.efficios.jabberwocky.common.TimeRange
-import com.efficios.jabberwocky.lttng.kernel.trace.LttngKernelTrace
+import com.efficios.jabberwocky.ctf.trace.CtfTrace
 import com.efficios.jabberwocky.project.TraceProject
 import com.efficios.jabberwocky.views.timegraph.model.provider.states.TimeGraphModelStateProvider
 import com.efficios.jabberwocky.views.timegraph.model.render.states.TimeGraphStateRender
@@ -63,7 +63,7 @@ fun main(args: Array<String>) {
 
     /* Setup the trace and project */
     val projectPath = Files.createTempDirectory(PROJECT_NAME)
-    val trace = LttngKernelTrace(Paths.get(tracePath))
+    val trace = CtfTrace(Paths.get(tracePath))
     println("Creating project from trace $tracePath")
     val traceProject = TraceProject.ofSingleTrace(PROJECT_NAME, projectPath, trace)
 

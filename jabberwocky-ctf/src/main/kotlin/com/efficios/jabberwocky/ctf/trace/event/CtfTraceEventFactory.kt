@@ -7,28 +7,23 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package com.efficios.jabberwocky.ctf.trace.generic
+package com.efficios.jabberwocky.ctf.trace.event
 
 import com.efficios.jabberwocky.ctf.trace.CtfTrace
+import com.efficios.jabberwocky.trace.event.FieldValue
+import com.google.common.collect.ImmutableMap
 import org.eclipse.tracecompass.ctf.core.CTFStrings
 import org.eclipse.tracecompass.ctf.core.event.IEventDefinition
 import org.eclipse.tracecompass.ctf.core.event.types.IntegerDefinition
 
-import com.efficios.jabberwocky.ctf.trace.event.CtfTraceEvent
-import com.efficios.jabberwocky.ctf.trace.event.CtfTraceEventFieldParser
-import com.efficios.jabberwocky.ctf.trace.event.CtfTraceLostEvent
-import com.efficios.jabberwocky.ctf.trace.event.ICtfTraceEventFactory
-import com.efficios.jabberwocky.trace.event.FieldValue
-import com.google.common.collect.ImmutableMap
-
-class GenericCtfTraceEventFactory(private val trace: CtfTrace<CtfTraceEvent>) : ICtfTraceEventFactory<CtfTraceEvent> {
+class CtfTraceEventFactory(private val trace: CtfTrace) {
 
     companion object {
         private const val UNDERSCORE = "_"
         private const val CONTEXT_FIELD_PREFIX = "context."
     }
 
-    override fun createEvent(eventDef: IEventDefinition): CtfTraceEvent {
+    fun createEvent(eventDef: IEventDefinition): CtfTraceEvent {
         /* lib quirk, eventDef.getTimestamp() actually returns a cycle count... */
         val cycles = eventDef.getTimestamp()
         val ts = trace.innerTrace.timestampCyclesToNanos(cycles)

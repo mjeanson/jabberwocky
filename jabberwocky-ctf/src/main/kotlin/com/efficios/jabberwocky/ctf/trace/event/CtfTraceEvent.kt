@@ -11,10 +11,9 @@ package com.efficios.jabberwocky.ctf.trace.event
 
 import com.efficios.jabberwocky.ctf.trace.CtfTrace
 import com.efficios.jabberwocky.trace.event.BaseTraceEvent
-import com.efficios.jabberwocky.trace.event.TraceEvent
 import com.efficios.jabberwocky.trace.event.FieldValue
 
-open class CtfTraceEvent(trace: CtfTrace<CtfTraceEvent>,
+open class CtfTraceEvent(override val trace: CtfTrace,
                          timestamp: Long,
                          cpu: Int,
                          eventName: String,

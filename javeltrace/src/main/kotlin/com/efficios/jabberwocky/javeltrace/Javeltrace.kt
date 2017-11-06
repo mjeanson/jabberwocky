@@ -8,11 +8,11 @@
  */
 
 @file:JvmName("Javeltrace")
-package com.efficios.jabberwocky.javeltrace;
+
+package com.efficios.jabberwocky.javeltrace
 
 import com.efficios.jabberwocky.ctf.trace.CtfTrace
 import com.efficios.jabberwocky.ctf.trace.event.CtfTraceEvent
-import com.efficios.jabberwocky.ctf.trace.generic.GenericCtfTrace
 import com.efficios.jabberwocky.project.TraceProject
 import com.efficios.jabberwocky.trace.event.FieldValue
 import java.nio.file.Files
@@ -36,7 +36,7 @@ fun main(args: Array<String>) {
     val projectPath = Files.createTempDirectory("javeltrace-working-dir")
 
     /* Create the trace project */
-    val trace = GenericCtfTrace(Paths.get(tracePath))
+    val trace = CtfTrace(Paths.get(tracePath))
     val project = TraceProject.ofSingleTrace("MyProject", projectPath, trace)
 
     /* Retrieve an iterator on the project and read its events. */
@@ -57,14 +57,14 @@ fun main(args: Array<String>) {
     projectPath.toFile().deleteRecursively()
 }
 
-private fun printEvent(trace: CtfTrace<CtfTraceEvent>, event: CtfTraceEvent, offset: Long) {
+private fun printEvent(trace: CtfTrace, event: CtfTraceEvent, offset: Long) {
     val ts = event.timestamp
     // TODO Correct the timestamp
 //    val ts2 = trace.innerTrace.timestampCyclesToNanos(ts)
 //    val timestampStr = TS_FORMAT.format(ts2)
 //    val offsetStr = TS_FORMAT.format(offset)
     val timestampStr = ts.toString()
-    val offsetStr = String.format("%09d", offset);
+    val offsetStr = String.format("%09d", offset)
 
     val sj = StringJoiner(" ")
             .add("[$timestampStr]")

@@ -9,31 +9,36 @@
 
 package com.efficios.jabberwocky.lttng.ust.trace
 
-import com.efficios.jabberwocky.lttng.testutils.ExtractedGenericCtfTestTrace
-import com.efficios.jabberwocky.lttng.testutils.ExtractedLttngUstTestTrace
-import com.efficios.jabberwocky.trace.TraceInitializationException
+import com.efficios.jabberwocky.ctf.trace.CtfTrace
+import com.efficios.jabberwocky.lttng.testutils.ExtractedCtfTestTrace
 import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.ClassRule
 import org.junit.Test
 
-class LttngUstTraceTest {
+class LttngUstTraceUtilsTest {
 
     companion object {
-        @JvmField @ClassRule
-        val KERNEL_TRACE = ExtractedGenericCtfTestTrace(CtfTestTrace.KERNEL)
-        @JvmField @ClassRule
-        val UST_TRACE = ExtractedLttngUstTestTrace(CtfTestTrace.CYG_PROFILE)
+        @JvmField
+        @ClassRule
+        val KERNEL_TRACE = ExtractedCtfTestTrace(CtfTestTrace.KERNEL)
+        @JvmField
+        @ClassRule
+        val UST_TRACE = ExtractedCtfTestTrace(CtfTestTrace.CYG_PROFILE)
     }
 
     @Test
     fun testOpeningKernelTrace() {
         val path = UST_TRACE.trace.tracePath
-        LttngUstTrace(path)
+        val trace = CtfTrace(path)
+        assertTrue(trace.isUstTrace())
     }
 
-    @Test(expected = TraceInitializationException::class)
+    @Test
     fun testOpeningNonKernelTrace() {
         val path = KERNEL_TRACE.trace.tracePath
-        LttngUstTrace(path)
+        val trace = CtfTrace(path)
+        assertFalse(trace.isUstTrace())
     }
 }

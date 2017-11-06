@@ -10,9 +10,9 @@
 package com.efficios.jabberwocky.ctf.collection
 
 import com.efficios.jabberwocky.collection.TraceCollection
+import com.efficios.jabberwocky.ctf.trace.CtfTrace
 import com.efficios.jabberwocky.ctf.trace.ExtractedCtfTestTrace
 import com.efficios.jabberwocky.ctf.trace.event.CtfTraceEvent
-import com.efficios.jabberwocky.ctf.trace.generic.GenericCtfTrace
 import com.efficios.jabberwocky.project.TraceProject
 import com.efficios.jabberwocky.trace.event.FieldValue
 import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
@@ -43,7 +43,7 @@ class CtfTraceProjectTest {
     }
 
     private lateinit var projectPath: Path
-    private lateinit var fixture: TraceProject<CtfTraceEvent, GenericCtfTrace>
+    private lateinit var fixture: TraceProject<CtfTraceEvent, CtfTrace>
 
     @Before
     fun setup() {

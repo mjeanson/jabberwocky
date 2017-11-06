@@ -8,15 +8,13 @@
  */
 
 @file:JvmName("XYChartExample")
+
 package com.efficios.jabberwocky.javeltrace
 
 import com.efficios.jabberwocky.analysis.eventstats.EventStatsXYChartProvider
 import com.efficios.jabberwocky.common.TimeRange
-import com.efficios.jabberwocky.ctf.trace.generic.GenericCtfTrace
-import com.efficios.jabberwocky.lttng.kernel.trace.LttngKernelTrace
-import com.efficios.jabberwocky.lttng.kernel.views.timegraph.threads.ThreadsModelProvider
+import com.efficios.jabberwocky.ctf.trace.CtfTrace
 import com.efficios.jabberwocky.project.TraceProject
-import com.efficios.jabberwocky.views.timegraph.view.json.RenderToJson
 import com.efficios.jabberwocky.views.xychart.view.json.XYChartJsonOutput
 import com.google.common.primitives.Longs
 import java.nio.file.Files
@@ -43,7 +41,7 @@ fun main(args: Array<String>) {
 
     /* Create the trace project */
     val projectPath = Files.createTempDirectory("project")
-    val trace = GenericCtfTrace(Paths.get(tracePath))
+    val trace = CtfTrace(Paths.get(tracePath))
     val project = TraceProject.ofSingleTrace("MyProject", projectPath, trace)
 
     val range = TimeRange.of(project.startTime, project.endTime)

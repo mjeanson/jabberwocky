@@ -12,17 +12,17 @@ package com.efficios.jabberwocky.ctf.trace
 import com.efficios.jabberwocky.ctf.trace.event.CtfTraceEvent
 import com.google.common.primitives.Ints
 
-fun <E : CtfTraceEvent> CtfTrace<E>.getTracerName(): String? {
+fun CtfTrace.getTracerName(): String? {
     /* Remove the "" at the start and end of the string */
     return environment["tracer_name"]?.replace("^\"|\"$".toRegex(), "")
 }
 
-fun <E : CtfTraceEvent> CtfTrace<E>.getTracerMajorVersion(): Int? {
+fun CtfTrace.getTracerMajorVersion(): Int? {
     val str = environment["tracer_major"] ?: return null
     return Ints.tryParse(str)
 }
 
-fun <E : CtfTraceEvent> CtfTrace<E>.getTracerMinorVersion(): Int? {
+fun CtfTrace.getTracerMinorVersion(): Int? {
     val str = environment["tracer_minor"] ?: return null
     return Ints.tryParse(str)
 }

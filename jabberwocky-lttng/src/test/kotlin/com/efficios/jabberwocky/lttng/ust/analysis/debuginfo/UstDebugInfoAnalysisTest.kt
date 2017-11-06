@@ -9,8 +9,7 @@
 
 package com.efficios.jabberwocky.lttng.ust.analysis.debuginfo
 
-import com.efficios.jabberwocky.lttng.testutils.ExtractedGenericCtfTestTrace
-import com.efficios.jabberwocky.lttng.testutils.ExtractedLttngUstTestTrace
+import com.efficios.jabberwocky.lttng.testutils.ExtractedCtfTestTrace
 import com.efficios.jabberwocky.project.TraceProject
 import com.efficios.jabberwocky.trace.Trace
 import com.efficios.jabberwocky.trace.event.TraceEvent
@@ -28,18 +27,24 @@ import kotlin.test.*
 class UstDebugInfoAnalysisTest {
 
     companion object {
-        @JvmField @ClassRule
-        val REAL_TEST_TRACE = ExtractedLttngUstTestTrace(CtfTestTrace.DEBUG_INFO4)
-        @JvmField @ClassRule
-        val SYNTH_EXEC_TRACE = ExtractedLttngUstTestTrace(CtfTestTrace.DEBUG_INFO_SYNTH_EXEC)
-        @JvmField @ClassRule
-        val SYNTH_TWO_PROCESSES_TRACE = ExtractedLttngUstTestTrace(CtfTestTrace.DEBUG_INFO_SYNTH_TWO_PROCESSES)
-        @JvmField @ClassRule
-        val SYNTH_BUILDID_DEBUGLINK_TRACE = ExtractedLttngUstTestTrace(CtfTestTrace.DEBUG_INFO_SYNTH_BUILDID_DEBUGLINK)
-        @JvmField @ClassRule
-        val INVALID_TRACE = ExtractedLttngUstTestTrace(CtfTestTrace.CYG_PROFILE)
-        @JvmField @ClassRule
-        val NON_UST_TRACE = ExtractedGenericCtfTestTrace(CtfTestTrace.KERNEL)
+        @JvmField
+        @ClassRule
+        val REAL_TEST_TRACE = ExtractedCtfTestTrace(CtfTestTrace.DEBUG_INFO4)
+        @JvmField
+        @ClassRule
+        val SYNTH_EXEC_TRACE = ExtractedCtfTestTrace(CtfTestTrace.DEBUG_INFO_SYNTH_EXEC)
+        @JvmField
+        @ClassRule
+        val SYNTH_TWO_PROCESSES_TRACE = ExtractedCtfTestTrace(CtfTestTrace.DEBUG_INFO_SYNTH_TWO_PROCESSES)
+        @JvmField
+        @ClassRule
+        val SYNTH_BUILDID_DEBUGLINK_TRACE = ExtractedCtfTestTrace(CtfTestTrace.DEBUG_INFO_SYNTH_BUILDID_DEBUGLINK)
+        @JvmField
+        @ClassRule
+        val INVALID_TRACE = ExtractedCtfTestTrace(CtfTestTrace.CYG_PROFILE)
+        @JvmField
+        @ClassRule
+        val NON_UST_TRACE = ExtractedCtfTestTrace(CtfTestTrace.KERNEL)
 
         private const val PROJECT_NAME = "debug-info-test-project"
     }
@@ -47,7 +52,7 @@ class UstDebugInfoAnalysisTest {
     private val analysis = UstDebugInfoAnalysis.instance()
 
 
-    private fun <E: TraceEvent, T : Trace<E>> createProject(trace: T): TraceProject<E, T> {
+    private fun <E : TraceEvent, T : Trace<E>> createProject(trace: T): TraceProject<E, T> {
         val projectPath = Files.createTempDirectory(PROJECT_NAME)
         return TraceProject.ofSingleTrace(PROJECT_NAME, projectPath, trace)
     }
@@ -110,14 +115,14 @@ class UstDebugInfoAnalysisTest {
     fun testBinaryCallsites() {
         val project = createProject(REAL_TEST_TRACE.trace)
         val ss = analysis.execute(project, null, null)
-        val results =  UstDebugInfoAnalysisResults(ss)
+        val results = UstDebugInfoAnalysisResults(ss)
 
         /* We want the 32nd(?) event */
         val event = project.iterator().use { it.asSequence().drop(31).first() }
 
         /* Tests that the aspects are resolved correctly */
         val actual = results.getCallsiteOfEvent(event)?.toString()
-        val expected = "/home/simark/src/babeltrace/tests/debug-info-data/libhello_so+0x14d4";
+        val expected = "/home/simark/src/babeltrace/tests/debug-info-data/libhello_so+0x14d4"
         assertEquals(expected, actual)
 
         disposeProject(project)
@@ -132,7 +137,7 @@ class UstDebugInfoAnalysisTest {
 
         val project = createProject(SYNTH_EXEC_TRACE.trace)
         val ss = analysis.execute(project, null, null)
-        val results =  UstDebugInfoAnalysisResults(ss)
+        val results = UstDebugInfoAnalysisResults(ss)
 
         val expected1 = UstDebugInfoLoadedBinaryFile(0x400000, "/tmp/foo", null, null, false)
         val matchingFile1 = results.getMatchingFile(4000000, vpid, 0x400100)
@@ -159,7 +164,7 @@ class UstDebugInfoAnalysisTest {
 
         val project = createProject(SYNTH_TWO_PROCESSES_TRACE.trace)
         val ss = analysis.execute(project, null, null)
-        val results =  UstDebugInfoAnalysisResults(ss)
+        val results = UstDebugInfoAnalysisResults(ss)
 
         val expected1 = UstDebugInfoLoadedBinaryFile(0x400000, "/tmp/foo",
                 "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "/tmp/debuglink1", false)

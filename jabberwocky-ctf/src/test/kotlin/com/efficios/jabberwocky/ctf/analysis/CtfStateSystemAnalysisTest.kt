@@ -14,9 +14,9 @@ import ca.polymtl.dorsal.libdelorean.IStateSystemWriter
 import ca.polymtl.dorsal.libdelorean.statevalue.IntegerStateValue
 import com.efficios.jabberwocky.analysis.statesystem.StateSystemAnalysis
 import com.efficios.jabberwocky.collection.TraceCollection
+import com.efficios.jabberwocky.ctf.trace.CtfTrace
 import com.efficios.jabberwocky.ctf.trace.ExtractedCtfTestTrace
 import com.efficios.jabberwocky.ctf.trace.event.CtfTraceEvent
-import com.efficios.jabberwocky.ctf.trace.generic.GenericCtfTrace
 import com.efficios.jabberwocky.project.TraceProject
 import com.efficios.jabberwocky.trace.event.TraceEvent
 import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
@@ -31,13 +31,16 @@ import java.nio.file.Path
 class CtfStateSystemAnalysisTest {
 
     companion object {
-        @JvmField @ClassRule
+        @JvmField
+        @ClassRule
         val ETT1 = ExtractedCtfTestTrace(CtfTestTrace.KERNEL)
 
-        @JvmField @ClassRule
+        @JvmField
+        @ClassRule
         val ETT2 = ExtractedCtfTestTrace(CtfTestTrace.TRACE2)
 
-        @JvmField @ClassRule
+        @JvmField
+        @ClassRule
         val ETT3 = ExtractedCtfTestTrace(CtfTestTrace.KERNEL_VM)
 
         private val projectName = "Test-statesystem-project"
@@ -45,9 +48,9 @@ class CtfStateSystemAnalysisTest {
     }
 
     private lateinit var projectPath: Path
-    private lateinit var project: TraceProject<CtfTraceEvent, GenericCtfTrace>
+    private lateinit var project: TraceProject<CtfTraceEvent, CtfTrace>
 
-    private lateinit var ss : IStateSystemReader
+    private lateinit var ss: IStateSystemReader
 
     @Before
     fun setup() {

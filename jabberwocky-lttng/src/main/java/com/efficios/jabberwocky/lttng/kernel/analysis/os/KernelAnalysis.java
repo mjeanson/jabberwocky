@@ -17,8 +17,9 @@ import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
 import ca.polymtl.dorsal.libdelorean.exceptions.TimeRangeException;
 import com.efficios.jabberwocky.analysis.statesystem.StateSystemAnalysis;
 import com.efficios.jabberwocky.collection.TraceCollection;
+import com.efficios.jabberwocky.ctf.trace.CtfTrace;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.handlers.KernelEventHandler;
-import com.efficios.jabberwocky.lttng.kernel.trace.LttngKernelTrace;
+import com.efficios.jabberwocky.lttng.kernel.trace.LttngKernelTraceUtilsKt;
 import com.efficios.jabberwocky.lttng.kernel.trace.layout.ILttngKernelEventLayout;
 import com.efficios.jabberwocky.project.TraceProject;
 import com.efficios.jabberwocky.trace.Trace;
@@ -31,11 +32,10 @@ import java.util.stream.Collectors;
 import static java.util.Objects.requireNonNull;
 
 /**
- * This is the state change input plugin for the state system which handles the
- * kernel traces.
- *
+ * This is the state change input plugin for the state system which handles the kernel traces.
+ * <p>
  * Attribute tree:
- *
+ * <p>
  * <pre>
  * |- CPUs
  * |  |- <CPU number> -> CPU Status
@@ -64,12 +64,13 @@ public class KernelAnalysis extends StateSystemAnalysis {
     }
 
     /**
-     * Version number of this state provider. Please bump this if you modify the
-     * contents of the generated state history in some way.
+     * Version number of this state provider. Please bump this if you modify the contents of the generated state history
+     * in some way.
      */
     private static final int VERSION = 27;
 
-    private KernelAnalysis() {}
+    private KernelAnalysis() {
+    }
 
     // ------------------------------------------------------------------------
     // IAnalysis
@@ -88,7 +89,9 @@ public class KernelAnalysis extends StateSystemAnalysis {
     private static boolean projectContainsKernelTrace(TraceProject<?, ?> project) {
         return project.getTraceCollections().stream()
                 .flatMap(collection -> collection.getTraces().stream())
-                .anyMatch(trace -> trace instanceof LttngKernelTrace);
+                // Only applies to CTF traces atm
+                .filter(trace -> trace instanceof CtfTrace).map(trace -> (CtfTrace) trace)
+                .anyMatch(LttngKernelTraceUtilsKt::isKernelTrace);
     }
 
     // ------------------------------------------------------------------------
@@ -103,10 +106,10 @@ public class KernelAnalysis extends StateSystemAnalysis {
     @Override
     public TraceCollection<?, ?> filterTraces(@Nullable TraceProject<?, ?> project) {
         requireNonNull(project);
-        Collection<LttngKernelTrace> kernelTraces = project.getTraceCollections().stream()
+        Collection<CtfTrace> kernelTraces = project.getTraceCollections().stream()
                 .flatMap(collection -> collection.getTraces().stream())
-                .filter(trace -> trace instanceof LttngKernelTrace)
-                .map(trace -> (LttngKernelTrace) trace)
+                .filter(trace -> trace instanceof CtfTrace).map(trace -> (CtfTrace) trace)
+                .filter(LttngKernelTraceUtilsKt::isKernelTrace)
                 .collect(Collectors.toList());
         return new TraceCollection(kernelTraces);
     }
@@ -114,12 +117,14 @@ public class KernelAnalysis extends StateSystemAnalysis {
     @Override
     public void handleEvent(IStateSystemWriter ss, TraceEvent event, @Nullable Object[] trackedState) {
         Trace trace = event.getTrace();
-        if (!(trace instanceof LttngKernelTrace)) {
+        if (!(trace instanceof CtfTrace) || !(LttngKernelTraceUtilsKt.isKernelTrace((CtfTrace) trace))) {
             /* We shouldn't have received this event... */
             return;
         }
-        LttngKernelTrace kernelTrace = (LttngKernelTrace) trace;
-        KernelAnalysisEventDefinitions defs = KernelAnalysisEventDefinitions.getDefsFromLayout(kernelTrace.getKernelEventLayout());
+        CtfTrace kernelTrace = (CtfTrace) trace;
+        // TODO Cache the mapping trace <-> layout so it's not refetched every event.
+        // However this needs to be done for one run of the analysis only!
+        KernelAnalysisEventDefinitions defs = KernelAnalysisEventDefinitions.getDefsFromLayout(LttngKernelTraceUtilsKt.getKernelEventLayout(kernelTrace));
 
         final String eventName = event.getEventName();
 

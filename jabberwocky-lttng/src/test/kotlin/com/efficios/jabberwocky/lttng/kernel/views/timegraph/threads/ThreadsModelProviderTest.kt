@@ -14,7 +14,7 @@ import ca.polymtl.dorsal.libdelorean.interval.StateInterval
 import ca.polymtl.dorsal.libdelorean.statevalue.StateValue
 import com.efficios.jabberwocky.common.TimeRange
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.Attributes
-import com.efficios.jabberwocky.lttng.testutils.ExtractedLttngKernelTestTrace
+import com.efficios.jabberwocky.lttng.testutils.ExtractedCtfTestTrace
 import com.efficios.jabberwocky.project.TraceProject
 import com.efficios.jabberwocky.views.timegraph.model.render.states.MultiStateInterval
 import com.efficios.jabberwocky.views.timegraph.model.render.states.TimeGraphStateInterval
@@ -32,14 +32,16 @@ import kotlin.test.fail
 class ThreadsModelProviderTest {
 
     companion object {
-        @JvmField @ClassRule
-        val TEST_TRACE = ExtractedLttngKernelTestTrace(CtfTestTrace.KERNEL)
+        @JvmField
+        @ClassRule
+        val TEST_TRACE = ExtractedCtfTestTrace(CtfTestTrace.KERNEL)
 
         private const val PROJECT_NAME = "test-proj"
         private const val NANOS_PER_SECOND = 1000000000L
     }
 
     private val provider = ThreadsModelProvider()
+
     init {
         provider.disableFilterMode(0)
     }
@@ -143,7 +145,7 @@ class ThreadsModelProviderTest {
     }
 
     private fun testIntervalsResolution(range: TimeRange,
-                                resolution: Long) {
+                                        resolution: Long) {
 
         val ss = provider.stateSystem!!
         val threadsQuark = ss.getQuarkAbsolute(Attributes.THREADS)

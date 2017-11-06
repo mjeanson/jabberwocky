@@ -9,7 +9,8 @@
 
 package com.efficios.jabberwocky.lttng.ust.analysis.debuginfo
 
-import com.efficios.jabberwocky.lttng.ust.trace.LttngUstTrace
+import com.efficios.jabberwocky.ctf.trace.CtfTrace
+import com.efficios.jabberwocky.lttng.ust.trace.getUstEventLayout
 import com.efficios.jabberwocky.trace.event.FieldValue
 import com.efficios.jabberwocky.trace.event.TraceEvent
 
@@ -20,8 +21,8 @@ import com.efficios.jabberwocky.trace.event.TraceEvent
 
 fun UstDebugInfoAnalysisResults.getCallsiteOfEvent(event: TraceEvent): BinaryCallsite? {
     /* This aspect only supports UST traces */
-    val trace = event.trace as? LttngUstTrace ?: return null
-    val layout = trace.ustEventLayout
+    val trace = event.trace as? CtfTrace ?: return null
+    val layout = trace.getUstEventLayout() ?: return null
 
     /* We need both the vpid and ip contexts */
     val vpid = event.getField(layout.contextVpid(), FieldValue.IntegerValue::class.java)?.value ?: return null

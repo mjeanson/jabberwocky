@@ -9,22 +9,22 @@
 
 package com.efficios.jabberwocky.lttng.testutils
 
-import com.efficios.jabberwocky.lttng.ust.trace.LttngUstTrace
+import com.efficios.jabberwocky.ctf.trace.CtfTrace
 import com.efficios.jabberwocky.trace.TraceInitializationException
 import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
 import org.junit.rules.ExternalResource
 import java.nio.file.Paths
 
-class ExtractedLttngUstTestTrace(private val testTrace: CtfTestTrace) : ExternalResource() {
+class ExtractedCtfTestTrace(private val testTrace: CtfTestTrace) : ExternalResource() {
 
     private lateinit var testTraceExtractor: CtfTestTraceExtractor
-    lateinit var trace: LttngUstTrace
+    lateinit var trace: CtfTrace
 
     override fun before() {
         testTraceExtractor = CtfTestTraceExtractor.extractTestTrace(testTrace)
         val tracePath = testTraceExtractor.trace.path
         try {
-            trace = LttngUstTrace(Paths.get(tracePath))
+            trace = CtfTrace(Paths.get(tracePath))
         } catch (e: TraceInitializationException) {
             throw IllegalArgumentException(e)
         }
@@ -36,4 +36,3 @@ class ExtractedLttngUstTestTrace(private val testTrace: CtfTestTrace) : External
     }
 
 }
-

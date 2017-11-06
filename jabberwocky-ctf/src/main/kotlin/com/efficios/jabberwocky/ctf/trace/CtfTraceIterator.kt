@@ -21,14 +21,14 @@ import java.util.*
 
 private const val MAX_CACHE_SIZE = 50_000
 
-open class CtfTraceIterator<E : CtfTraceEvent> private constructor(private val originTrace: CtfTrace<E>,
-                                                                   private val forwardIterator: ForwardIterator<E>) : TraceIterator<E> {
+open class CtfTraceIterator private constructor(private val originTrace: CtfTrace,
+                                                private val forwardIterator: ForwardIterator) : TraceIterator<CtfTraceEvent> {
 
-    constructor(originTrace: CtfTrace<E>) : this(originTrace, ForwardIterator(originTrace))
+    constructor(originTrace: CtfTrace) : this(originTrace, ForwardIterator(originTrace))
 
     @VisibleForTesting
     @Transient
-    internal var cacheIterator: ListIterator<E>? = null
+    internal var cacheIterator: ListIterator<CtfTraceEvent>? = null
         private set
 
     override fun hasNext(): Boolean {
@@ -37,7 +37,7 @@ open class CtfTraceIterator<E : CtfTraceEvent> private constructor(private val o
         return true
     }
 
-    override fun next(): E {
+    override fun next(): CtfTraceEvent {
         val cacheIter = cacheIterator
         return if (cacheIter == null) {
             forwardIterator.next()
@@ -80,7 +80,7 @@ open class CtfTraceIterator<E : CtfTraceEvent> private constructor(private val o
         }
     }
 
-    override fun previous(): E {
+    override fun previous(): CtfTraceEvent {
         if (!hasPrevious()) throw NoSuchElementException()
         /* Previous call to hasPrevious() should have populated 'cacheIterator' */
         return cacheIterator!!.previous()
@@ -91,7 +91,7 @@ open class CtfTraceIterator<E : CtfTraceEvent> private constructor(private val o
         forwardIterator.seek(timestamp)
     }
 
-    override fun copy(): CtfTraceIterator<E> = CtfTraceIterator(originTrace, forwardIterator.copy())
+    override fun copy(): CtfTraceIterator = CtfTraceIterator(originTrace, forwardIterator.copy())
 
     override fun close() {
         cacheIterator = null
@@ -104,7 +104,7 @@ open class CtfTraceIterator<E : CtfTraceEvent> private constructor(private val o
         forwardIterator.goToLastEvent()
     }
 
-    private fun newCacheIterator(): ListIterator<E>? {
+    private fun newCacheIterator(): ListIterator<CtfTraceEvent>? {
         var startedFromAfterEnd = false
         /*
          * We will jump back to an earlier timestamp, and start reading from there to populate
@@ -137,7 +137,7 @@ open class CtfTraceIterator<E : CtfTraceEvent> private constructor(private val o
         forwardIterator.seek(ts)
         if (!forwardIterator.hasNext()) return null
 
-        val list = EvictingQueue.create<E>(MAX_CACHE_SIZE)
+        val list = EvictingQueue.create<CtfTraceEvent>(MAX_CACHE_SIZE)
         while (forwardIterator.hasNext()) {
             val event = forwardIterator.peek()!!
             if (event == limitEvent) break
@@ -151,7 +151,7 @@ open class CtfTraceIterator<E : CtfTraceEvent> private constructor(private val o
         return list.toList().listIterator(list.size)
     }
 
-    private class ForwardIterator<out E : CtfTraceEvent>(private val originTrace: CtfTrace<E>) : Iterator<E> {
+    private class ForwardIterator(private val originTrace: CtfTrace) : Iterator<CtfTraceEvent> {
 
         val traceReader: CTFTraceReader = try {
             CTFTraceReader(originTrace.innerTrace)
@@ -167,7 +167,7 @@ open class CtfTraceIterator<E : CtfTraceEvent> private constructor(private val o
 
         override fun hasNext(): Boolean = (currentEventDef != null)
 
-        override fun next(): E {
+        override fun next(): CtfTraceEvent {
             val currentEventDef = currentEventDef ?: throw NoSuchElementException()
 
             /* Wrap the current event into a JW event */
@@ -189,7 +189,7 @@ open class CtfTraceIterator<E : CtfTraceEvent> private constructor(private val o
             traceReader.close()
         }
 
-        fun peek(): E? {
+        fun peek(): CtfTraceEvent? {
             return originTrace.eventFactory.createEvent(currentEventDef ?: return null)
         }
 
@@ -211,7 +211,7 @@ open class CtfTraceIterator<E : CtfTraceEvent> private constructor(private val o
             }
         }
 
-        fun copy(): ForwardIterator<E> {
+        fun copy(): ForwardIterator {
             val eventDef = currentEventDef
             return ForwardIterator(originTrace).apply {
                 /* Here we seek using the *cycle count* directly */

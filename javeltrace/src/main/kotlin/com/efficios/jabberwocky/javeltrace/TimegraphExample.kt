@@ -8,10 +8,11 @@
  */
 
 @file:JvmName("TimegraphExample")
+
 package com.efficios.jabberwocky.javeltrace
 
 import com.efficios.jabberwocky.common.TimeRange
-import com.efficios.jabberwocky.lttng.kernel.trace.LttngKernelTrace
+import com.efficios.jabberwocky.ctf.trace.CtfTrace
 import com.efficios.jabberwocky.lttng.kernel.views.timegraph.threads.ThreadsModelProvider
 import com.efficios.jabberwocky.project.TraceProject
 import com.efficios.jabberwocky.views.timegraph.view.json.RenderToJson
@@ -42,7 +43,7 @@ fun main(args: Array<String>) {
 
     /* Create the trace project */
     val projectPath = Files.createTempDirectory("project")
-    val trace = LttngKernelTrace(Paths.get(tracePath))
+    val trace = CtfTrace(Paths.get(tracePath))
     val project = TraceProject.ofSingleTrace("MyProject", projectPath, trace)
 
     /* Query for a timegraph render for the requested time range */

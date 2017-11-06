@@ -10,9 +10,9 @@
 package com.efficios.jabberwocky.ctf.collection
 
 import com.efficios.jabberwocky.collection.TraceCollection
+import com.efficios.jabberwocky.ctf.trace.CtfTrace
 import com.efficios.jabberwocky.ctf.trace.ExtractedCtfTestTrace
 import com.efficios.jabberwocky.ctf.trace.event.CtfTraceEvent
-import com.efficios.jabberwocky.ctf.trace.generic.GenericCtfTrace
 import com.efficios.jabberwocky.trace.event.FieldValue
 import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
 import org.junit.Assert.assertEquals
@@ -36,7 +36,7 @@ class CtfTraceCollectionTest {
         val ETT3 = ExtractedCtfTestTrace(CtfTestTrace.KERNEL_VM)
     }
 
-    private lateinit var fixture: TraceCollection<CtfTraceEvent, GenericCtfTrace>
+    private lateinit var fixture: TraceCollection<CtfTraceEvent, CtfTrace>
 
     @Before
     fun setup() {

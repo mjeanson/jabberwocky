@@ -10,14 +10,14 @@
 package com.efficios.jabberwocky.ctf.trace
 
 import com.efficios.jabberwocky.ctf.trace.event.CtfTraceEvent
-import com.efficios.jabberwocky.ctf.trace.event.ICtfTraceEventFactory
+import com.efficios.jabberwocky.ctf.trace.event.CtfTraceEventFactory
 import com.efficios.jabberwocky.trace.Trace
 import com.efficios.jabberwocky.trace.TraceInitializationException
 import org.eclipse.tracecompass.ctf.core.CTFException
 import org.eclipse.tracecompass.ctf.core.trace.CTFTrace
 import java.nio.file.Path
 
-abstract class CtfTrace<E : CtfTraceEvent>(val tracePath: Path) : Trace<E>() {
+class CtfTrace(val tracePath: Path) : Trace<CtfTraceEvent>() {
 
     internal val innerTrace: CTFTrace = try {
         CTFTrace(tracePath.toFile())
@@ -25,11 +25,11 @@ abstract class CtfTrace<E : CtfTraceEvent>(val tracePath: Path) : Trace<E>() {
         throw TraceInitializationException(e)
     }
 
-    override fun iterator(): CtfTraceIterator<E> {
-        return CtfTraceIterator<E>(this)
+    override fun iterator(): CtfTraceIterator {
+        return CtfTraceIterator(this)
     }
 
-    abstract val eventFactory: ICtfTraceEventFactory<E>
+    val eventFactory = CtfTraceEventFactory(this)
 
     val environment: Map<String, String> = innerTrace.environment
 }

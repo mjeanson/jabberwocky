@@ -15,7 +15,7 @@ import com.efficios.jabberwocky.trace.event.TraceLostEvent
 import com.google.common.base.MoreObjects
 import java.util.*
 
-class CtfTraceLostEvent(trace: CtfTrace<CtfTraceEvent>,
+class CtfTraceLostEvent(trace: CtfTrace,
                         startTime: Long,
                         endTime: Long,
                         cpu: Int,
