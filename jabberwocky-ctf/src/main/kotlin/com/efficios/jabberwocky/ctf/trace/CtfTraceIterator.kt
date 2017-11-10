@@ -104,6 +104,9 @@ open class CtfTraceIterator private constructor(private val originTrace: CtfTrac
         forwardIterator.goToLastEvent()
     }
 
+    /**
+     * Returns null when we are at the beginning already.
+     */
     private fun newCacheIterator(): ListIterator<CtfTraceEvent>? {
         var startedFromAfterEnd = false
         /*
@@ -120,7 +123,14 @@ open class CtfTraceIterator private constructor(private val originTrace: CtfTrac
             /* Should not be empty/null on next access */
             currentPackets = forwardIterator.traceReader.currentPacketDescriptors
             startedFromAfterEnd = true
+
+            /* Sometimes goToLastEvent() leaves us at the end. */
+            if (!forwardIterator.hasNext()) {
+                forwardIterator.seek(originTrace.endTime)
+            }
         }
+
+        if (!forwardIterator.hasNext()) throw IllegalStateException()
 
         val limitEvent = forwardIterator.next() /* Should be present */
         val ts = currentPackets

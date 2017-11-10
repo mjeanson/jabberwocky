@@ -1,4 +1,3 @@
-
 /*
  * Copyright (C) 2017 EfficiOS Inc., Alexandre Montplaisir <alexmonthy@efficios.com>
  *
