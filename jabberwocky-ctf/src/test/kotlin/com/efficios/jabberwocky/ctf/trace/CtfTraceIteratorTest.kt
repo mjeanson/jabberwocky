@@ -77,15 +77,6 @@ class CtfTraceIteratorTest : TraceIteratorTestBase() {
     override val timestampAfterEnd = lastEvent.timestamp + 100
 
     @Test
-    fun testGoToLastEvent() {
-        with(iterator as CtfTraceIterator) {
-            goToLastEvent()
-            assertTrue(hasNext())
-            assertEquals(lastEvent, next())
-        }
-    }
-
-    @Test
     fun testBackwardsCache() {
         with(iterator as CtfTraceIterator) {
             seek(middleEvent.timestamp)

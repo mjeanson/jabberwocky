@@ -98,12 +98,6 @@ open class CtfTraceIterator private constructor(private val originTrace: CtfTrac
         forwardIterator.close()
     }
 
-    @VisibleForTesting
-    internal fun goToLastEvent() {
-        cacheIterator = null
-        forwardIterator.goToLastEvent()
-    }
-
     /**
      * Returns null when we are at the beginning already.
      */
@@ -119,15 +113,10 @@ open class CtfTraceIterator private constructor(private val originTrace: CtfTrac
          */
         var currentPackets = forwardIterator.traceReader.currentPacketDescriptors
         if (currentPackets == null || Iterables.isEmpty(currentPackets)) {
-            forwardIterator.goToLastEvent()
+            forwardIterator.seek(originTrace.endTime)
             /* Should not be empty/null on next access */
             currentPackets = forwardIterator.traceReader.currentPacketDescriptors
             startedFromAfterEnd = true
-
-            /* Sometimes goToLastEvent() leaves us at the end. */
-            if (!forwardIterator.hasNext()) {
-                forwardIterator.seek(originTrace.endTime)
-            }
         }
 
         if (!forwardIterator.hasNext()) throw IllegalStateException()
@@ -210,15 +199,6 @@ open class CtfTraceIterator private constructor(private val originTrace: CtfTrac
             /* traceReader.seek() works off cycle counts, not timestamps !?! */
             traceReader.seek(originTrace.innerTrace.timestampNanoToCycles(timestamp))
             currentEventDef = traceReader.topStream?.currentEvent
-        }
-
-        fun goToLastEvent() {
-            traceReader.goToLastEvent() // Despite the name, this only goes to "last packet"...
-            while (traceReader.currentEventDef != null) {
-                currentEventDef = traceReader.currentEventDef!!
-                traceReader.advance()
-
-            }
         }
 
         fun copy(): ForwardIterator {
