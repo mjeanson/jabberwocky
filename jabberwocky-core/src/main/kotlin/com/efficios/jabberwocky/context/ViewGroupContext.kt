@@ -77,4 +77,30 @@ class ViewGroupContext {
     fun getCurrentProjectFullRange(): TimeRange {
         return currentTraceProject?.fullRange ?: UNINITIALIZED_RANGE
     }
+
+    /**
+     * Move the visible range to be centered on a target timestamp.
+     *
+     * The visible range span (or duration) will remain the same, we will simply "slide" the window.
+     * This means it might be clamped to the end or start time of the project.
+     *
+     * Note this will not apply a selection on the target timetamp. If this is desired, it should
+     * be done separately.
+     */
+    fun centerVisibleRangeOn(timestamp: Long) {
+        val project = currentTraceProject ?: return
+        if (timestamp !in project.startTime..project.endTime) throw IllegalArgumentException("Target timestamp outside of project range")
+
+        /* We will try our best to keep the current visible range span the same. */
+        val span = currentVisibleTimeRange.duration
+        val halfSpan = span / 2
+        currentVisibleTimeRange = when {
+            /* Clamp to start time */
+            timestamp - halfSpan < project.startTime -> TimeRange.of(project.startTime, project.startTime + span)
+            /* Clamp to end time */
+            timestamp + halfSpan > project.endTime -> TimeRange.of(project.endTime - span, project.endTime)
+            /* Simply center on the target timestamp, it should fit. */
+            else -> TimeRange.of(timestamp - halfSpan, timestamp + halfSpan)
+        }
+    }
 }
