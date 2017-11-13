@@ -37,7 +37,21 @@ class ViewGroupContext {
     fun currentTraceProjectProperty(): ReadOnlyObjectProperty<TraceProject<*, *>?> = currentTraceProjectProperty
     var currentTraceProject
         get() = currentTraceProjectProperty.get()
-        set(value) = setNewTraceProject(value)
+        set(traceProject) {
+            /* On trace change, adjust the other properties accordingly. */
+            if (traceProject == null) {
+                currentVisibleTimeRangeProperty = SimpleObjectProperty(UNINITIALIZED_RANGE)
+                currentSelectionTimeRangeProperty = SimpleObjectProperty(UNINITIALIZED_RANGE)
+            } else {
+                val start = traceProject.startTime
+                val end = traceProject.endTime
+                val visibleRangeEnd = minOf(start + DEFAULT_INITIAL_OFFSET, end);
+
+                currentVisibleTimeRangeProperty = SimpleObjectProperty(TimeRange.of(start, visibleRangeEnd))
+                currentSelectionTimeRangeProperty = SimpleObjectProperty(TimeRange.of(start, start))
+            }
+            currentTraceProjectProperty.set(traceProject);
+        }
 
     /** Current visible time range in the context */
     private var currentVisibleTimeRangeProperty: ObjectProperty<TimeRange> = SimpleObjectProperty(UNINITIALIZED_RANGE)
@@ -53,23 +67,6 @@ class ViewGroupContext {
         get() = currentSelectionTimeRangeProperty.get()
         set(value) = currentSelectionTimeRangeProperty.set(value)
 
-
-    private fun setNewTraceProject(traceProject: TraceProject<*, *>?) {
-        /* On trace change, adjust the other properties accordingly. */
-        if (traceProject == null) {
-            currentVisibleTimeRangeProperty = SimpleObjectProperty(UNINITIALIZED_RANGE)
-            currentSelectionTimeRangeProperty = SimpleObjectProperty(UNINITIALIZED_RANGE)
-        } else {
-            val start = traceProject.startTime
-            val end = traceProject.endTime
-            val visibleRangeEnd = minOf(start + DEFAULT_INITIAL_OFFSET, end);
-
-            currentVisibleTimeRangeProperty = SimpleObjectProperty(TimeRange.of(start, visibleRangeEnd))
-            currentSelectionTimeRangeProperty = SimpleObjectProperty(TimeRange.of(start, start))
-        }
-
-        currentTraceProjectProperty.set(traceProject);
-    }
 
     /**
      * Utility method to get the full range of the current active trace project.
