@@ -28,6 +28,6 @@ data class TimeRange private constructor (val startTime: Long, val endTime: Long
 
     val isSingleTimestamp: Boolean = (startTime == endTime)
 
-    fun contains(timestamp: Long): Boolean = (timestamp in startTime..endTime)
+    operator fun contains(timestamp: Long): Boolean = (timestamp in startTime..endTime)
 
 }
