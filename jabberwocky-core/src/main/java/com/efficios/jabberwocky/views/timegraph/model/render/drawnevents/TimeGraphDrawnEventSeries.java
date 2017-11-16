@@ -11,6 +11,7 @@ package com.efficios.jabberwocky.views.timegraph.model.render.drawnevents;
 
 import com.efficios.jabberwocky.common.ConfigOption;
 import com.efficios.jabberwocky.views.common.ColorDefinition;
+import com.efficios.jabberwocky.views.common.EventSymbolStyle;
 
 /**
  * Definition of a time graph arrow series.
@@ -23,27 +24,9 @@ import com.efficios.jabberwocky.views.common.ColorDefinition;
  */
 public class TimeGraphDrawnEventSeries {
 
-    /**
-     * Headless symbol style definitions
-     */
-    public enum SymbolStyle {
-        /** Circle */
-        CIRCLE,
-        /** Cross */
-        CROSS,
-        /** Star */
-        STAR,
-        /** Square */
-        SQUARE,
-        /** Diamond */
-        DIAMOND,
-        /** Triangle */
-        TRIANGLE;
-    }
-
     private final String fSeriesName;
     private final ConfigOption<ColorDefinition> fColor;
-    private final ConfigOption<SymbolStyle> fSymbolStyle;
+    private final ConfigOption<EventSymbolStyle> fSymbolStyle;
 
     /**
      * Constructor.
@@ -60,7 +43,7 @@ public class TimeGraphDrawnEventSeries {
      */
     public TimeGraphDrawnEventSeries(String seriesName,
             ConfigOption<ColorDefinition> color,
-            ConfigOption<SymbolStyle> symbolStyle) {
+            ConfigOption<EventSymbolStyle> symbolStyle) {
 
         fSeriesName = seriesName;
         fColor = color;
@@ -90,7 +73,7 @@ public class TimeGraphDrawnEventSeries {
      *
      * @return This series's symbol style
      */
-    public ConfigOption<SymbolStyle> getSymbolStyle() {
+    public ConfigOption<EventSymbolStyle> getSymbolStyle() {
         return fSymbolStyle;
     }
 
