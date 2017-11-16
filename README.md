@@ -76,7 +76,7 @@ then add the module dependency inside the `<dependencies>` section:
     <dependency>
       <groupId>com.efficios.jabberwocky</groupId>
       <artifactId>jabberwocky-core</artifactId>
-      <version>0.2.19-SNAPSHOT</version>
+      <version>0.2.34-SNAPSHOT</version>
     </dependency>
 
 Other modules like `jabberwocky-ctf` and `jabberwocky-lttng` contain parsers and
