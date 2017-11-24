@@ -15,6 +15,7 @@ import ca.polymtl.dorsal.libdelorean.exceptions.AttributeNotFoundException;
 import ca.polymtl.dorsal.libdelorean.exceptions.StateSystemDisposedException;
 import ca.polymtl.dorsal.libdelorean.interval.StateInterval;
 import ca.polymtl.dorsal.libdelorean.statevalue.IntegerStateValue;
+import ca.polymtl.dorsal.libdelorean.statevalue.StateValue;
 import com.efficios.jabberwocky.common.TimeRange;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.Attributes;
 import com.efficios.jabberwocky.lttng.kernel.analysis.os.KernelAnalysis;
@@ -88,8 +89,16 @@ public class ThreadsModelArrowProviderCpus extends StateSystemModelArrowProvider
         for (int i = 1; i < threadTimeline.size(); i++) {
             StateInterval interval1 = threadTimeline.get(i - 1);
             StateInterval interval2 = threadTimeline.get(i);
-            int thread1 = ((IntegerStateValue) interval1.getStateValue()).getValue();
-            int thread2 = ((IntegerStateValue) interval2.getStateValue()).getValue();
+
+            StateValue sv1 = interval1.getStateValue();
+            StateValue sv2 = interval2.getStateValue();
+
+            if (!(sv1 instanceof IntegerStateValue) || !(sv2 instanceof IntegerStateValue)) {
+                continue;
+            }
+
+            int thread1 = ((IntegerStateValue) sv1).getValue();
+            int thread2 = ((IntegerStateValue) sv2).getValue();
 
             if (thread1 == -1 || thread2 == -1) {
                 /* No arrow to draw here */
@@ -99,7 +108,7 @@ public class ThreadsModelArrowProviderCpus extends StateSystemModelArrowProvider
             TimeGraphTreeElement startTreeElem = getTreeElementFromThread(treeRender, thread1, cpu);
             TimeGraphTreeElement endTreeElem = getTreeElementFromThread(treeRender, thread2, cpu);
             TimeGraphEvent startEvent = new TimeGraphEvent(interval1.getEnd(), startTreeElem);
-            TimeGraphEvent endEvent  = new TimeGraphEvent(interval2.getStart(), endTreeElem);
+            TimeGraphEvent endEvent = new TimeGraphEvent(interval2.getStart(), endTreeElem);
 
             TimeGraphArrow arrow = new TimeGraphArrow(startEvent, endEvent, getArrowSeries());
             arrows.add(arrow);
