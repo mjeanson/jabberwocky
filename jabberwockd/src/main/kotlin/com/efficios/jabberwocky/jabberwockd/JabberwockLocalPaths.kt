@@ -19,49 +19,29 @@ import java.nio.file.Paths
  */
 object JabberwockLocalPaths {
 
-    private const val appDirSuffix = "jabberwockd"
-    private const val tracesDirSuffix = "traces"
-    private const val projectsDirSuffix = "projects"
+    private const val APP_DIR_SUFFIX = "jabberwockd"
+    private const val TRACES_DIR_SUFFIX = "traces"
+    private const val PROJECTS_DIR_SUFFIX = "projects"
 
-    val homeDir: Path
+    val homeDir = System.getProperty("user.home")?.let { Paths.get(it) }
+            ?: System.getenv("HOME")?.let { Paths.get(it) }
+            ?: throw IllegalArgumentException("Cannot find user home directory. Try defining \$HOME.")
 
-    val dataDir: Path
-    val configDir: Path
-    val cacheDir: Path
+    val dataDir: Path = System.getenv("XDG_DATA_HOME")
+            ?.let { Paths.get(it, APP_DIR_SUFFIX) }
+            ?: homeDir.resolve(Paths.get(".local", "share", APP_DIR_SUFFIX))
+
+    val configDir: Path = System.getenv("XDG_CONFIG_HOME")
+            ?.let { Paths.get(it, APP_DIR_SUFFIX) }
+            ?: homeDir.resolve(Paths.get(".config", APP_DIR_SUFFIX))
+
+    val cacheDir: Path = System.getenv("XDG_CACHE_HOME")
+            ?.let { Paths.get(it, APP_DIR_SUFFIX) }
+            ?: homeDir.resolve(Paths.get(".cache", APP_DIR_SUFFIX))
 
     /** Subdirectory to store input traces. Should go under 'dataDir' */
-    val tracesDir: Path
+    val tracesDir: Path = dataDir.resolve(TRACES_DIR_SUFFIX)
+
     /** Subdirectory to store Jabberwocky trace projects. Should go under 'dataDir' */
-    val projectsDir: Path
-
-    init {
-        val homeDirStr = System.getProperty("user.home")
-                ?: System.getenv("HOME")
-                ?: throw IllegalArgumentException("Cannot find user home directory. Try defining \$HOME.")
-        homeDir = Paths.get(homeDirStr)
-
-        val dataDirStr = System.getenv("XDG_DATA_HOME")
-        dataDir = if (dataDirStr == null) {
-            homeDir.resolve(Paths.get(".local", "share", appDirSuffix))
-        } else {
-            Paths.get(dataDirStr, appDirSuffix)
-        }
-
-        val configDirStr = System.getenv("XDG_CONFIG_HOME")
-        configDir = if (configDirStr == null) {
-            homeDir.resolve(Paths.get(".config", appDirSuffix))
-        } else {
-            Paths.get(configDirStr, appDirSuffix)
-        }
-
-        val cacheDirStr = System.getenv("XDG_CACHE_HOME")
-        cacheDir = if (cacheDirStr == null) {
-            homeDir.resolve(Paths.get(".cache", appDirSuffix))
-        } else {
-            Paths.get(cacheDirStr, appDirSuffix)
-        }
-
-        tracesDir = dataDir.resolve(tracesDirSuffix)
-        projectsDir = dataDir.resolve(projectsDirSuffix)
-    }
+    val projectsDir: Path = dataDir.resolve(PROJECTS_DIR_SUFFIX)
 }
