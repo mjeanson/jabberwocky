@@ -27,7 +27,7 @@
   <dependencies>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-stdlib-jre8</artifactId>
+      <artifactId>kotlin-stdlib-jdk8</artifactId>
     </dependency>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
@@ -46,8 +46,8 @@
       <artifactId>jabberwocky-ctf</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.eclipse.tracecompass.testtraces</groupId>
-      <artifactId>tracecompass-test-traces-ctf</artifactId>
+      <groupId>org.lttng.scope</groupId>
+      <artifactId>ttt-ctf</artifactId>
     </dependency>
   </dependencies>
 

@@ -9,10 +9,10 @@
 
 package com.efficios.jabberwocky.ctf.trace
 
-import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
 import org.junit.Assert.assertEquals
 import org.junit.ClassRule
 import org.junit.Test
+import org.lttng.scope.ttt.ctf.CtfTestTrace
 
 class CtfTraceTest {
 

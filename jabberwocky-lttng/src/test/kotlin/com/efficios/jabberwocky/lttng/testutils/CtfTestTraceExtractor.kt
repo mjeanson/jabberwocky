@@ -11,7 +11,7 @@ package com.efficios.jabberwocky.lttng.testutils
 
 import org.eclipse.tracecompass.ctf.core.CTFException
 import org.eclipse.tracecompass.ctf.core.trace.CTFTrace
-import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
+import org.lttng.scope.ttt.ctf.CtfTestTrace
 import java.io.IOException
 import java.net.URL
 import java.nio.file.Files

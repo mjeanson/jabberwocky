@@ -16,7 +16,7 @@
   <parent>
     <groupId>org.lttng.scope</groupId>
     <artifactId>scope-project-parent</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.5</version>
   </parent>
 
   <groupId>com.efficios.jabberwocky</groupId>
@@ -51,13 +51,13 @@
       <dependency>
         <groupId>ca.polymtl.dorsal.libdelorean</groupId>
         <artifactId>libdelorean</artifactId>
-        <version>0.7.8-SNAPSHOT</version>
+        <version>0.7.9-SNAPSHOT</version>
       </dependency>
 
       <dependency>
         <groupId>org.eclipse.tracecompass</groupId>
         <artifactId>ctfreader</artifactId>
-        <version>0.1.5-SNAPSHOT</version>
+        <version>0.1.6-SNAPSHOT</version>
       </dependency>
 
       <!-- Artifacts provided by this project. Version numbers should

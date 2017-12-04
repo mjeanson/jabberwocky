@@ -13,9 +13,9 @@ import com.efficios.jabberwocky.lttng.testutils.ExtractedCtfTestTrace
 import com.efficios.jabberwocky.project.TraceProject
 import com.efficios.jabberwocky.trace.Trace
 import com.efficios.jabberwocky.trace.event.TraceEvent
-import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
 import org.junit.ClassRule
 import org.junit.Test
+import org.lttng.scope.ttt.ctf.CtfTestTrace
 import java.nio.file.Files
 import kotlin.test.*
 

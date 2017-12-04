@@ -18,8 +18,8 @@ import com.efficios.jabberwocky.lttng.testutils.ExtractedCtfTestTrace
 import com.efficios.jabberwocky.project.TraceProject
 import com.efficios.jabberwocky.views.timegraph.model.render.states.MultiStateInterval
 import com.efficios.jabberwocky.views.timegraph.model.render.states.TimeGraphStateInterval
-import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
 import org.junit.*
+import org.lttng.scope.ttt.ctf.CtfTestTrace
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path

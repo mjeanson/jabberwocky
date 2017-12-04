@@ -9,23 +9,17 @@
 
 package com.efficios.jabberwocky.ctf.trace
 
+import org.eclipse.tracecompass.ctf.core.CTFException
+import org.eclipse.tracecompass.ctf.core.trace.CTFTrace
+import org.lttng.scope.ttt.ctf.CtfTestTrace
 import java.io.IOException
-import java.io.InputStream
 import java.net.URL
-import java.nio.file.FileVisitResult
 import java.nio.file.Files
 import java.nio.file.Path
-import java.nio.file.SimpleFileVisitor
-import java.nio.file.attribute.BasicFileAttributes
-import java.util.Collections
-import java.util.Comparator
+import java.util.*
 import java.util.jar.JarEntry
 import java.util.jar.JarFile
 import java.util.stream.Collectors
-
-import org.eclipse.tracecompass.ctf.core.CTFException
-import org.eclipse.tracecompass.ctf.core.trace.CTFTrace
-import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
 
 /**
  * Wrapper around [CtfTestTrace] that will extract the resources to a

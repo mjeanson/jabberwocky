@@ -19,12 +19,12 @@ import com.efficios.jabberwocky.ctf.trace.ExtractedCtfTestTrace
 import com.efficios.jabberwocky.ctf.trace.event.CtfTraceEvent
 import com.efficios.jabberwocky.project.TraceProject
 import com.efficios.jabberwocky.trace.event.TraceEvent
-import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.ClassRule
 import org.junit.Test
+import org.lttng.scope.ttt.ctf.CtfTestTrace
 import java.nio.file.Files
 import java.nio.file.Path
 

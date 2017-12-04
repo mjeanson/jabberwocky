@@ -16,11 +16,11 @@ import ca.polymtl.dorsal.libdelorean.IStateSystemReader;
 import com.efficios.jabberwocky.lttng.testutils.ExtractedCtfTestTrace;
 import com.efficios.jabberwocky.project.TraceProject;
 import com.google.common.io.MoreFiles;
-import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
+import org.lttng.scope.ttt.ctf.CtfTestTrace;
 
 import java.io.IOException;
 import java.nio.file.Files;

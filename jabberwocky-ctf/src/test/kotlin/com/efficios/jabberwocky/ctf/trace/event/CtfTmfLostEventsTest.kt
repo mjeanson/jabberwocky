@@ -15,10 +15,10 @@ package com.efficios.jabberwocky.ctf.trace.event
 import com.efficios.jabberwocky.ctf.trace.CtfTrace
 import com.efficios.jabberwocky.ctf.trace.ExtractedCtfTestTrace
 import com.efficios.jabberwocky.trace.event.TraceLostEvent
-import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
 import org.junit.Assert.*
 import org.junit.ClassRule
 import org.junit.Test
+import org.lttng.scope.ttt.ctf.CtfTestTrace
 
 /**
  * Tests to verify that lost events are handled correctly.

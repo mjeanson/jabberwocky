@@ -11,11 +11,11 @@ package com.efficios.jabberwocky.lttng.ust.trace
 
 import com.efficios.jabberwocky.ctf.trace.CtfTrace
 import com.efficios.jabberwocky.lttng.testutils.ExtractedCtfTestTrace
-import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.ClassRule
 import org.junit.Test
+import org.lttng.scope.ttt.ctf.CtfTestTrace
 
 class LttngUstTraceUtilsTest {
 

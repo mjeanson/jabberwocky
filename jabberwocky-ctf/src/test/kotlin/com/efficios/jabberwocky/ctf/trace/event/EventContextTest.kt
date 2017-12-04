@@ -15,11 +15,11 @@ package com.efficios.jabberwocky.ctf.trace.event
 import com.efficios.jabberwocky.ctf.trace.ExtractedCtfTestTrace
 import com.efficios.jabberwocky.trace.event.FieldValue.IntegerValue
 import com.efficios.jabberwocky.trace.event.FieldValue.StringValue
-import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.ClassRule
 import org.junit.Test
+import org.lttng.scope.ttt.ctf.CtfTestTrace
 
 /**
  * Tests for reading event contexts from a CtfTmfTrace.

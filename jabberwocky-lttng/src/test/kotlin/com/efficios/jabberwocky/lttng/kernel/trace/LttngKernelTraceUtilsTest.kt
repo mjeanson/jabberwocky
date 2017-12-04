@@ -13,12 +13,11 @@ import com.efficios.jabberwocky.ctf.trace.CtfTrace
 import com.efficios.jabberwocky.lttng.kernel.trace.layout.Lttng28EventLayout
 import com.efficios.jabberwocky.lttng.kernel.trace.layout.LttngEventLayout
 import com.efficios.jabberwocky.lttng.testutils.ExtractedCtfTestTrace
-import com.efficios.jabberwocky.trace.TraceInitializationException
-import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.ClassRule
 import org.junit.Test
+import org.lttng.scope.ttt.ctf.CtfTestTrace
 import kotlin.test.assertEquals
 
 class LttngKernelTraceUtilsTest {

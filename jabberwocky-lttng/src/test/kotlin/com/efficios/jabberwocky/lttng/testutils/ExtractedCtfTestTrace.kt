@@ -11,8 +11,8 @@ package com.efficios.jabberwocky.lttng.testutils
 
 import com.efficios.jabberwocky.ctf.trace.CtfTrace
 import com.efficios.jabberwocky.trace.TraceInitializationException
-import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
 import org.junit.rules.ExternalResource
+import org.lttng.scope.ttt.ctf.CtfTestTrace
 import java.nio.file.Paths
 
 class ExtractedCtfTestTrace(private val testTrace: CtfTestTrace) : ExternalResource() {

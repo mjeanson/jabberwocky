@@ -14,7 +14,6 @@ package com.efficios.jabberwocky.ctf.trace
 
 import com.efficios.jabberwocky.ctf.trace.event.CtfTraceEvent
 import com.efficios.jabberwocky.trace.event.FieldValue.*
-import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.ClassRule
@@ -22,6 +21,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
 import org.junit.rules.Timeout
+import org.lttng.scope.ttt.ctf.CtfTestTrace
 import java.util.concurrent.TimeUnit
 
 /**

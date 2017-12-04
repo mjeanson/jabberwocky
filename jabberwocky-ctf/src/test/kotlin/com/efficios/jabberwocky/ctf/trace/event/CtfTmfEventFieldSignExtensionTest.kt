@@ -12,11 +12,11 @@ package com.efficios.jabberwocky.ctf.trace.event
 import com.efficios.jabberwocky.ctf.trace.ExtractedCtfTestTrace
 import com.efficios.jabberwocky.trace.event.FieldValue.ArrayValue
 import com.efficios.jabberwocky.trace.event.FieldValue.IntegerValue
-import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.ClassRule
 import org.junit.Test
+import org.lttng.scope.ttt.ctf.CtfTestTrace
 import java.util.stream.Collectors
 import kotlin.streams.asStream
 

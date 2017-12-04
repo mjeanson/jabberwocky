@@ -12,11 +12,11 @@ package com.efficios.jabberwocky.ctf.trace
 import com.efficios.jabberwocky.ctf.trace.event.CtfTraceEvent
 import com.efficios.jabberwocky.trace.TraceIteratorTestBase
 import com.efficios.jabberwocky.trace.event.FieldValue
-import org.eclipse.tracecompass.testtraces.ctf.CtfTestTrace
 import org.hamcrest.Matchers.lessThan
 import org.junit.Assert.*
 import org.junit.ClassRule
 import org.junit.Test
+import org.lttng.scope.ttt.ctf.CtfTestTrace
 
 class CtfTraceIteratorTest : TraceIteratorTestBase() {
 
