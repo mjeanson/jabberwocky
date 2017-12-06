@@ -78,10 +78,7 @@ class XYChartJsonOutput(override val control: XYChartControl) : XYChartView {
 
     override fun seekVisibleRange(newVisibleRange: TimeRange) {
         /* Generate JSON for the visible area */
-        val provider = control.renderProvider
-        val renders = provider.series
-                .map {  provider.generateRender(it, newVisibleRange, 1,null) }
-
+        val renders = control.renderProvider.generateSeriesRenders(newVisibleRange, 1, null)
         printRenderTo(System.out, renders)
     }
 

@@ -15,10 +15,9 @@ import com.efficios.jabberwocky.views.xychart.model.provider.XYChartModelProvide
 import com.efficios.jabberwocky.views.xychart.model.render.XYChartSeries
 
 abstract class StateSystemXYChartProvider(providerName: String,
-                                          series: List<XYChartSeries>,
-                                          stateSystemAnalysis: StateSystemAnalysis) : XYChartModelProvider(providerName, series) {
+                                          stateSystemAnalysis: StateSystemAnalysis) : XYChartModelProvider(providerName) {
 
-    protected var stateSystem: IStateSystemReader? = null
+    var stateSystem: IStateSystemReader? = null
         private set
 
     init {

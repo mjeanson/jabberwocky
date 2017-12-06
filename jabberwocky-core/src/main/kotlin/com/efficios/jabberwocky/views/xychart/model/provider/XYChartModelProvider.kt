@@ -17,8 +17,7 @@ import javafx.beans.property.ObjectProperty
 import javafx.beans.property.SimpleObjectProperty
 import java.util.concurrent.FutureTask
 
-abstract class XYChartModelProvider(val providerName: String,
-                                    val series: List<XYChartSeries>) {
+abstract class XYChartModelProvider(val providerName: String) {
 
     private val traceProjectProperty: ObjectProperty<TraceProject<*, *>?> = SimpleObjectProperty()
     fun traceProjectProperty() = traceProjectProperty
@@ -26,5 +25,19 @@ abstract class XYChartModelProvider(val providerName: String,
         get() = traceProjectProperty.get()
         set(value) = traceProjectProperty.set(value)
 
-    abstract fun generateRender(series: XYChartSeries, range: TimeRange, resolution: Long, task: FutureTask<*>? = null): XYChartRender
+    private val seriesProviders = mutableListOf<XYChartSeriesProvider>()
+
+    fun registerSeries(seriesProvider: XYChartSeriesProvider) {
+        seriesProviders.add(seriesProvider)
+    }
+
+    fun removeSeries(seriesProvider: XYChartSeriesProvider) {
+        seriesProviders.remove(seriesProvider)
+    }
+
+    fun generateSeriesRenders(range: TimeRange, resolution: Long, task: FutureTask<*>? = null): List<XYChartRender> {
+        return seriesProviders
+                .map { it.generateSeriesRender(range, resolution, task) }
+                .toList()
+    }
 }

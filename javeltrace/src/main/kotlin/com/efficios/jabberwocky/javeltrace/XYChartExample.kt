@@ -50,9 +50,9 @@ fun main(args: Array<String>) {
     /* Query for a XY chart render for the whole trace */
     val provider = EventStatsXYChartProvider()
     provider.traceProject = project
-    val render = provider.generateRender(provider.series.first(), range, resolution, null)
+    val renders = provider.generateSeriesRenders(range, resolution, null)
 
-    XYChartJsonOutput.printRenderTo(System.out, listOf(render))
+    XYChartJsonOutput.printRenderTo(System.out, renders)
 
     /* Cleanup */
     projectPath.toFile().deleteRecursively()

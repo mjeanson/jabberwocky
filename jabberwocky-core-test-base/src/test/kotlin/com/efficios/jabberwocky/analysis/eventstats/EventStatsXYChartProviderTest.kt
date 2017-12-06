@@ -74,7 +74,7 @@ class EventStatsXYChartProviderTest {
                 TimeRange.of(projectEnd + 10, projectEnd + 10)
 
         ).forEach {
-            provider.generateRender(provider.series[0], it, 1, null)
+            provider.generateSeriesRenders(it, 1, null)
         }
     }
 
