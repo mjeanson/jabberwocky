@@ -28,13 +28,10 @@ import java.nio.ByteOrder
 
 /**
  * The class `CtfTmfEventFieldTest` contains tests for the class
- * `[CtfTmfEventField]`.
+ * `CtfTmfEventField`.
 
  * @author Matthew Khouzam
- * *
- * @version 1.0
  */
-@SuppressWarnings("restriction") // Upstream ctf.core does not expose some things we use (ByteArrayDefinition)
 class CtfTmfEventFieldTest {
 
     companion object {
@@ -50,7 +47,6 @@ class CtfTmfEventFieldTest {
         private const val FLOAT = "float"
         private const val LEN = "len"
         private const val INT = "int"
-        private const val NAME = "test"
         private const val STRUCT = "struct"
         private const val VARIANT = "variant"
         private const val ENUM = "enum"
@@ -100,7 +96,7 @@ class CtfTmfEventFieldTest {
         bb.put(TEST_NUMBER)
 
         sDec.addField(ARRAY_INT, arrIntDec)
-        for (i in 0..ARRAY_SIZE - 1) {
+        for (i in 0 until ARRAY_SIZE) {
             bb.put(TEST_NUMBER)
         }
 
@@ -111,7 +107,7 @@ class CtfTmfEventFieldTest {
         bb.putFloat(TEST_NUMBER.toFloat())
 
         sDec.addField(ARRAY_FLOAT, arrFloatDec)
-        for (i in 0..ARRAY_SIZE - 1) {
+        for (i in 0 until ARRAY_SIZE) {
             bb.putFloat(TEST_NUMBER.toFloat())
         }
 
@@ -120,7 +116,7 @@ class CtfTmfEventFieldTest {
         bb.put(0.toByte())
 
         sDec.addField(ARRAY_STR, arrStrDec)
-        for (i in 0..ARRAY_SIZE - 1) {
+        for (i in 0 until ARRAY_SIZE) {
             bb.put(testStringBytes)
             bb.put(0.toByte())
         }
@@ -137,7 +133,7 @@ class CtfTmfEventFieldTest {
         bb.put(TEST_NUMBER)
 
         sDec.addField(ARRAY_STRUCT, arrStructDec)
-        for (i in 0..ARRAY_SIZE - 1) {
+        for (i in 0 until ARRAY_SIZE) {
             bb.put(testStringBytes)
             bb.put(0.toByte())
             bb.put(TEST_NUMBER)
@@ -149,18 +145,18 @@ class CtfTmfEventFieldTest {
         bb.put(TEST_NUMBER)
 
         sDec.addField(ARRAY_ENUM, arrEnumDec)
-        for (i in 0..ARRAY_SIZE - 1) {
+        for (i in 0 until ARRAY_SIZE) {
             bb.put(TEST_NUMBER)
         }
 
         varDec.addField(LEN, byteDec)
         varDec.addField(FLOAT, flDec)
-        varDec.setTag(ENUM)
+        varDec.tag = ENUM
         sDec.addField(VARIANT, varDec)
         bb.putFloat(TEST_NUMBER.toFloat())
 
         sDec.addField(ARRAY_VARIANT, arrVariantDec)
-        for (i in 0..ARRAY_SIZE - 1) {
+        for (i in 0 until ARRAY_SIZE) {
             bb.putFloat(TEST_NUMBER.toFloat())
         }
 
@@ -172,7 +168,7 @@ class CtfTmfEventFieldTest {
      * Run the CtfTmfEventField parseField(Definition,String) method test.
      */
     @Test
-    fun testParseField_float() {
+    fun testParseFieldFloat() {
         val fieldDef = fixture.lookupDefinition(FLOAT) as FloatDefinition
         val result = CtfTraceEventFieldParser.parseField(fieldDef)
         assertEquals("2.0", result.toString())
@@ -183,7 +179,7 @@ class CtfTmfEventFieldTest {
      * array of floats field.
      */
     @Test
-    fun testParseField_array_float() {
+    fun testParseFieldArrayFloat() {
         val fieldDef = fixture.lookupArrayDefinition(ARRAY_FLOAT)!!
         val result = CtfTraceEventFieldParser.parseField(fieldDef)
         assertEquals("[2.0, 2.0]", result.toString())
@@ -193,7 +189,7 @@ class CtfTmfEventFieldTest {
      * Run the CtfTmfEventField parseField(Definition,String) method test.
      */
     @Test
-    fun testParseField_int() {
+    fun testParseFieldInt() {
         val fieldDef = fixture.lookupDefinition(INT)
         val result = CtfTraceEventFieldParser.parseField(fieldDef)
         assertEquals("2", result.toString())
@@ -204,7 +200,7 @@ class CtfTmfEventFieldTest {
      * array of integers field.
      */
     @Test
-    fun testParseField_array_int() {
+    fun testParseFieldArrayInt() {
         val fieldDef = fixture.lookupArrayDefinition(ARRAY_INT)!!
         val result = CtfTraceEventFieldParser.parseField(fieldDef)
         assertEquals("[2, 2]", result.toString())
@@ -214,7 +210,7 @@ class CtfTmfEventFieldTest {
      * Run the CtfTmfEventField parseField(Definition,String) method test.
      */
     @Test
-    fun testParseField_sequence() {
+    fun testParseFieldSequence() {
         val fieldDef = fixture.lookupDefinition(SEQ)
         val result = CtfTraceEventFieldParser.parseField(fieldDef)
         assertEquals("[2, 2]", result.toString())
@@ -224,10 +220,10 @@ class CtfTmfEventFieldTest {
      * Run the CtfTmfEventField parseField(Definition,String) method test.
      */
     @Test
-    fun testParseField_sequence_value() {
+    fun testParseFieldSequenceValue() {
         val fieldDef = fixture.lookupDefinition(SEQ)
         @SuppressWarnings("unchecked")
-        val result = CtfTraceEventFieldParser.parseField(fieldDef) as ArrayValue<IntegerValue>
+        val result = CtfTraceEventFieldParser.parseField(fieldDef).asType<ArrayValue<IntegerValue>>()!!
         val values = (0 until result.size)
                 .map { result.getElement(it) }
                 .map { it.value }
@@ -240,7 +236,7 @@ class CtfTmfEventFieldTest {
      * Run the CtfTmfEventField parseField(Definition,String) method test.
      */
     @Test
-    fun testParseField_string() {
+    fun testParseFieldString() {
         val fieldDef = fixture.lookupDefinition(STR)
         val result = CtfTraceEventFieldParser.parseField(fieldDef)
         assertEquals("two", result.toString())
@@ -251,7 +247,7 @@ class CtfTmfEventFieldTest {
      * array of strings field.
      */
     @Test
-    fun testParseField_array_string() {
+    fun testParseFieldArrayString() {
         val fieldDef = fixture.lookupArrayDefinition(ARRAY_STR)!!
         val result = CtfTraceEventFieldParser.parseField(fieldDef)
         assertEquals("[two, two]", result.toString())
@@ -261,7 +257,7 @@ class CtfTmfEventFieldTest {
      * Run the CtfTmfEventField parseField(Definition,String) method test.
      */
     @Test
-    fun testParseField_struct() {
+    fun testParseFieldStruct() {
         val fieldDef = fixture.lookupDefinition(STRUCT)
         val result = CtfTraceEventFieldParser.parseField(fieldDef)
         assertEquals("{str=two, int=2}", result.toString())
@@ -272,7 +268,7 @@ class CtfTmfEventFieldTest {
      * array of structs field.
      */
     @Test
-    fun testParseField_array_struct() {
+    fun testParseFieldArrayStruct() {
         val fieldDef = fixture.lookupArrayDefinition(ARRAY_STRUCT)!!
         val result = CtfTraceEventFieldParser.parseField(fieldDef)
         assertEquals("[{str=two, int=2}, {str=two, int=2}]", result.toString())
@@ -282,7 +278,7 @@ class CtfTmfEventFieldTest {
      * Run the CtfTmfEventField parseField(Definition,String) method test.
      */
     @Test
-    fun testParseField_enum() {
+    fun testParseFieldEnum() {
         val fieldDef = fixture.lookupDefinition(ENUM)
         val result = CtfTraceEventFieldParser.parseField(fieldDef)
         assertEquals("float(2)", result.toString())
@@ -293,7 +289,7 @@ class CtfTmfEventFieldTest {
      * array of enums field.
      */
     @Test
-    fun testParseField_array_enum() {
+    fun testParseFieldArrayEnum() {
         val fieldDef = fixture.lookupArrayDefinition(ARRAY_ENUM)!!
         val result = CtfTraceEventFieldParser.parseField(fieldDef)
         assertEquals("[float(2), float(2)]", result.toString())
@@ -303,7 +299,7 @@ class CtfTmfEventFieldTest {
      * Run the CtfTmfEventField parseField(Definition,String) method test.
      */
     @Test
-    fun testParseField_variant() {
+    fun testParseFieldVariant() {
         val fieldDef = fixture.lookupDefinition(VARIANT)
         val result = CtfTraceEventFieldParser.parseField(fieldDef)
         assertEquals("2.0", result.toString())
@@ -314,7 +310,7 @@ class CtfTmfEventFieldTest {
      * array of variants field.
      */
     @Test
-    fun testParseField_array_variant() {
+    fun testParseFieldArrayVariant() {
         val fieldDef = fixture.lookupArrayDefinition(ARRAY_VARIANT)!!
         val result = CtfTraceEventFieldParser.parseField(fieldDef)
         assertEquals("[2.0, 2.0]", result.toString())
