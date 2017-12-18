@@ -42,7 +42,7 @@ class DebugHandler : HttpHandler {
         println("Remote address = ${t.remoteAddress}")
         println("----------")
 
-        val responseHeaders = t.responseHeaders
+//        val responseHeaders = t.responseHeaders
         // responseHeaders.set(...)
 
         val response = "This is the response"

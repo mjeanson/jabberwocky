@@ -33,6 +33,7 @@ class CtfTmfEventFieldSignExtensionTest {
     companion object {
 
         @JvmField @ClassRule
+        @Suppress("deprecation") // The debug info in this trace is deprecated, but we're testing other things here.
         val ETT = ExtractedCtfTestTrace(CtfTestTrace.DEBUG_INFO3)
     }
 

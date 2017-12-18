@@ -47,7 +47,7 @@ fun main(args: Array<String>) {
         while (it.hasNext()) {
             val event = it.next()
             val offset = event.timestamp - prevTimestamp
-            printEvent(trace, event, offset)
+            printEvent(event, offset)
             prevTimestamp = event.timestamp
             i++
         }
@@ -57,7 +57,7 @@ fun main(args: Array<String>) {
     projectPath.toFile().deleteRecursively()
 }
 
-private fun printEvent(trace: CtfTrace, event: CtfTraceEvent, offset: Long) {
+private fun printEvent(event: CtfTraceEvent, offset: Long) {
     val ts = event.timestamp
     // TODO Correct the timestamp
 //    val ts2 = trace.innerTrace.timestampCyclesToNanos(ts)

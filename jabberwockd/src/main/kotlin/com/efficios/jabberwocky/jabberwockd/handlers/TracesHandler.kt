@@ -44,12 +44,12 @@ class TracesHandler : HttpHandler {
         }
         // TODO Print trace info, etc.
 
-        val requestMethod = exchange.requestMethod
-        val requestHeaders = exchange.requestHeaders
-        val requestBody = exchange.requestBody
-        val requestBodyString = requestBody.bufferedReader().use { it.readText() }
+//        val requestMethod = exchange.requestMethod
+//        val requestHeaders = exchange.requestHeaders
+//        val requestBody = exchange.requestBody
+//        val requestBodyString = requestBody.bufferedReader().use { it.readText() }
 
-        val responseHeaders = exchange.responseHeaders
+//        val responseHeaders = exchange.responseHeaders
         // responseHeaders.set(...)
 
         val response = "This is the response"
