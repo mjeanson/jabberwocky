@@ -39,7 +39,7 @@ public class ProcessFreeHandler extends KernelEventHandler {
     @Override
     public void handleEvent(IStateSystemWriter ss, TraceEvent event) throws AttributeNotFoundException {
         int cpu = event.getCpu();
-        Long tid = requireNonNull(event.getField(getLayout().fieldTid(), IntegerValue.class)).getValue();
+        Long tid = ((IntegerValue) event.getFields().get(getLayout().fieldTid())).getValue();
 
         String threadAttributeName = Attributes.buildThreadAttributeName(tid.intValue(), cpu);
         if (threadAttributeName == null) {

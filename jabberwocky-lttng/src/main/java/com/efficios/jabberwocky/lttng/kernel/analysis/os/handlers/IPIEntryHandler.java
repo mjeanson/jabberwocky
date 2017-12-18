@@ -17,8 +17,6 @@ import com.efficios.jabberwocky.lttng.kernel.trace.layout.ILttngKernelEventLayou
 import com.efficios.jabberwocky.trace.event.FieldValue.IntegerValue;
 import com.efficios.jabberwocky.trace.event.TraceEvent;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * IPI Entry Handler
  *
@@ -40,7 +38,7 @@ public class IPIEntryHandler extends KernelEventHandler {
     public void handleEvent(IStateSystemWriter ss, TraceEvent event) throws AttributeNotFoundException {
 
         int cpu = event.getCpu();
-        Long irqId = requireNonNull(event.getField(getLayout().fieldIPIVector(), IntegerValue.class)).getValue();
+        Long irqId = ((IntegerValue) event.getFields().get(getLayout().fieldIPIVector())).getValue();
 
         /*
          * Mark this IRQ as active in the resource tree. The state value = the

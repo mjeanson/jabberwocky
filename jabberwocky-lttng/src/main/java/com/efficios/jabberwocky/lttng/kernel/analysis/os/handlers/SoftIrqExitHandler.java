@@ -45,7 +45,7 @@ public class SoftIrqExitHandler extends KernelEventHandler {
     public void handleEvent(IStateSystemWriter ss, TraceEvent event) throws AttributeNotFoundException {
         long timestamp = event.getTimestamp();
         int cpu = event.getCpu();
-        Long softIrqId = requireNonNull(event.getField(getLayout().fieldVec(), IntegerValue.class)).getValue();
+        Long softIrqId = ((IntegerValue) event.getFields().get(getLayout().fieldVec())).getValue();
         int currentThreadNode = KernelEventHandlerUtils.getCurrentThreadNode(cpu, ss);
 
         /* Put this SoftIRQ back to inactive (= -1) in the resource tree */

@@ -42,7 +42,7 @@ public class SoftIrqRaiseHandler extends KernelEventHandler {
     @Override
     public void handleEvent(IStateSystemWriter ss, TraceEvent event) throws AttributeNotFoundException {
         int cpu = event.getCpu();
-        Long softIrqId = requireNonNull(event.getField(getLayout().fieldVec(), IntegerValue.class)).getValue();
+        Long softIrqId = ((IntegerValue) event.getFields().get(getLayout().fieldVec())).getValue();
 
         /*
          * Mark this SoftIRQ as *raised* in the resource tree.

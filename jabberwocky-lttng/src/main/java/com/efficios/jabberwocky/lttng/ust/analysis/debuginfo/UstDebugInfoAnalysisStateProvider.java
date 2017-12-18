@@ -151,7 +151,7 @@ class UstDebugInfoAnalysisStateProvider {
          * the analysis also needs the "ip" context, but the state provider part
          * does not.
          */
-        final IntegerValue vpidField = event.getField(layout.contextVpid(), IntegerValue.class);
+        final IntegerValue vpidField = (IntegerValue) event.getFields().get(layout.contextVpid());
         if (vpidField == null) {
             return;
         }
@@ -313,12 +313,12 @@ class UstDebugInfoAnalysisStateProvider {
     private void handleBinInfo(LttngUst28EventLayout layout, TraceEvent event, final Long vpid,
                                final IStateSystemWriter ss, boolean statedump) {
         // "?.getValue()" would be sooo much cleaner...
-        IntegerValue baddrField = event.getField(layout.fieldBaddr(), IntegerValue.class);
-        IntegerValue memszField = event.getField(layout.fieldMemsz(), IntegerValue.class);
-        StringValue pathField = event.getField(layout.fieldPath(), StringValue.class);
-        IntegerValue hasBuildIdField = event.getField(layout.fieldHasBuildId(), IntegerValue.class);
-        IntegerValue hasDebugLinkField = event.getField(layout.fieldHasDebugLink(), IntegerValue.class);
-        IntegerValue isPicField = event.getField(layout.fieldIsPic(), IntegerValue.class);
+        IntegerValue baddrField = (IntegerValue) event.getFields().get(layout.fieldBaddr());
+        IntegerValue memszField = (IntegerValue) event.getFields().get(layout.fieldMemsz());
+        StringValue pathField = (StringValue) event.getFields().get(layout.fieldPath());
+        IntegerValue hasBuildIdField = (IntegerValue) event.getFields().get(layout.fieldHasBuildId());
+        IntegerValue hasDebugLinkField = (IntegerValue) event.getFields().get(layout.fieldHasDebugLink());
+        IntegerValue isPicField = (IntegerValue) event.getFields().get(layout.fieldIsPic());
 
         if (baddrField == null ||
                 memszField == null ||
@@ -363,8 +363,8 @@ class UstDebugInfoAnalysisStateProvider {
      */
     private void handleBuildId(LttngUst28EventLayout layout, TraceEvent event, final Long vpid,
                                final IStateSystemWriter ss, boolean statedump) {
-        ArrayValue<IntegerValue> buildIdArrayField = event.getField(layout.fieldBuildId(), ArrayValue.class);
-        IntegerValue baddrField = event.getField(layout.fieldBaddr(), IntegerValue.class);
+        ArrayValue<IntegerValue> buildIdArrayField = (ArrayValue<IntegerValue>) event.getFields().get(layout.fieldBuildId());
+        IntegerValue baddrField = (IntegerValue) event.getFields().get(layout.fieldBaddr());
 
         if (buildIdArrayField == null || baddrField == null) {
             // TODO Restore logging
@@ -399,8 +399,8 @@ class UstDebugInfoAnalysisStateProvider {
 
     private void handleDebugLink(LttngUst28EventLayout layout, TraceEvent event, final Long vpid,
                                  final IStateSystemWriter ss, boolean statedump) {
-        IntegerValue baddrField = event.getField(layout.fieldBaddr(), IntegerValue.class);
-        StringValue debugLinkField = event.getField(layout.fieldDebugLinkFilename(), StringValue.class);
+        IntegerValue baddrField = (IntegerValue) event.getFields().get(layout.fieldBaddr());
+        StringValue debugLinkField = (StringValue) event.getFields().get(layout.fieldDebugLinkFilename());
 
         if (baddrField == null || debugLinkField == null) {
             // TODO Restore logging
@@ -428,7 +428,7 @@ class UstDebugInfoAnalysisStateProvider {
      * Uses fields: Long baddr
      */
     private static void handleClose(LttngUst28EventLayout layout, TraceEvent event, final Long vpid, final IStateSystemWriter ss) {
-        IntegerValue baddrField = event.getField(layout.fieldBaddr(), IntegerValue.class);
+        IntegerValue baddrField = (IntegerValue) event.getFields().get(layout.fieldBaddr());
 
         if (baddrField == null) {
             // TODO Restore logging

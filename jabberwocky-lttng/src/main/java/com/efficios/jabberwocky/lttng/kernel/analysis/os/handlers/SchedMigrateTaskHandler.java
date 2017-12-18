@@ -38,8 +38,8 @@ public class SchedMigrateTaskHandler extends KernelEventHandler {
 
     @Override
     public void handleEvent(IStateSystemWriter ss, TraceEvent event) throws AttributeNotFoundException {
-        IntegerValue tidField = event.getField(getLayout().fieldTid(), IntegerValue.class);
-        IntegerValue destCpuField = event.getField(getLayout().fieldDestCpu(), IntegerValue.class);
+        IntegerValue tidField = (IntegerValue) event.getFields().get(getLayout().fieldTid());
+        IntegerValue destCpuField = (IntegerValue) event.getFields().get(getLayout().fieldDestCpu());
         if (tidField == null || destCpuField == null) {
             return;
         }

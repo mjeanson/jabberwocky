@@ -38,8 +38,8 @@ public class PiSetprioHandler extends KernelEventHandler {
     @Override
     public void handleEvent(IStateSystemWriter ss, TraceEvent event) throws AttributeNotFoundException {
         int cpu = event.getCpu();
-        Long tid = requireNonNull(event.getField(getLayout().fieldTid(), IntegerValue.class)).getValue();
-        Long prio = requireNonNull(event.getField(getLayout().fieldNewPrio(), IntegerValue.class)).getValue();
+        Long tid = ((IntegerValue) event.getFields().get(getLayout().fieldTid())).getValue();
+        Long prio = ((IntegerValue) event.getFields().get(getLayout().fieldNewPrio())).getValue();
 
         String threadAttributeName = Attributes.buildThreadAttributeName(tid.intValue(), cpu);
         if (threadAttributeName == null) {

@@ -60,9 +60,9 @@ class EventContextTest {
     @Test
     fun testContextStart() {
         val firstEvent = getEventAt(startTime)
-        val perfPageFault = firstEvent.getField("context.perf_page_fault", IntegerValue::class.java)!!.value
-        val procname = firstEvent.getField("context.procname", StringValue::class.java)!!.value
-        val tid = firstEvent.getField("context.tid", IntegerValue::class.java)!!.value
+        val perfPageFault = firstEvent.fields["context.perf_page_fault"]?.asType<IntegerValue>()!!.value
+        val procname = firstEvent.fields["context.procname"]?.asType<StringValue>()!!.value
+        val tid = firstEvent.fields["context.tid"]?.asType<IntegerValue>()!!.value
 
         assertEquals(613, perfPageFault)
         assertEquals("lttng-sessiond", procname)
@@ -76,9 +76,9 @@ class EventContextTest {
     fun testContext1() {
         val time = startTime + 5000000000L // 1363700745.559739078
         val event = getEventAt(time)
-        val perfPageFault = event.getField("context.perf_page_fault", IntegerValue::class.java)!!.value
-        val procname = event.getField("context.procname", StringValue::class.java)!!.value
-        val tid = event.getField("context.tid", IntegerValue::class.java)!!.value
+        val perfPageFault = event.fields["context.perf_page_fault"]?.asType<IntegerValue>()!!.value
+        val procname = event.fields["context.procname"]?.asType<StringValue>()!!.value
+        val tid = event.fields["context.tid"]?.asType<IntegerValue>()!!.value
 
         assertEquals(6048, perfPageFault)
         assertEquals("swapper/0", procname)
@@ -92,9 +92,9 @@ class EventContextTest {
     fun testContext2() {
         val time = startTime + 2 * 5000000000L // 1363700750.559707062
         val event = getEventAt(time)
-        val perfPageFault = event.getField("context.perf_page_fault", IntegerValue::class.java)!!.value
-        val procname = event.getField("context.procname", StringValue::class.java)!!.value
-        val tid = event.getField("context.tid", IntegerValue::class.java)!!.value
+        val perfPageFault = event.fields["context.perf_page_fault"]?.asType<IntegerValue>()!!.value
+        val procname = event.fields["context.procname"]?.asType<StringValue>()!!.value
+        val tid = event.fields["context.tid"]?.asType<IntegerValue>()!!.value
 
         assertEquals(13258, perfPageFault)
         assertEquals("swapper/0", procname)
@@ -109,9 +109,9 @@ class EventContextTest {
     fun testContextMiddle() {
         val midTime = startTime + (endTime - startTime) / 2L // 1363700755.555723128
         val midEvent = getEventAt(midTime)
-        val perfPageFault = midEvent.getField("context.perf_page_fault", IntegerValue::class.java)!!.value
-        val procname = midEvent.getField("context.procname", StringValue::class.java)!!.value
-        val tid = midEvent.getField("context.tid", IntegerValue::class.java)!!.value
+        val perfPageFault = midEvent.fields["context.perf_page_fault"]?.asType<IntegerValue>()!!.value
+        val procname = midEvent.fields["context.procname"]?.asType<StringValue>()!!.value
+        val tid = midEvent.fields["context.tid"]?.asType<IntegerValue>()!!.value
 
         assertEquals(19438, perfPageFault)
         assertEquals("swapper/0", procname)
@@ -125,9 +125,9 @@ class EventContextTest {
     fun testContext3() {
         val time = startTime + 4 * 5000000000L // 1363700760.559719724
         val event = getEventAt(time)
-        val perfPageFault = event.getField("context.perf_page_fault", IntegerValue::class.java)!!.value
-        val procname = event.getField("context.procname", StringValue::class.java)!!.value
-        val tid = event.getField("context.tid", IntegerValue::class.java)!!.value
+        val perfPageFault = event.fields["context.perf_page_fault"]?.asType<IntegerValue>()!!.value
+        val procname = event.fields["context.procname"]?.asType<StringValue>()!!.value
+        val tid = event.fields["context.tid"]?.asType<IntegerValue>()!!.value
 
         assertEquals(21507, perfPageFault)
         assertEquals("swapper/0", procname)
@@ -141,9 +141,9 @@ class EventContextTest {
     fun testContext4() {
         val time = startTime + 5 * 5000000000L // 1363700765.559714634
         val event = getEventAt(time)
-        val perfPageFault = event.getField("context.perf_page_fault", IntegerValue::class.java)!!.value
-        val procname = event.getField("context.procname", StringValue::class.java)!!.value
-        val tid = event.getField("context.tid", IntegerValue::class.java)!!.value
+        val perfPageFault = event.fields["context.perf_page_fault"]?.asType<IntegerValue>()!!.value
+        val procname = event.fields["context.procname"]?.asType<StringValue>()!!.value
+        val tid = event.fields["context.tid"]?.asType<IntegerValue>()!!.value
 
         assertEquals(21507, perfPageFault)
         assertEquals("swapper/0", procname)
@@ -156,9 +156,9 @@ class EventContextTest {
     @Test
     fun testContextEnd() {
         val lastEvent = getEventAt(endTime)
-        val perfPageFault = lastEvent.getField("context.perf_page_fault", IntegerValue::class.java)!!.value
-        val procname = lastEvent.getField("context.procname", StringValue::class.java)!!.value
-        val tid = lastEvent.getField("context.tid", IntegerValue::class.java)!!.value
+        val perfPageFault = lastEvent.fields["context.perf_page_fault"]?.asType<IntegerValue>()!!.value
+        val procname = lastEvent.fields["context.procname"]?.asType<StringValue>()!!.value
+        val tid = lastEvent.fields["context.tid"]?.asType<IntegerValue>()!!.value
 
         assertEquals(22117, perfPageFault)
         assertEquals("lttng-sessiond", procname)

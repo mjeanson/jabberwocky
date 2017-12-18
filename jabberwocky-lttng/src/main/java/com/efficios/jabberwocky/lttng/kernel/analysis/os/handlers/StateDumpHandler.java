@@ -24,8 +24,6 @@ import com.efficios.jabberwocky.trace.event.FieldValue.StringValue;
 import com.efficios.jabberwocky.trace.event.TraceEvent;
 import org.jetbrains.annotations.Nullable;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * LTTng Specific state dump event handler
  */
@@ -34,8 +32,7 @@ public class StateDumpHandler extends KernelEventHandler {
     /**
      * Constructor
      *
-     * @param layout
-     *            event layout
+     * @param layout event layout
      */
     public StateDumpHandler(ILttngKernelEventLayout layout) {
         super(layout);
@@ -44,14 +41,14 @@ public class StateDumpHandler extends KernelEventHandler {
     @Override
     public void handleEvent(IStateSystemWriter ss, TraceEvent event) throws AttributeNotFoundException {
         int eventCpu = event.getCpu();
-        Long tid = requireNonNull(event.getField("tid", IntegerValue.class)).getValue(); //$NON-NLS-1$
-        Long pid =  requireNonNull(event.getField("pid", IntegerValue.class)).getValue(); //$NON-NLS-1$
-        Long ppid = requireNonNull(event.getField("ppid", IntegerValue.class)).getValue(); //$NON-NLS-1$
-        Long status = requireNonNull(event.getField("status", IntegerValue.class)).getValue(); //$NON-NLS-1$
-        String name = requireNonNull(event.getField("name", StringValue.class)).getValue(); //$NON-NLS-1$
+        Long tid = ((IntegerValue) event.getFields().get("tid")).getValue();
+        Long pid = ((IntegerValue) event.getFields().get("pid")).getValue();
+        Long ppid = ((IntegerValue) event.getFields().get("ppid")).getValue();
+        Long status = ((IntegerValue) event.getFields().get("status")).getValue();
+        String name = ((StringValue) event.getFields().get("name")).getValue();
 
         /* Only present in LTTng 2.10+ */
-        IntegerValue cpuFieldValue = event.getField("cpu", IntegerValue.class); //$NON-NLS-1$
+        IntegerValue cpuFieldValue = (IntegerValue) event.getFields().get("cpu"); //$NON-NLS-1$
         @Nullable Long cpuField = (cpuFieldValue == null ? null : cpuFieldValue.getValue());
 
         /*
@@ -80,21 +77,21 @@ public class StateDumpHandler extends KernelEventHandler {
         StateValue value;
         if (ss.queryOngoingState(curThreadNode).isNull()) {
             switch (status) {
-            case LinuxValues.STATEDUMP_PROCESS_STATUS_WAIT_CPU:
-                value = StateValues.PROCESS_STATUS_WAIT_FOR_CPU_VALUE;
-                setRunQueue(ss, curThreadNode, cpu, timestamp);
-                break;
-            case LinuxValues.STATEDUMP_PROCESS_STATUS_WAIT:
-                /*
-                 * We have no information on what the process is waiting on
-                 * (unlike a sched_switch for example), so we will use the
-                 * WAIT_UNKNOWN state instead of the "normal" WAIT_BLOCKED
-                 * state.
-                 */
-                value = StateValues.PROCESS_STATUS_WAIT_UNKNOWN_VALUE;
-                break;
-            default:
-                value = StateValues.PROCESS_STATUS_UNKNOWN_VALUE;
+                case LinuxValues.STATEDUMP_PROCESS_STATUS_WAIT_CPU:
+                    value = StateValues.PROCESS_STATUS_WAIT_FOR_CPU_VALUE;
+                    setRunQueue(ss, curThreadNode, cpu, timestamp);
+                    break;
+                case LinuxValues.STATEDUMP_PROCESS_STATUS_WAIT:
+                    /*
+                     * We have no information on what the process is waiting on
+                     * (unlike a sched_switch for example), so we will use the
+                     * WAIT_UNKNOWN state instead of the "normal" WAIT_BLOCKED
+                     * state.
+                     */
+                    value = StateValues.PROCESS_STATUS_WAIT_UNKNOWN_VALUE;
+                    break;
+                default:
+                    value = StateValues.PROCESS_STATUS_UNKNOWN_VALUE;
             }
             ss.modifyAttribute(timestamp, value, curThreadNode);
         }

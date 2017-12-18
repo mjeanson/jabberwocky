@@ -25,8 +25,8 @@ fun UstDebugInfoAnalysisResults.getCallsiteOfEvent(event: TraceEvent): BinaryCal
     val layout = trace.getUstEventLayout() ?: return null
 
     /* We need both the vpid and ip contexts */
-    val vpid = event.getField(layout.contextVpid(), FieldValue.IntegerValue::class.java)?.value ?: return null
-    val ip = event.getField(layout.contextIp(), FieldValue.IntegerValue::class.java)?.value ?: return null
+    val vpid = event.fields[layout.contextVpid()]?.asType<FieldValue.IntegerValue>()?.value ?: return null
+    val ip = event.fields[layout.contextIp()]?.asType<FieldValue.IntegerValue>()?.value ?: return null
     val ts = event.timestamp
 
     return getBinaryCallsite(vpid, ts, ip)

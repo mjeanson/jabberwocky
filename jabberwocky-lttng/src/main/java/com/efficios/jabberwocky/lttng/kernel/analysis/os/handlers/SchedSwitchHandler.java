@@ -23,8 +23,6 @@ import com.efficios.jabberwocky.trace.event.FieldValue.IntegerValue;
 import com.efficios.jabberwocky.trace.event.FieldValue.StringValue;
 import com.efficios.jabberwocky.trace.event.TraceEvent;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * Scheduler switch event handler
  */
@@ -33,8 +31,7 @@ public class SchedSwitchHandler extends KernelEventHandler {
     /**
      * Constructor
      *
-     * @param layout
-     *            event layout
+     * @param layout event layout
      */
     public SchedSwitchHandler(ILttngKernelEventLayout layout) {
         super(layout);
@@ -44,13 +41,13 @@ public class SchedSwitchHandler extends KernelEventHandler {
     public void handleEvent(IStateSystemWriter ss, TraceEvent event) throws AttributeNotFoundException {
         int cpu = event.getCpu();
 
-        String prevProcessName = requireNonNull(event.getField(getLayout().fieldPrevComm(), StringValue.class)).getValue();
-        Long prevTid = requireNonNull(event.getField(getLayout().fieldPrevTid(), IntegerValue.class)).getValue();
-        Long prevState = requireNonNull(event.getField(getLayout().fieldPrevState(), IntegerValue.class)).getValue();
-        Long prevPrio = requireNonNull(event.getField(getLayout().fieldPrevPrio(), IntegerValue.class)).getValue();
-        String nextProcessName = requireNonNull(event.getField(getLayout().fieldNextComm(), StringValue.class)).getValue();
-        Long nextTid = requireNonNull(event.getField(getLayout().fieldNextTid(), IntegerValue.class)).getValue();
-        Long nextPrio = requireNonNull(event.getField(getLayout().fieldNextPrio(), IntegerValue.class)).getValue();
+        String prevProcessName = ((StringValue) event.getFields().get(getLayout().fieldPrevComm())).getValue();
+        Long prevTid = ((IntegerValue) event.getFields().get(getLayout().fieldPrevTid())).getValue();
+        Long prevState = ((IntegerValue) event.getFields().get(getLayout().fieldPrevState())).getValue();
+        Long prevPrio = ((IntegerValue) event.getFields().get(getLayout().fieldPrevPrio())).getValue();
+        String nextProcessName = ((StringValue) event.getFields().get(getLayout().fieldNextComm())).getValue();
+        Long nextTid = ((IntegerValue) event.getFields().get(getLayout().fieldNextTid())).getValue();
+        Long nextPrio = ((IntegerValue) event.getFields().get(getLayout().fieldNextPrio())).getValue();
 
         /* Will never return null since "cpu" is null checked */
         String formerThreadAttributeName = Attributes.buildThreadAttributeName(prevTid.intValue(), cpu);
@@ -100,7 +97,7 @@ public class SchedSwitchHandler extends KernelEventHandler {
     }
 
     private static void setOldProcessStatus(IStateSystemWriter ss,
-            long prevState, int formerThreadNode, int cpu, long timestamp) {
+                                            long prevState, int formerThreadNode, int cpu, long timestamp) {
         StateValue value;
         boolean staysOnRunQueue = false;
         /*

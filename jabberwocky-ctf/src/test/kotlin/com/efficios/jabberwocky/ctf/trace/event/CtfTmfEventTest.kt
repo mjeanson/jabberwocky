@@ -95,7 +95,7 @@ class CtfTmfEventTest {
     </String> */
     @Test
     fun testGetFieldNames() {
-        val result = fixture.fieldNames
+        val result = fixture.fields.keys
         assertNotNull(result)
         assertTrue(result.isNotEmpty())
     }
@@ -105,8 +105,7 @@ class CtfTmfEventTest {
      */
     @Test
     fun testGetFieldValue() {
-        val result = fixture.getField(VALID_FIELD, IntegerValue::class.java)!!
-        assertNotNull(result)
+        val result = fixture.fields[VALID_FIELD]?.asType<IntegerValue>()!!
         assertNotNull(result.value)
     }
 

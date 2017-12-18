@@ -19,30 +19,12 @@ open class BaseTraceEvent(@Transient override val trace: Trace<TraceEvent>,
                       override val timestamp: Long,
                       override val cpu: Int,
                       override val eventName: String,
-                      eventFields: Map<String, FieldValue>,
+                      override val fields: Map<String, FieldValue>,
                       attributes: Map<String, String>? = null) : TraceEvent {
 
-    private val fEventFields: Map<String, FieldValue> = ImmutableMap.copyOf(eventFields)
+    final override val attributes: Map<String, String> = attributes ?: Collections.emptyMap()
 
-    final override val attributes: Map<String, String> = if (attributes == null) Collections.emptyMap() else ImmutableMap.copyOf(attributes)
-
-    final override val fieldNames = fEventFields.keys
-
-    override fun <T : FieldValue> getField(fieldName: String, fieldType: Class<T>): T? {
-        val value = fEventFields[fieldName] ?: /*
-             * No field with this name found (the map doesn't accept null
-             * values)
-             */
-                return null
-        if (!fieldType.isAssignableFrom(value.javaClass)) {
-            /* Field exists but is not of the expected type */
-            return null
-        }
-        val ret = value as T
-        return ret
-    }
-
-    override fun hashCode() = Objects.hash(timestamp, cpu, eventName, fEventFields, attributes)
+    override fun hashCode() = Objects.hash(timestamp, cpu, eventName, fields, attributes)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -53,7 +35,7 @@ open class BaseTraceEvent(@Transient override val trace: Trace<TraceEvent>,
         if (timestamp != other.timestamp) return false
         if (cpu != other.cpu) return false
         if (eventName != other.eventName) return false
-        if (fEventFields != other.fEventFields) return false
+        if (fields != other.fields) return false
         if (attributes != other.attributes) return false
 
         return true
@@ -64,7 +46,7 @@ open class BaseTraceEvent(@Transient override val trace: Trace<TraceEvent>,
                 .add("timestamp", NumberFormat.getInstance().format(timestamp)) //$NON-NLS-1$
                 .add("event name", eventName) //$NON-NLS-1$
                 .add("cpu", cpu) //$NON-NLS-1$
-                .add("fields", fEventFields) //$NON-NLS-1$
+                .add("fields", fields) //$NON-NLS-1$
                 .toString()
     }
 

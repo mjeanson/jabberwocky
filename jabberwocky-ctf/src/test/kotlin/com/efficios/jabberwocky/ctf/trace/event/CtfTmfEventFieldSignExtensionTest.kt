@@ -62,7 +62,7 @@ class CtfTmfEventFieldSignExtensionTest {
 
             /* Retrieve the event's field called "build_id" */
             val event = iter.next()
-            val arrayValue = event.getField("build_id", ArrayValue::class.java) as ArrayValue<IntegerValue>
+            val arrayValue = event.fields["build_id"]?.asType<ArrayValue<IntegerValue>>()!!
             val values = (0 until arrayValue.size)
                     .map { arrayValue.getElement(it) }
                     .map { it.value }

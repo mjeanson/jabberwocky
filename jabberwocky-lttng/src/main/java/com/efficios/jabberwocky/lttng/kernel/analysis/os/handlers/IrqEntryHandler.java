@@ -40,7 +40,7 @@ public class IrqEntryHandler extends KernelEventHandler {
     @Override
     public void handleEvent(IStateSystemWriter ss, TraceEvent event) throws AttributeNotFoundException {
         int cpu = event.getCpu();
-        Long irqId = requireNonNull(event.getField(getLayout().fieldIrq(), IntegerValue.class)).getValue();
+        Long irqId = ((IntegerValue) event.getFields().get(getLayout().fieldIrq())).getValue();
 
         /*
          * Mark this IRQ as active in the resource tree.

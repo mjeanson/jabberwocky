@@ -22,11 +22,9 @@ import com.efficios.jabberwocky.lttng.kernel.trace.layout.ILttngKernelEventLayou
 import com.efficios.jabberwocky.trace.event.FieldValue.IntegerValue;
 import com.efficios.jabberwocky.trace.event.TraceEvent;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * Waking/wakeup handler.
- *
+ * <p>
  * "sched_waking" and "sched_wakeup" tracepoints contain the same fields, and
  * apply the same state transitions in our model, so they can both use this
  * handler.
@@ -35,6 +33,7 @@ public class SchedWakeupHandler extends KernelEventHandler {
 
     /**
      * Constructor
+     *
      * @param layout event layout
      */
     public SchedWakeupHandler(ILttngKernelEventLayout layout) {
@@ -44,9 +43,9 @@ public class SchedWakeupHandler extends KernelEventHandler {
     @Override
     public void handleEvent(IStateSystemWriter ss, TraceEvent event) throws AttributeNotFoundException {
         int cpu = event.getCpu();
-        final Long tid = requireNonNull(event.getField(getLayout().fieldTid(), IntegerValue.class)).getValue();
-        final Long prio = requireNonNull(event.getField(getLayout().fieldPrio(), IntegerValue.class)).getValue();
-        Long targetCpu = requireNonNull(event.getField(getLayout().fieldTargetCpu(), IntegerValue.class)).getValue();
+        final Long tid = ((IntegerValue) event.getFields().get(getLayout().fieldTid())).getValue();
+        final Long prio = ((IntegerValue) event.getFields().get(getLayout().fieldPrio())).getValue();
+        Long targetCpu = ((IntegerValue) event.getFields().get(getLayout().fieldTargetCpu())).getValue();
 
         String threadAttributeName = Attributes.buildThreadAttributeName(tid.intValue(), cpu);
         if (threadAttributeName == null) {

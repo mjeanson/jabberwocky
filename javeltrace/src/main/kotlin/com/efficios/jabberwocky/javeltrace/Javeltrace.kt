@@ -73,9 +73,8 @@ private fun printEvent(event: CtfTraceEvent, offset: Long) {
             .add("{ cpu_id = " + event.cpu.toString() + " },")
 
     val fieldJoiner = StringJoiner(", ", "{ ", " }")
-    for (fieldName in event.fieldNames) {
-        val fieldValue = event.getField(fieldName, FieldValue::class.java)
-        fieldJoiner.add(fieldName + " = " + fieldValue.toString())
+    for (field in event.fields.entries) {
+        fieldJoiner.add(field.key + " = " + field.value.toString())
     }
     sj.add(fieldJoiner.toString())
 

@@ -13,6 +13,20 @@ import java.util.*
 
 sealed class FieldValue(open val attributes: Map<String, String>?) {
 
+    /**
+     * Utility method to avoid having to add parentheses around checked casts.
+     * For example you can use either
+     *
+     * (event.fields["field_1"] as? IntegerValue)!!.value
+     *
+     * or
+     *
+     * event.fields["field_1"]?.asType<IntegerValue>()!!.value
+     *
+     */
+    inline fun <reified T : FieldValue> asType(): T? = this as? T
+
+
     data class ArrayValue<T : FieldValue>(val elements: Array<T>,
                                           override val attributes: Map<String, String>? = null) : FieldValue(attributes) {
         val size: Int = elements.size
@@ -69,13 +83,6 @@ sealed class FieldValue(open val attributes: Map<String, String>?) {
 
     data class StructValue(val elements: Map<String, FieldValue>,
                            override val attributes: Map<String, String>? = null) : FieldValue(attributes) {
-
-        val fieldNames = elements.keys
-
-        inline fun <reified T : FieldValue> getField(fieldName: String): T? {
-            val value = elements[fieldName] ?: return null
-            return value as? T
-        }
 
         override fun toString() = elements.toString()
     }

@@ -42,9 +42,9 @@ public class ProcessForkHandler extends KernelEventHandler {
     @Override
     public void handleEvent(IStateSystemWriter ss, TraceEvent event) throws AttributeNotFoundException {
         int cpu = event.getCpu();
-        String childProcessName = requireNonNull(event.getField(getLayout().fieldChildComm(), StringValue.class)).getValue();
-        int parentTid = Long.valueOf(requireNonNull(event.getField(getLayout().fieldParentTid(), IntegerValue.class)).getValue()).intValue();
-        int childTid = Long.valueOf(requireNonNull(event.getField(getLayout().fieldChildTid(), IntegerValue.class)).getValue()).intValue();
+        String childProcessName = ((StringValue) event.getFields().get(getLayout().fieldChildComm())).getValue();
+        int parentTid = Long.valueOf(((IntegerValue) event.getFields().get(getLayout().fieldParentTid())).getValue()).intValue();
+        int childTid = Long.valueOf(((IntegerValue) event.getFields().get(getLayout().fieldChildTid())).getValue()).intValue();
 
         String parentThreadAttributeName = Attributes.buildThreadAttributeName(parentTid, cpu);
         if (parentThreadAttributeName == null) {

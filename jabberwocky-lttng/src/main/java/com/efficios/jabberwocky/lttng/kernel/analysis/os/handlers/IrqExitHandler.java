@@ -40,7 +40,7 @@ public class IrqExitHandler extends KernelEventHandler {
     public void handleEvent(IStateSystemWriter ss, TraceEvent event) throws AttributeNotFoundException {
         int cpu = event.getCpu();
         int currentThreadNode = KernelEventHandlerUtils.getCurrentThreadNode(cpu, ss);
-        Long irqId = requireNonNull(event.getField(getLayout().fieldIrq(), IntegerValue.class)).getValue();
+        Long irqId = ((IntegerValue) event.getFields().get(getLayout().fieldIrq())).getValue();
 
         /* Put this IRQ back to inactive in the resource tree */
         int quark = ss.getQuarkRelativeAndAdd(KernelEventHandlerUtils.getNodeIRQs(cpu, ss), irqId.toString());

@@ -35,14 +35,16 @@ class FunkyTraceTest {
 
     companion object {
 
-        @JvmField @ClassRule
+        @JvmField
+        @ClassRule
         val ETT = ExtractedCtfTestTrace(CtfTestTrace.FUNKY_TRACE)
 
         const val DELTA = 0.0000001
     }
 
     /** Time-out tests after 1 minute.  */
-    @JvmField @Rule
+    @JvmField
+    @Rule
     val globalTimeout: TestRule = Timeout(1, TimeUnit.MINUTES)
 
     /**
@@ -53,8 +55,8 @@ class FunkyTraceTest {
         val event = getEvent(0)
         assertEquals("Simple Event", event.eventName)
         assertEquals(1234567L, event.timestamp)
-        assertEquals(42L, event.getField("integer_field", IntegerValue::class.java)!!.value)
-        assertEquals(3.1415, event.getField("float_field", FloatValue::class.java)!!.value, DELTA)
+        assertEquals(42L, event.fields["integer_field"]?.asType<IntegerValue>()!!.value)
+        assertEquals(3.1415, event.fields["float_field"]?.asType<FloatValue>()!!.value, DELTA)
     }
 
     /**
@@ -65,8 +67,8 @@ class FunkyTraceTest {
         val event = getEvent(1)
         assertEquals("Spammy_Event", event.eventName)
         assertEquals(1234568L, event.timestamp)
-        assertEquals(0L, event.getField("field_1", IntegerValue::class.java)!!.value)
-        assertEquals("This is a test", event.getField("a_string", StringValue::class.java)!!.value)
+        assertEquals(0L, event.fields["field_1"]?.asType<IntegerValue>()!!.value)
+        assertEquals("This is a test", event.fields["a_string"]?.asType<StringValue>()!!.value)
     }
 
     /**
@@ -77,8 +79,9 @@ class FunkyTraceTest {
         val event = getEvent(100000)
         assertEquals("Spammy_Event", event.eventName)
         assertEquals(1334567L, event.timestamp)
-        assertEquals(99999L, event.getField("field_1", IntegerValue::class.java)!!.value)
-        assertEquals("This is a test", event.getField("a_string", StringValue::class.java)!!.value)
+
+        assertEquals(99999L, event.fields["field_1"]?.asType<IntegerValue>()!!.value)
+        assertEquals("This is a test", event.fields["a_string"]?.asType<StringValue>()!!.value)
     }
 
     /**
@@ -106,32 +109,32 @@ class FunkyTraceTest {
         val event = getEvent(100001)
         assertEquals("Complex Test Event", event.eventName)
         assertEquals(1334568L, event.timestamp)
-        assertEquals(0xddf00dL, event.getField("uint_35", IntegerValue::class.java)!!.value)
-        assertEquals(-12345L, event.getField("int_16", IntegerValue::class.java)!!.value)
+        assertEquals(0xddf00dL, event.fields["uint_35"]?.asType<IntegerValue>()!!.value)
+        assertEquals(-12345L, event.fields["int_16"]?.asType<IntegerValue>()!!.value)
 
-        val complexStruct = event.getField("complex_structure", StructValue::class.java)!!
-        val fieldNames = complexStruct.fieldNames
+        val complexStruct = event.fields["complex_structure"] as StructValue
+        val fieldNames = complexStruct.elements.keys
         assertTrue(fieldNames.contains("variant_selector"))
         assertTrue(fieldNames.contains("a_string"))
         assertTrue(fieldNames.contains("variant_value"))
 
-        val enumVal = complexStruct.getField<EnumValue>("variant_selector")
-        assertEquals("INT16_TYPE", enumVal?.stringValue)
-        assertEquals(1L, enumVal?.longValue)
+        val enumVal = complexStruct.elements["variant_selector"] as EnumValue
+        assertEquals("INT16_TYPE", enumVal.stringValue)
+        assertEquals(1L, enumVal.longValue)
 
-        assertEquals("Test string", complexStruct.getField<StringValue>("a_string")!!.value)
+        assertEquals("Test string", complexStruct.elements["a_string"]?.asType<StringValue>()!!.value)
 
-        val variantField = complexStruct.getField<IntegerValue>("variant_value")!!
+        val variantField = complexStruct.elements["variant_value"] as IntegerValue
         assertEquals(-200L, variantField.value)
 
-        val innerStruct = complexStruct.getField<StructValue>("inner_structure")!!
-        assertEquals(10L, innerStruct.getField<IntegerValue>("seq_len")?.value)
+        val innerStruct = complexStruct.elements["inner_structure"] as StructValue
+        assertEquals(10L, innerStruct.elements["seq_len"]?.asType<IntegerValue>()!!.value)
 
         // FIXME Replace Class<?> parameters with something better
-        val arrayVal = innerStruct.getField<ArrayValue<IntegerValue>>("a_sequence")!!
+        val arrayVal = innerStruct.elements["a_sequence"]?.asType<ArrayValue<IntegerValue>>()!!
         val expectedValues = longArrayOf(4, 3, 2, 1, 0, -1, -2, -3, -4, -5)
         for (i in expectedValues.indices) {
-            assertEquals(expectedValues[i],  arrayVal.getElement(i).value)
+            assertEquals(expectedValues[i], arrayVal.getElement(i).value)
         }
     }
 

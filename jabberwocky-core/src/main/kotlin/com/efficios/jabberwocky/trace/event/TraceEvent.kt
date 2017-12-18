@@ -21,9 +21,7 @@ interface TraceEvent {
 
     val eventName: String
 
-    val fieldNames: Set<String>
-
-    fun <T : FieldValue> getField(fieldName: String, fieldType: Class<T>): T?
+    val fields: Map<String, FieldValue>
 
     val attributes: Map<String, String>
 
