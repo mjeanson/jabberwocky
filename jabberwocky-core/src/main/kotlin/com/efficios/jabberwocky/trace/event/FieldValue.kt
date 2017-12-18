@@ -72,13 +72,9 @@ sealed class FieldValue(open val attributes: Map<String, String>?) {
 
         val fieldNames = elements.keys
 
-        fun <T : FieldValue> getField(fieldName: String, fieldType: Class<T>): T? {
+        inline fun <reified T : FieldValue> getField(fieldName: String): T? {
             val value = elements[fieldName] ?: return null
-            if (!fieldType.isAssignableFrom(value.javaClass)) {
-                return null
-            }
-            val ret = value as T
-            return ret
+            return value as? T
         }
 
         override fun toString() = elements.toString()

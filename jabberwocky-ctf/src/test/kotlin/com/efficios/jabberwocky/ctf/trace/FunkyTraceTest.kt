@@ -115,26 +115,23 @@ class FunkyTraceTest {
         assertTrue(fieldNames.contains("a_string"))
         assertTrue(fieldNames.contains("variant_value"))
 
-        val enumVal = complexStruct.getField("variant_selector", EnumValue::class.java)
+        val enumVal = complexStruct.getField<EnumValue>("variant_selector")
         assertEquals("INT16_TYPE", enumVal?.stringValue)
         assertEquals(1L, enumVal?.longValue)
 
-        assertEquals("Test string", complexStruct.getField("a_string", StringValue::class.java)!!.value)
+        assertEquals("Test string", complexStruct.getField<StringValue>("a_string")!!.value)
 
-        val variantField = complexStruct.getField("variant_value", IntegerValue::class.java)!!
+        val variantField = complexStruct.getField<IntegerValue>("variant_value")!!
         assertEquals(-200L, variantField.value)
 
-        val innerStruct = complexStruct.getField("inner_structure", StructValue::class.java)!!
-        assertEquals(10L, innerStruct.getField("seq_len", IntegerValue::class.java)?.value)
+        val innerStruct = complexStruct.getField<StructValue>("inner_structure")!!
+        assertEquals(10L, innerStruct.getField<IntegerValue>("seq_len")?.value)
 
         // FIXME Replace Class<?> parameters with something better
-        val arrayVal = innerStruct.getField("a_sequence", ArrayValue::class.java)!!
+        val arrayVal = innerStruct.getField<ArrayValue<IntegerValue>>("a_sequence")!!
         val expectedValues = longArrayOf(4, 3, 2, 1, 0, -1, -2, -3, -4, -5)
-        assertEquals(expectedValues.size, arrayVal.size)
         for (i in expectedValues.indices) {
-            // Maybe we can do something with reified parameters dark magic
-            val elem = arrayVal.getElement(i) as IntegerValue
-            assertEquals(expectedValues[i], elem.value)
+            assertEquals(expectedValues[i],  arrayVal.getElement(i).value)
         }
     }
 
