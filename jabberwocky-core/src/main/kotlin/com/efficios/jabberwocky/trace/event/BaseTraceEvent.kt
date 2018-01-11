@@ -16,11 +16,11 @@ import java.text.NumberFormat
 import java.util.*
 
 open class BaseTraceEvent(@Transient override val trace: Trace<TraceEvent>,
-                      override val timestamp: Long,
-                      override val cpu: Int,
-                      override val eventName: String,
-                      override val fields: Map<String, FieldValue>,
-                      attributes: Map<String, String>? = null) : TraceEvent {
+                          final override val timestamp: Long,
+                          final override val cpu: Int,
+                          final override val eventName: String,
+                          final override val fields: Map<String, FieldValue>,
+                          attributes: Map<String, String>? = null) : TraceEvent {
 
     final override val attributes: Map<String, String> = attributes ?: Collections.emptyMap()
 
