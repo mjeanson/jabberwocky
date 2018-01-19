@@ -17,7 +17,7 @@ object CtfTraceEventFieldParser {
 
     fun parseField(fieldDef: IDefinition): FieldValue = when (fieldDef) {
 
-        is IntegerDefinition -> IntegerValue(fieldDef.value, fieldDef.declaration.base)
+        is IntegerDefinition? -> IntegerValue(fieldDef.value, fieldDef.declaration.base)
         is FloatDefinition -> FloatValue(fieldDef.value)
         is StringDefinition -> StringValue(fieldDef.value)
 
