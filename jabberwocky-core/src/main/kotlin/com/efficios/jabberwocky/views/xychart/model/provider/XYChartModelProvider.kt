@@ -36,6 +36,9 @@ abstract class XYChartModelProvider(val providerName: String) {
     }
 
     fun generateSeriesRenders(range: TimeRange, resolution: Long, task: FutureTask<*>? = null): List<XYChartRender> {
+        if (resolution <= 0) {
+            throw IllegalArgumentException("Resolution parameter must be positive, was $resolution")
+        }
         return seriesProviders
                 .map { it.generateSeriesRender(range, resolution, task) }
                 .toList()
