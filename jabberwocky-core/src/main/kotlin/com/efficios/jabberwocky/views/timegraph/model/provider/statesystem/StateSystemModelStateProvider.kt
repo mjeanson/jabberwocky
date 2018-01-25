@@ -15,6 +15,7 @@ import ca.polymtl.dorsal.libdelorean.interval.StateInterval
 import ca.polymtl.dorsal.libdelorean.iterator2D
 import com.efficios.jabberwocky.analysis.statesystem.StateSystemAnalysis
 import com.efficios.jabberwocky.common.TimeRange
+import com.efficios.jabberwocky.common.intersection
 import com.efficios.jabberwocky.views.timegraph.model.provider.states.TimeGraphModelStateProvider
 import com.efficios.jabberwocky.views.timegraph.model.render.StateDefinition
 import com.efficios.jabberwocky.views.timegraph.model.render.states.MultiStateInterval
@@ -116,9 +117,12 @@ abstract class StateSystemModelStateProvider(stateDefinitions: List<StateDefinit
                                  task: FutureTask<*>?): Map<TimeGraphTreeElement, TimeGraphStateRender> {
 
         val ss = stateSystem
-        if (ss == null || (task != null && task.isCancelled)) {
-            return Collections.emptyMap()
-        }
+        /* Early-exit if there is no state system (project) currently set. */
+        if (ss == null || (task != null && task.isCancelled)) return Collections.emptyMap()
+
+        /* Clamp the requested time range to the known valid time range for the state database. */
+        val queryTimeRange = timeRange.intersection(ss.startTime, ss.currentEndTime) ?: return Collections.emptyMap()
+
         val intervalsPerElement = treeElements.associateBy({ it }, { mutableListOf<TimeGraphStateInterval>() })
 
         val ssTreeElements = treeElements
@@ -130,8 +134,8 @@ abstract class StateSystemModelStateProvider(stateDefinitions: List<StateDefinit
 
         /* Query the intervals from the state system */
         val quarks = ssTreeElements.map { it.sourceQuark }.toSet()
-        ss.iterator2D(timeRange.startTime, timeRange.endTime, resolution, quarks).asSequence()
-                .forEach{ iterationStep ->
+        ss.iterator2D(queryTimeRange.startTime, queryTimeRange.endTime, resolution, quarks).asSequence()
+                .forEach { iterationStep ->
                     val ts = iterationStep.ts
                     val queryResults = iterationStep.queryResults
 
@@ -165,9 +169,9 @@ abstract class StateSystemModelStateProvider(stateDefinitions: List<StateDefinit
          * Manually add the entries for the last pixel [endTime - resolution, endTime].
          * The iterator doesn't return them.
          */
-        val lastResolutionPt = timeRange.startTime + (timeRange.duration / resolution) * resolution
-        val extraData = ss.queryFullState(timeRange.endTime).associateBy { it.attribute }
-        ss.queryStates(timeRange.endTime, ssTreeElements.map { it.sourceQuark }.toSet())
+        val lastResolutionPt = queryTimeRange.startTime + (queryTimeRange.duration / resolution) * resolution
+        val extraData = ss.queryFullState(queryTimeRange.endTime).associateBy { it.attribute }
+        ss.queryStates(queryTimeRange.endTime, ssTreeElements.map { it.sourceQuark }.toSet())
                 .forEach { quark, interval ->
                     val treeElem = quarksToTreeElementMap[quark]!!
                     val targetIntervalList = intervalsPerElement[treeElem]!!
@@ -185,8 +189,8 @@ abstract class StateSystemModelStateProvider(stateDefinitions: List<StateDefinit
          * intervals with multi-states before returning.
          */
         return intervalsPerElement
-                .mapValues { entry -> fillWithMultiStates(timeRange, entry.key, entry.value) }
-                .mapValues { entry -> TimeGraphStateRender(timeRange, entry.key, entry.value) }
+                .mapValues { entry -> fillWithMultiStates(queryTimeRange, entry.key, entry.value) }
+                .mapValues { entry -> TimeGraphStateRender(queryTimeRange, entry.key, entry.value) }
     }
 
     override fun getAllStateRenders(treeRender: TimeGraphTreeRender,
