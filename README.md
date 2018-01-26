@@ -3,6 +3,7 @@ Jabberwocky Trace Analysis Library
 
 [![Build Status](https://travis-ci.org/efficios/jabberwocky.svg?branch=master)](https://travis-ci.org/efficios/jabberwocky)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/12053/badge.svg)](https://scan.coverity.com/projects/jabberwocky)
+[![codecov](https://codecov.io/gh/efficios/jabberwocky/branch/master/graph/badge.svg)](https://codecov.io/gh/efficios/jabberwocky)
 
 > 'Twas brillig, and the slithy toves  
 > Did gyre and gimble in the wabe;  
