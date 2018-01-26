@@ -17,9 +17,7 @@ import org.junit.Test
  */
 class TimeRangeTest {
 
-    companion object {
-        private val FIXTURE = TimeRange.of(20, 30)
-    }
+    private val fixture = TimeRange.of(20, 30)
 
     /**
      * Test that attempting to build a time range with invalid values is forbidden.
@@ -29,58 +27,32 @@ class TimeRangeTest {
         TimeRange.of(20, 10)
     }
 
-    /**
-     * Test the [TimeRange.startTime] property.
-     */
     @Test
-    fun testStartTime() {
-        val start = FIXTURE.startTime
-        assertEquals(20, start)
-    }
+    fun testStartTime() = assertEquals(20, fixture.startTime)
 
-    /**
-     * Test the [TimeRange.endTime] property.
-     */
     @Test
-    fun testEndTime() {
-        val end = FIXTURE.endTime
-        assertEquals(30, end)
-    }
+    fun testEndTime() = assertEquals(30, fixture.endTime)
 
-    /**
-     * Test the [TimeRange.duration] property.
-     */
     @Test
-    fun testDuration() {
-        val duration = FIXTURE.duration
-        assertEquals(10, duration)
-    }
+    fun testDuration() = assertEquals(10, fixture.duration)
 
-    /**
-     * Test the [TimeRange.isSingleTimestamp] property.
-     */
     @Test
     fun testIsSingleTimestamp() {
-        assertFalse(FIXTURE.isSingleTimestamp)
-
-        val singleRange = TimeRange.of(10, 10)
-        assertTrue(singleRange.isSingleTimestamp)
+        assertFalse(fixture.isSingleTimestamp)
+        assertTrue(TimeRange.of(10, 10).isSingleTimestamp)
     }
 
-    /**
-     * Test the [TimeRange.contains] method.
-     */
     @Test
     fun testContains() {
-        assertTrue(FIXTURE.contains(23))
-        assertFalse(FIXTURE.contains(10))
-        assertFalse(FIXTURE.contains(50))
+        assertTrue(23 in fixture)
+        assertFalse(10 in fixture)
+        assertFalse(50 in fixture)
 
         /* contains() is inclusive */
-        assertTrue(FIXTURE.contains(20))
-        assertTrue(FIXTURE.contains(30))
-        assertFalse(FIXTURE.contains(19))
-        assertFalse(FIXTURE.contains(31))
+        assertTrue(20 in fixture)
+        assertTrue(30 in fixture)
+        assertFalse(19 in fixture)
+        assertFalse(31 in fixture)
     }
 
 }
