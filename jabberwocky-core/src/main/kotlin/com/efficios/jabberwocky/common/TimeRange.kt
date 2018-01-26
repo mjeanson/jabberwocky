@@ -9,6 +9,9 @@
 
 package com.efficios.jabberwocky.common
 
+import kotlin.math.max
+import kotlin.math.min
+
 data class TimeRange private constructor (val startTime: Long, val endTime: Long) {
 
     init {
@@ -38,3 +41,17 @@ data class TimeRange private constructor (val startTime: Long, val endTime: Long
  */
 fun TimeRange.intersects(other: TimeRange) = intersects(other.startTime, other.endTime)
 fun TimeRange.intersects(lowerLimit: Long, upperLimit: Long) = !(this.endTime < lowerLimit || this.startTime > upperLimit)
+
+/**
+ * Compute the intersection between two time ranges, that is the overlapping range common to both.
+ * If the ranges don't intersect at all, null is returned.
+ */
+fun TimeRange.intersection(other: TimeRange): TimeRange? = intersection(other.startTime, other.endTime)
+fun TimeRange.intersection(lowerLimit: Long, upperLimit: Long): TimeRange? {
+    if (!intersects(lowerLimit, upperLimit)) return null
+
+    val newStart = max(startTime, lowerLimit)
+    var newEnd = max(endTime, newStart)
+    newEnd = min(newEnd, upperLimit)
+    return TimeRange.of(newStart, newEnd)
+}

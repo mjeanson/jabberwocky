@@ -55,10 +55,10 @@ class TimeRangeTest {
         assertFalse(31 in fixture)
     }
 
-    @Test
-    fun testIntersects() {
-        /* Time ranges that should intersect */
-        listOf(15 to 20,
+    companion object {
+        /** Time ranges that should intersect 'fixture' */
+        private val INTERSECTING_RANGES = listOf(
+                15 to 20,
                 15 to 25,
                 20 to 25,
                 22 to 28,
@@ -74,19 +74,46 @@ class TimeRangeTest {
                 20 to 20,
                 25 to 25,
                 30 to 30)
+                .map { TimeRange.of(it.first.toLong(), it.second.toLong()) }
 
-                .map { it.first.toLong() to it.second.toLong() }
-                .map { TimeRange.of(it.first, it.second) }
-                .forEach { assertTrue(it.intersects(fixture)) }
-
-        /* Time ranges that should not intersect */
-        listOf(12 to 18,
+        /** Time ranges that should not intersect 'fixture' */
+        private val NON_INTERSECTING_RANGES = listOf(
+                12 to 18,
                 32 to 38,
                 15 to 15,
                 35 to 35)
+                .map { TimeRange.of(it.first.toLong(), it.second.toLong()) }
+    }
 
-                .map { it.first.toLong() to it.second.toLong() }
-                .map { TimeRange.of(it.first, it.second) }
-                .forEach { assertFalse(it.intersects(fixture)) }
+    @Test
+    fun testIntersects() {
+        INTERSECTING_RANGES.forEach { assertTrue(it.intersects(fixture)) }
+        NON_INTERSECTING_RANGES.forEach { assertFalse(it.intersects(fixture)) }
+    }
+
+    @Test
+    fun testIntersection() {
+        val intersections = listOf(
+                20 to 20,
+                20 to 25,
+                20 to 25,
+                22 to 28,
+                25 to 30,
+                25 to 30,
+                30 to 30,
+
+                20 to 30,
+                20 to 30,
+                20 to 30,
+                20 to 30,
+
+                20 to 20,
+                25 to 25,
+                30 to 30)
+                .map { TimeRange.of(it.first.toLong(), it.second.toLong()) }
+
+        INTERSECTING_RANGES.forEachIndexed { index, timeRange -> assertEquals(intersections[index], timeRange.intersection(fixture)) }
+        
+        NON_INTERSECTING_RANGES.forEach { assertNull(it.intersection(fixture)) }
     }
 }
