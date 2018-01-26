@@ -31,3 +31,10 @@ data class TimeRange private constructor (val startTime: Long, val endTime: Long
     operator fun contains(timestamp: Long): Boolean = (timestamp in startTime..endTime)
 
 }
+
+/**
+ * Determine if this interval intersects (has any overlapping range with) another one.
+ * The range's bounds are inclusive.
+ */
+fun TimeRange.intersects(other: TimeRange) = intersects(other.startTime, other.endTime)
+fun TimeRange.intersects(lowerLimit: Long, upperLimit: Long) = !(this.endTime < lowerLimit || this.startTime > upperLimit)

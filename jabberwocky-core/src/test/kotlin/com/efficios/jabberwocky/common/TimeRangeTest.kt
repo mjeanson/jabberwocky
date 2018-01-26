@@ -55,4 +55,38 @@ class TimeRangeTest {
         assertFalse(31 in fixture)
     }
 
+    @Test
+    fun testIntersects() {
+        /* Time ranges that should intersect */
+        listOf(15 to 20,
+                15 to 25,
+                20 to 25,
+                22 to 28,
+                25 to 30,
+                25 to 35,
+                30 to 35,
+
+                15 to 35,
+                15 to 30,
+                20 to 30,
+                20 to 35,
+
+                20 to 20,
+                25 to 25,
+                30 to 30)
+
+                .map { it.first.toLong() to it.second.toLong() }
+                .map { TimeRange.of(it.first, it.second) }
+                .forEach { assertTrue(it.intersects(fixture)) }
+
+        /* Time ranges that should not intersect */
+        listOf(12 to 18,
+                32 to 38,
+                15 to 15,
+                35 to 35)
+
+                .map { it.first.toLong() to it.second.toLong() }
+                .map { TimeRange.of(it.first, it.second) }
+                .forEach { assertFalse(it.intersects(fixture)) }
+    }
 }
