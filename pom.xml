@@ -51,13 +51,13 @@
       <dependency>
         <groupId>ca.polymtl.dorsal.libdelorean</groupId>
         <artifactId>libdelorean</artifactId>
-        <version>0.7.10-SNAPSHOT</version>
+        <version>0.7.11-SNAPSHOT</version>
       </dependency>
 
       <dependency>
         <groupId>org.eclipse.tracecompass</groupId>
         <artifactId>ctfreader</artifactId>
-        <version>0.1.7-SNAPSHOT</version>
+        <version>0.1.8-SNAPSHOT</version>
       </dependency>
 
       <!-- Artifacts provided by this project. Version numbers should
